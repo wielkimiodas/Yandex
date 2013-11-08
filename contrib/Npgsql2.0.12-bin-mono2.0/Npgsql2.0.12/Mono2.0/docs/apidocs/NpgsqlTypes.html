@@ -1,0 +1,196 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>NpgsqlTypes</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">Npgsql Api Docs</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">NpgsqlTypes Namespace</h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p>
+        <a href="NpgsqlTypesHierarchy.html">Namespace hierarchy</a>
+      </p>
+      <h3 class="dtH3">Classes</h3>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+          <tr valign="top">
+            <th width="50%">Class</th>
+            <th width="50%">Description</th>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.Fastpath.html">Fastpath</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.FastpathArg.html">FastpathArg</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.LargeObject.html">LargeObject</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.LargeObjectManager.html">LargeObjectManager</a>
+            </td>
+            <td width="50%"> Summary description for LargeObjectManager. </td>
+          </tr>
+        </table>
+      </div>
+      <h3 class="dtH3">Structures</h3>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+          <tr valign="top">
+            <th width="50%">Structure</th>
+            <th width="50%">Description</th>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.BitString.html">BitString</a>
+            </td>
+            <td width="50%">
+                <p>Implements a bit string; a collection of zero or more bits which can each be 1 or 0.</p>
+                <p>BitString's behave as a list of bools, though like most strings and unlike most collections the position tends to be of as much significance as the value.</p>
+                <p>BitStrings are often used as masks, and are commonly cast to and from other values.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlBox.html">NpgsqlBox</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlCircle.html">NpgsqlCircle</a>
+            </td>
+            <td width="50%"> Represents a PostgreSQL Circle type. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlDate.html">NpgsqlDate</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlInet.html">NpgsqlInet</a>
+            </td>
+            <td width="50%"> Represents a PostgreSQL inet type. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlInterval.html">NpgsqlInterval</a>
+            </td>
+            <td width="50%"> Represents the PostgreSQL interval datatype. <remarks>PostgreSQL differs from .NET in how it's interval type doesn't assume 24 hours in a day (to deal with 23- and 25-hour days caused by daylight savings adjustments) and has a concept of months that doesn't exist in .NET's <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemTimeSpanClassTopic.htm">TimeSpan</a> class. (Neither datatype has any concessions for leap-seconds). <p>For most uses just casting to and from TimeSpan will work correctly — in particular, the results of subtracting one <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemDateTimeClassTopic.htm">DateTime</a> or the PostgreSQL date, time and timestamp types from another should be the same whether you do so in .NET or PostgreSQL — but if the handling of days and months in PostgreSQL is important to your application then you should use this class instead of <b>TimeSpan</b>.</p><p>If you don't know whether these differences are important to your application, they probably arent! Just use <b>TimeSpan</b> and do not use this class directly ?</p><p>To avoid forcing unnecessary provider-specific concerns on users who need not be concerned with them a call to <b>GetValue</b> on a field containing an <b>NpgsqlInterval</b> value will return a <b>TimeSpan</b> rather than an <b>NpgsqlInterval</b>. If you need the extra functionality of <b>NpgsqlInterval</b> then use <a href="Npgsql.NpgsqlDataReader.GetInterval.html">GetInterval</a>.</p></remarks><seealso cref="P:NpgsqlTypes.NpgsqlInterval.Ticks"></seealso><seealso cref="M:NpgsqlTypes.NpgsqlInterval.JustifyDays"></seealso><seealso cref="M:NpgsqlTypes.NpgsqlInterval.JustifyMonths"></seealso><seealso cref="M:NpgsqlTypes.NpgsqlInterval.Canonicalize"></seealso></td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlLSeg.html">NpgsqlLSeg</a>
+            </td>
+            <td width="50%"> Represents a PostgreSQL Line Segment type. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlMacAddress.html">NpgsqlMacAddress</a>
+            </td>
+            <td width="50%"> Represents a PostgreSQL MacAddress type. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlPath.html">NpgsqlPath</a>
+            </td>
+            <td width="50%"> Represents a PostgreSQL Path type. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlPoint.html">NpgsqlPoint</a>
+            </td>
+            <td width="50%"> Represents a PostgreSQL Point type </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlPolygon.html">NpgsqlPolygon</a>
+            </td>
+            <td width="50%"> Represents a PostgreSQL Polygon type. </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlTime.html">NpgsqlTime</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlTimeStamp.html">NpgsqlTimeStamp</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlTimeStampTZ.html">NpgsqlTimeStampTZ</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlTimeTZ.html">NpgsqlTimeTZ</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlTimeZone.html">NpgsqlTimeZone</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+        </table>
+      </div>
+      <h3 class="dtH3">Enumerations</h3>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+          <tr valign="top">
+            <th width="50%">Enumeration</th>
+            <th width="50%">Description</th>
+          </tr>
+          <tr valign="top">
+            <td width="50%">
+              <a href="NpgsqlTypes.NpgsqlDbType.html">NpgsqlDbType</a>
+            </td>
+            <td width="50%"> </td>
+          </tr>
+        </table>
+      </div>
+      <hr />
+      <div id="footer">
+        <p>
+          <a>Copyright © 2002 - 2012 Npgsql Development Team</a>
+        </p>
+        <p>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

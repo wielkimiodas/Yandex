@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yandex.PostgresWriter", "Yandex.PostgresWriter\Yandex.PostgresWriter.csproj", "{98945A80-A485-493F-8E75-CDC5B7810755}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yandex.DataReader", "Yandex.DataReader\Yandex.DataReader.csproj", "{83514D79-F9E1-4162-A3F3-0A9BA14F465D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{36F341E2-1FA5-405A-86DF-B8FA832A3112}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{8A543A75-00F6-4723-BDF7-D14562B4B591}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yandex.UnitTests", "Yandex.UnitTests\Yandex.UnitTests.csproj", "{31023B68-36EA-49BA-B452-BB5F708E74DB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98945A80-A485-493F-8E75-CDC5B7810755}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98945A80-A485-493F-8E75-CDC5B7810755}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98945A80-A485-493F-8E75-CDC5B7810755}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98945A80-A485-493F-8E75-CDC5B7810755}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83514D79-F9E1-4162-A3F3-0A9BA14F465D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83514D79-F9E1-4162-A3F3-0A9BA14F465D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83514D79-F9E1-4162-A3F3-0A9BA14F465D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83514D79-F9E1-4162-A3F3-0A9BA14F465D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31023B68-36EA-49BA-B452-BB5F708E74DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31023B68-36EA-49BA-B452-BB5F708E74DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31023B68-36EA-49BA-B452-BB5F708E74DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31023B68-36EA-49BA-B452-BB5F708E74DB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{83514D79-F9E1-4162-A3F3-0A9BA14F465D} = {36F341E2-1FA5-405A-86DF-B8FA832A3112}
+		{98945A80-A485-493F-8E75-CDC5B7810755} = {36F341E2-1FA5-405A-86DF-B8FA832A3112}
+		{31023B68-36EA-49BA-B452-BB5F708E74DB} = {8A543A75-00F6-4723-BDF7-D14562B4B591}
+	EndGlobalSection
+EndGlobal

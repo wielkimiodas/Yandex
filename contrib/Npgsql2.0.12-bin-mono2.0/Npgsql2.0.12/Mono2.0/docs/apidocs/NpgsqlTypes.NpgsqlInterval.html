@@ -1,0 +1,66 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>NpgsqlInterval Structure</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">Npgsql Api Docs</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">NpgsqlInterval Structure</h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p> Represents the PostgreSQL interval datatype. <remarks>PostgreSQL differs from .NET in how it's interval type doesn't assume 24 hours in a day (to deal with 23- and 25-hour days caused by daylight savings adjustments) and has a concept of months that doesn't exist in .NET's <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemTimeSpanClassTopic.htm">TimeSpan</a> class. (Neither datatype has any concessions for leap-seconds). <p>For most uses just casting to and from TimeSpan will work correctly — in particular, the results of subtracting one <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemDateTimeClassTopic.htm">DateTime</a> or the PostgreSQL date, time and timestamp types from another should be the same whether you do so in .NET or PostgreSQL — but if the handling of days and months in PostgreSQL is important to your application then you should use this class instead of <b>TimeSpan</b>.</p><p>If you don't know whether these differences are important to your application, they probably arent! Just use <b>TimeSpan</b> and do not use this class directly ?</p><p>To avoid forcing unnecessary provider-specific concerns on users who need not be concerned with them a call to <b>GetValue</b> on a field containing an <b>NpgsqlInterval</b> value will return a <b>TimeSpan</b> rather than an <b>NpgsqlInterval</b>. If you need the extra functionality of <b>NpgsqlInterval</b> then use <a href="Npgsql.NpgsqlDataReader.GetInterval.html">GetInterval</a>.</p></remarks><seealso cref="P:NpgsqlTypes.NpgsqlInterval.Ticks"></seealso><seealso cref="M:NpgsqlTypes.NpgsqlInterval.JustifyDays"></seealso><seealso cref="M:NpgsqlTypes.NpgsqlInterval.JustifyMonths"></seealso><seealso cref="M:NpgsqlTypes.NpgsqlInterval.Canonicalize"></seealso></p>
+      <p>For a list of all members of this type, see <a href="NpgsqlTypes.NpgsqlIntervalMembers.html">NpgsqlInterval Members</a>.</p>
+      <p>
+        <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassTopic.htm">System.Object</a>
+        <br />   <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemValueTypeClassTopic.htm">System.ValueType</a><br />      <b>NpgsqlTypes.NpgsqlInterval</b></p>
+      <div class="syntax">
+        <span class="lang">[Visual Basic]</span>
+        <br />Public Structure NpgsqlInterval<div>    Implements <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemCollectionsIComparerClassTopic.htm">IComparer</a>, <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemCollectionsGenericIComparer`1NpgsqlTypesNpgsqlInterval Npgsql Version=20120 Culture=neutral PublicKeyToken=5d8b90d52f46fda7ClassTopic.htm">IComparer`1([NpgsqlTypes.NpgsqlInterval, Npgsql, Version=2.0.12.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7))</a>, <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemIComparableClassTopic.htm">IComparable</a>, <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemIEquatable`1NpgsqlTypesNpgsqlInterval Npgsql Version=20120 Culture=neutral PublicKeyToken=5d8b90d52f46fda7ClassTopic.htm">IEquatable`1([NpgsqlTypes.NpgsqlInterval, Npgsql, Version=2.0.12.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7))</a>, <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemIComparable`1NpgsqlTypesNpgsqlInterval Npgsql Version=20120 Culture=neutral PublicKeyToken=5d8b90d52f46fda7ClassTopic.htm">IComparable`1([NpgsqlTypes.NpgsqlInterval, Npgsql, Version=2.0.12.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7))</a></div></div>
+      <div class="syntax">
+        <span class="lang">[C#]</span>
+        <div>public struct NpgsqlInterval<b> : <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemCollectionsIComparerClassTopic.htm">IComparer</a>, <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemCollectionsGenericIComparer`1NpgsqlTypesNpgsqlInterval Npgsql Version=20120 Culture=neutral PublicKeyToken=5d8b90d52f46fda7ClassTopic.htm">0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7]]</a>, <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemIComparableClassTopic.htm">IComparable</a>, <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemIEquatable`1NpgsqlTypesNpgsqlInterval Npgsql Version=20120 Culture=neutral PublicKeyToken=5d8b90d52f46fda7ClassTopic.htm">0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7]]</a>, <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemIComparable`1NpgsqlTypesNpgsqlInterval Npgsql Version=20120 Culture=neutral PublicKeyToken=5d8b90d52f46fda7ClassTopic.htm">0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7]]</a></b></div>
+      </div>
+      <H4 class="dtH4">Thread Safety</H4>
+      <P>Public static (<b>Shared</b> in Visual Basic) members of this type are 
+				safe for multithreaded operations. Instance members are <b>not</b> guaranteed to be 
+				thread-safe.</P>
+      <h4 class="dtH4">Requirements</h4>
+      <p>
+        <b>Namespace: </b>
+        <a href="NpgsqlTypes.html">NpgsqlTypes</a>
+      </p>
+      <p>
+        <b>Assembly: </b>Npgsql (in )
+					</p>
+      <h4 class="dtH4">See Also</h4>
+      <p>
+        <a href="NpgsqlTypes.NpgsqlIntervalMembers.html">NpgsqlInterval Members</a> | <a href="NpgsqlTypes.html">NpgsqlTypes Namespace</a> | <a href="NpgsqlTypes.NpgsqlInterval.Ticks.html">Ticks</a> | <a href="NpgsqlTypes.NpgsqlInterval.JustifyDays.html">JustifyDays</a> | <a href="NpgsqlTypes.NpgsqlInterval.JustifyMonths.html">JustifyMonths</a> | <a href="NpgsqlTypes.NpgsqlInterval.Canonicalize.html">Canonicalize</a></p>
+      <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e" viewastext="true" style="display: none;">
+        <param name="Keyword" value="NpgsqlInterval structure, about NpgsqlInterval structure">
+        </param>
+      </object>
+      <hr />
+      <div id="footer">
+        <p>
+          <a>Copyright © 2002 - 2012 Npgsql Development Team</a>
+        </p>
+        <p>Generated from assembly Npgsql [2.0.12.0]</p>
+      </div>
+    </div>
+  </body>
+</html>

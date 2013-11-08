@@ -1,0 +1,62 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>BitString.ToString Method (String)</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">Npgsql Api Docs</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">BitString.ToString Method (String)</h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p> Returns a string representation of the BitString. </p>
+      <div class="syntax">
+        <span class="lang">[Visual Basic]</span>
+        <br />Overloads Public Function ToString( _<br />   ByVal <i>format</i> As <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemStringClassTopic.htm">String</a> _<br />) As <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemStringClassTopic.htm">String</a></div>
+      <div class="syntax">
+        <span class="lang">[C#]</span>
+        <br />public <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemStringClassTopic.htm">string</a> ToString(<br />   <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemStringClassTopic.htm">string</a> <i>format</i><br />);</div>
+      <h4 class="dtH4">Parameters</h4>
+      <dl>
+        <dt>
+          <i>format</i>
+        </dt>
+        <dd> A string which can contain a letter and optionally a number which sets a minimum size for the string returned. In each case using the lower-case form of the letter will result in a lower-case string being returned. <div class="tablediv"><table class="dtTABLE" cellspacing="0"><tr valign="top"><td>B</td><td>A string of 1s and 0s.</td></tr><tr valign="top"><td>X</td><td>An hexadecimal string (will result in an error unless the string's length is divisible by 4).</td></tr><tr valign="top"><td>G</td><td>A string of 1s and 0s in single-quotes preceded by 'B' (Postgres bit string literal syntax).</td></tr></table></div><term>C</term><description>The format produced by format-string "Y" if legal, otherwise that produced by format-string "G".</description><term>E</term><description>The most compact safe representation for Postgres. If single bit will be either a 0 or a 1. Otherwise if it can be that produce by format string "Y" it will, otherwise if there are less than 9bits in length it will be that produced by format-string "G". For longer strings that cannot be represented in hexadecimal it will be a string representing the first part of the string in format "Y" followed by the PostgreSQL concatenation operator, followed by the final bits in the format "G". E.g. "X'13DCE'||B'110'"</description> If format is empty or null, it is treated as if "B" had been passed (the default repreesentation, and that generally used by PostgreSQL for display). </dd>
+      </dl>
+      <h4 class="dtH4">Return Value</h4>
+      <p>The formatted string.</p>
+      <h4 class="dtH4">See Also</h4>
+      <p>
+        <a href="NpgsqlTypes.BitString.html">BitString Class</a> | <a href="NpgsqlTypes.html">NpgsqlTypes Namespace</a> | <a href="NpgsqlTypes.BitString.ToString_overloads.html">BitString.ToString Overload List</a></p>
+      <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e" viewastext="true" style="display: none;">
+        <param name="Keyword" value="ToString method">
+        </param>
+        <param name="Keyword" value="ToString method, BitString structure">
+        </param>
+        <param name="Keyword" value="BitString.ToString method">
+        </param>
+      </object>
+      <hr />
+      <div id="footer">
+        <p>
+          <a>Copyright © 2002 - 2012 Npgsql Development Team</a>
+        </p>
+        <p>Generated from assembly Npgsql [2.0.12.0]</p>
+      </div>
+    </div>
+  </body>
+</html>

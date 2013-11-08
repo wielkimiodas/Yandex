@@ -1,0 +1,48 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>CompareTo Method</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">Npgsql Api Docs</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">BitString.CompareTo Method</h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p> Compares two strings. Strings are compared as strings, so while 0 being less than 1 will mean a comparison between two strings of the same size is the same as treating them as numbers, in the case of two strings of differing lengths the comparison starts at the right-most (most significant) bit, and if all bits of the shorter string are exhausted without finding a comparison, then the larger string is deemed to be greater than the shorter (0010 is greater than 0001 but less than 00100). </p>
+      <h4 class="dtH4">Overload List</h4>
+      <p> Compares two strings. Strings are compared as strings, so while 0 being less than 1 will mean a comparison between two strings of the same size is the same as treating them as numbers, in the case of two strings of differing lengths the comparison starts at the right-most (most significant) bit, and if all bits of the shorter string are exhausted without finding a comparison, then the larger string is deemed to be greater than the shorter (0010 is greater than 0001 but less than 00100). </p>
+      <blockquote class="dtBlock">
+        <a href="NpgsqlTypes.BitString.CompareTo_overload_1.html">public int CompareTo(BitString);</a>
+      </blockquote>
+      <p> Compares the string with another object. </p>
+      <blockquote class="dtBlock">
+        <a href="NpgsqlTypes.BitString.CompareTo_overload_2.html">public int CompareTo(object);</a>
+      </blockquote>
+      <h4 class="dtH4">See Also</h4>
+      <p>
+        <a href="NpgsqlTypes.BitString.html">BitString Class</a> | <a href="NpgsqlTypes.html">NpgsqlTypes Namespace</a></p>
+      <hr />
+      <div id="footer">
+        <p>
+          <a>Copyright © 2002 - 2012 Npgsql Development Team</a>
+        </p>
+        <p>Generated from assembly Npgsql [2.0.12.0]</p>
+      </div>
+    </div>
+  </body>
+</html>

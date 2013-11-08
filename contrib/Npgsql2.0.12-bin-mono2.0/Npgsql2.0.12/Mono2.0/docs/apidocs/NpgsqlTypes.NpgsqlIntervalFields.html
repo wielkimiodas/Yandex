@@ -1,0 +1,60 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>NpgsqlInterval Fields</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">Npgsql Api Docs</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">NpgsqlInterval Fields</h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p>The fields of the <b>NpgsqlInterval</b> structure are listed below. For a complete list of <b>NpgsqlInterval</b> structure members, see the <a href="NpgsqlTypes.NpgsqlIntervalMembers.html">NpgsqlInterval Members</a> topic.</p>
+      <h4 class="dtH4">Public Static (Shared) Fields</h4>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+<tr VALIGN="top"><td width="50%"><img src="pubfield.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.NpgsqlInterval.DaysPerMonth.html">DaysPerMonth</a></td><td width="50%"> Represents the number of days assumed in one month if month justification or unjustifcation is performed. This is set to 30 for consistency with PostgreSQL. Note that this is means that month adjustments cause a year to be taken as 30 × 12 = 360 rather than 356/366 days. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubfield.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.NpgsqlInterval.HoursPerDay.html">HoursPerDay</a></td><td width="50%"> Represents the number of hours in one day (assuming no daylight savings adjustments). This field is constant. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubfield.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.NpgsqlInterval.MaxValue.html">MaxValue</a></td><td width="50%"> Represents the maximum <a href="NpgsqlTypes.NpgsqlInterval.html">NpgsqlInterval</a>. This field is read-only. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubfield.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.NpgsqlInterval.MinValue.html">MinValue</a></td><td width="50%"> Represents the minimum <a href="NpgsqlTypes.NpgsqlInterval.html">NpgsqlInterval</a>. This field is read-only. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubfield.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.NpgsqlInterval.MonthsPerYear.html">MonthsPerYear</a></td><td width="50%"> Represents the number of months in a year. This field is constant. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubfield.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.NpgsqlInterval.TicksPerDay.html">TicksPerDay</a></td><td width="50%"> Represents the number of ticks (100ns periods) in one day. This field is constant. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubfield.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.NpgsqlInterval.TicksPerHour.html">TicksPerHour</a></td><td width="50%"> Represents the number of ticks (100ns periods) in one hour. This field is constant. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubfield.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.NpgsqlInterval.TicksPerMicrosecond.html">TicksPerMicrosecond</a></td><td width="50%"> Represents the number of ticks (100ns periods) in one microsecond. This field is constant. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubfield.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.NpgsqlInterval.TicksPerMillsecond.html">TicksPerMillsecond</a></td><td width="50%"> Represents the number of ticks (100ns periods) in one millisecond. This field is constant. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubfield.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.NpgsqlInterval.TicksPerMinute.html">TicksPerMinute</a></td><td width="50%"> Represents the number of ticks (100ns periods) in one minute. This field is constant. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubfield.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.NpgsqlInterval.TicksPerMonth.html">TicksPerMonth</a></td><td width="50%"> Represents the number of ticks (100ns periods) in one day, assuming 30 days per month. <seealso cref="F:NpgsqlTypes.NpgsqlInterval.DaysPerMonth"></seealso></td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubfield.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.NpgsqlInterval.TicksPerSecond.html">TicksPerSecond</a></td><td width="50%"> Represents the number of ticks (100ns periods) in one second. This field is constant. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubfield.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.NpgsqlInterval.Zero.html">Zero</a></td><td width="50%"> Represents the zero <a href="NpgsqlTypes.NpgsqlInterval.html">NpgsqlInterval</a>. This field is read-only. </td></tr></table>
+      </div>
+      <h4 class="dtH4">See Also</h4>
+      <p>
+        <a href="NpgsqlTypes.NpgsqlInterval.html">NpgsqlInterval Class</a> | <a href="NpgsqlTypes.html">NpgsqlTypes Namespace</a> | <a href="NpgsqlTypes.NpgsqlInterval.Ticks.html">Ticks</a> | <a href="NpgsqlTypes.NpgsqlInterval.JustifyDays.html">JustifyDays</a> | <a href="NpgsqlTypes.NpgsqlInterval.JustifyMonths.html">JustifyMonths</a> | <a href="NpgsqlTypes.NpgsqlInterval.Canonicalize.html">Canonicalize</a></p>
+      <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e" viewastext="true" style="display: none;">
+        <param name="Keyword" value="NpgsqlInterval structure, fields">
+        </param>
+      </object>
+      <hr />
+      <div id="footer">
+        <p>
+          <a>Copyright © 2002 - 2012 Npgsql Development Team</a>
+        </p>
+        <p>Generated from assembly Npgsql [2.0.12.0]</p>
+      </div>
+    </div>
+  </body>
+</html>

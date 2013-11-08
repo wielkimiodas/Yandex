@@ -1,0 +1,88 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>BitString Methods</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">Npgsql Api Docs</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">BitString Methods</h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p>The methods of the <b>BitString</b> structure are listed below. For a complete list of <b>BitString</b> structure members, see the <a href="NpgsqlTypes.BitStringMembers.html">BitString Members</a> topic.</p>
+      <h4 class="dtH4">Public Static (Shared) Methods</h4>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><img src="static.gif" /><a href="NpgsqlTypes.BitString.Parse.html">Parse</a></td><td width="50%"> Parses a string to produce a BitString. Most formats that can be produced by <a href="NpgsqlTypes.BitString.ToString_overload_1.html">ToString</a> can be accepted, but hexadecimal can be interpreted with the preceding X' to mark the following characters as being hexadecimal rather than binary. </td></tr></table>
+      </div>
+      <h4 class="dtH4">Public Instance Methods</h4>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.And.html">And</a></td><td width="50%"> A logical and between this string and another. The two strings must be the same length. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.CompareTo_overloads.html">CompareTo</a></td><td width="50%">Overloaded.  Compares two strings. Strings are compared as strings, so while 0 being less than 1 will mean a comparison between two strings of the same size is the same as treating them as numbers, in the case of two strings of differing lengths the comparison starts at the right-most (most significant) bit, and if all bits of the shorter string are exhausted without finding a comparison, then the larger string is deemed to be greater than the shorter (0010 is greater than 0001 but less than 00100). </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.Concat.html">Concat</a></td><td width="50%"> Creats a bitstring by concatenating another onto this one. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.Contains.html">Contains</a></td><td width="50%"> True if there is at least one bit with the value looked for. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.CopyTo.html">CopyTo</a></td><td width="50%"> Copies the bitstring to an array of bools. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.Equals_overloads.html">Equals</a></td><td width="50%">Overloaded.  Returns true if the this string is identical to the argument passed. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.GetEnumerator.html">GetEnumerator</a></td><td width="50%"> Returns an enumerator that enumerates through the string. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.GetHashCode.html">GetHashCode</a></td><td width="50%"> Returns a code for use in hashing operations. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassGetTypeTopic.htm">GetType</a> (inherited from <b>Object</b>)</td><td width="50%"> </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.GetTypeCode.html">GetTypeCode</a></td><td width="50%"> </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.IndexOf.html">IndexOf</a></td><td width="50%"> Finds the first instance of a given value </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.LShift.html">LShift</a></td><td width="50%"> Shifts the string operand bits to the left, filling with zeros to produce a string of the same length. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.Not.html">Not</a></td><td width="50%"> A bitstring that is the logical inverse of this one. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.Or.html">Or</a></td><td width="50%"> A logical or between this string and another. The two strings must be the same length. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.RShift.html">RShift</a></td><td width="50%"> Shifts the string operand bits to the right, filling with zeros to produce a string of the same length. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.Substring_overloads.html">Substring</a></td><td width="50%">Overloaded.  Returns a substring of this string. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToBoolean_overloads.html">ToBoolean</a></td><td width="50%">Overloaded.  </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToByte_overloads.html">ToByte</a></td><td width="50%">Overloaded.  </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToByteEnumerable.html">ToByteEnumerable</a></td><td width="50%"> Interprets the bitstring as a series of octets (bytes) and returns those octets. Fails if the Bitstring does not contain a whole number of octets (its length is not evenly divisible by 8). </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToInt16_overloads.html">ToInt16</a></td><td width="50%">Overloaded.  </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToInt16Enumerable.html">ToInt16Enumerable</a></td><td width="50%"> Interprets the bitstring as a series of 16-bit integers and returns those integers. Fails if the Bitstring's length is not evenly divisible by 16. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToInt32_overloads.html">ToInt32</a></td><td width="50%">Overloaded.  </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToInt32Enumerable.html">ToInt32Enumerable</a></td><td width="50%"> Interprets the bitstring as a series of signed 32-bit integers and returns those integers. Fails if the Bitstring's length is not evenly divisible by 32. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToInt64_overloads.html">ToInt64</a></td><td width="50%">Overloaded.  </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToInt64Enumerable.html">ToInt64Enumerable</a></td><td width="50%"> Interprets the bitstring as a series of signed 64-bit integers and returns those integers. Fails if the Bitstring's length is not evenly divisible by 64. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToSByte_overloads.html">ToSByte</a></td><td width="50%">Overloaded.  </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToSByteEnumerable.html">ToSByteEnumerable</a></td><td width="50%"> Interprets the bitstring as a series of signed octets (bytes) and returns those octets. Fails if the Bitstring does not contain a whole number of octets (its length is not evenly divisible by 8). <remarks>This method is not CLS-Compliant and may not be available to languages that cannot handle signed bytes.</remarks></td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToString_overloads.html">ToString</a></td><td width="50%">Overloaded.  Returns a string representation of the BitString. </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToType.html">ToType</a></td><td width="50%"> </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToUInt16_overloads.html">ToUInt16</a></td><td width="50%">Overloaded.  </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToUInt16Enumerable.html">ToUInt16Enumerable</a></td><td width="50%"> Interprets the bitstring as a series of unsigned 16-bit integers and returns those integers. Fails if the Bitstring's length is not evenly divisible by 16. <remarks>This method is not CLS-Compliant and may not be available to languages that cannot handle unsigned integers.</remarks></td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToUInt32_overloads.html">ToUInt32</a></td><td width="50%">Overloaded.  </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToUInt32Enumerable.html">ToUInt32Enumerable</a></td><td width="50%"> Interprets the bitstring as a series of unsigned 32-bit integers and returns those integers. Fails if the Bitstring's length is not evenly divisible by 32. <remarks>This method is not CLS-Compliant and may not be available to languages that cannot handle unsigned integers.</remarks></td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToUInt64_overloads.html">ToUInt64</a></td><td width="50%">Overloaded.  </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.ToUInt64Enumerable.html">ToUInt64Enumerable</a></td><td width="50%"> Interprets the bitstring as a series of unsigned 64-bit integers and returns those integers. Fails if the Bitstring's length is not evenly divisible by 64. <remarks>This method is not CLS-Compliant and may not be available to languages that cannot handle unsigned integers.</remarks></td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"></img><a href="NpgsqlTypes.BitString.Xor.html">Xor</a></td><td width="50%"> A logical xor between this string and another. The two strings must be the same length. </td></tr></table>
+      </div>
+      <h4 class="dtH4">See Also</h4>
+      <p>
+        <a href="NpgsqlTypes.BitString.html">BitString Class</a> | <a href="NpgsqlTypes.html">NpgsqlTypes Namespace</a></p>
+      <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e" viewastext="true" style="display: none;">
+        <param name="Keyword" value="BitString structure, methods">
+        </param>
+      </object>
+      <hr />
+      <div id="footer">
+        <p>
+          <a>Copyright © 2002 - 2012 Npgsql Development Team</a>
+        </p>
+        <p>Generated from assembly Npgsql [2.0.12.0]</p>
+      </div>
+    </div>
+  </body>
+</html>

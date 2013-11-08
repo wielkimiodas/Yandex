@@ -1,0 +1,66 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>NpgsqlTimeTZ.CompareTo Method (NpgsqlTimeTZ)</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">Npgsql Api Docs</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">NpgsqlTimeTZ.CompareTo Method (NpgsqlTimeTZ)</h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p> Compares this with another <a href="NpgsqlTypes.NpgsqlTimeTZ.html">NpgsqlTimeTZ</a>. As per postgres' rules, first the times are compared as if they were both in the same timezone. If they are equal then then timezones are compared (+01:00 being "smaller" than -01:00). </p>
+      <div class="syntax">
+        <span class="lang">[Visual Basic]</span>
+        <br />NotOverridable Overloads Public Function CompareTo( _<br />   ByVal <i>other</i> As <a href="NpgsqlTypes.NpgsqlTimeTZ.html">NpgsqlTimeTZ</a> _<br />) As <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemInt32ClassTopic.htm">Integer</a> _<div>    Implements <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemIComparable`1[[NpgsqlTypesNpgsqlTimeTZ, Npgsql, Version=20120, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7]]ClassCompareToTopic.htm">IComparable`1.CompareTo</a></div></div>
+      <div class="syntax">
+        <span class="lang">[C#]</span>
+        <br />public <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemInt32ClassTopic.htm">int</a> CompareTo(<br />   <a href="NpgsqlTypes.NpgsqlTimeTZ.html">NpgsqlTimeTZ</a> <i>other</i><br />);</div>
+      <h4 class="dtH4">Parameters</h4>
+      <dl>
+        <dt>
+          <i>other</i>
+        </dt>
+        <dd>the <a href="NpgsqlTypes.NpgsqlTimeTZ.html">NpgsqlTimeTZ</a> to compare with.</dd>
+      </dl>
+      <h4 class="dtH4">Return Value</h4>
+      <p>An integer which is 0 if they are equal, &lt; 0 if this is the smaller and &gt; 0 if this is the larger.</p>
+      <h4 class="dtH4">Implements</h4>
+      <p>
+        <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemIComparable`1[[NpgsqlTypesNpgsqlTimeTZ, Npgsql, Version=20120, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7]]ClassCompareToTopic.htm">IComparable`1.CompareTo</a>
+      </p>
+      <h4 class="dtH4">See Also</h4>
+      <p>
+        <a href="NpgsqlTypes.NpgsqlTimeTZ.html">NpgsqlTimeTZ Class</a> | <a href="NpgsqlTypes.html">NpgsqlTypes Namespace</a> | <a href="NpgsqlTypes.NpgsqlTimeTZ.CompareTo_overloads.html">NpgsqlTimeTZ.CompareTo Overload List</a></p>
+      <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e" viewastext="true" style="display: none;">
+        <param name="Keyword" value="CompareTo method">
+        </param>
+        <param name="Keyword" value="CompareTo method, NpgsqlTimeTZ structure">
+        </param>
+        <param name="Keyword" value="NpgsqlTimeTZ.CompareTo method">
+        </param>
+      </object>
+      <hr />
+      <div id="footer">
+        <p>
+          <a>Copyright © 2002 - 2012 Npgsql Development Team</a>
+        </p>
+        <p>Generated from assembly Npgsql [2.0.12.0]</p>
+      </div>
+    </div>
+  </body>
+</html>
