@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Data;
 using System.Diagnostics;
+using System.Text;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yandex.PostgresWriter;
 
-namespace Yandex.UnitTests
+namespace Yandex.UnitTest
 {
     [TestClass]
-    public class PostgrasWriterTest
+    public class PostgresWriterTest
     {
         [TestMethod]
         public void QueryExecutionTest()

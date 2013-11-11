@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Yandex.DataReader")]
+[assembly: AssemblyTitle("Yandex.PostgresWriter")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Yandex.DataReader")]
+[assembly: AssemblyProduct("Yandex.PostgresWriter")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("54177a05-d70b-4a89-b74c-dfcb818f4b30")]
+[assembly: Guid("9e85f771-3d62-480c-88c3-854be460750e")]
 
 // Version information for an assembly consists of the following four values:
 //

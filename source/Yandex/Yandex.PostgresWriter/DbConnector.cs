@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Npgsql;
 
 namespace Yandex.PostgresWriter
@@ -19,7 +18,7 @@ namespace Yandex.PostgresWriter
 
         public DbConnector()
         {
-            
+
         }
 
         public DbConnector(string server, string userId, string port, string password, string database)
@@ -46,13 +45,13 @@ namespace Yandex.PostgresWriter
         public DataSet ExecuteQuery(string query)
         {
             Connect();
-            
+
             var dataAdapter = new NpgsqlDataAdapter(query, _connection);
             var dataSet = new DataSet();
             dataAdapter.Fill(dataSet);
-            
+
             Disconnect();
-            
+
             return dataSet;
         }
     }
