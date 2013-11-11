@@ -5,7 +5,7 @@ using System.Text;
 using Npgsql;
 using System.IO;
 
-namespace Transfer
+namespace Yandex.Transfer
 {
     public class Transfer : IDisposable
     {
