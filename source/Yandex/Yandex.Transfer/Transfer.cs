@@ -514,7 +514,7 @@ namespace Yandex.Transfer
 
                 for (int i = 0; i < 10; i++)
                 {
-                    int maxValue = (int)((i + 1) / 10.0 * (maxUrlId - minUrlId + 1));
+                    int maxValue = (int)((i + 1) / 10.0 * (maxUrlId - minUrlId + 1)) + minUrlId;
                     tic(String.Format("{0,2}/{1} ({2,-10} <= url_id < {3,10})", new object[] { i + 1, 10, minValue, maxValue }));
                     using (NpgsqlCommand cmd = new NpgsqlCommand(String.Format("INSERT INTO {0}.{1} (url_id, domain_id) SELECT DISTINCT ON (url_id) url_id, domain_id FROM {0}.{2} WHERE url_id >= {3} AND url_id < {4};", new object[] { schemaName, urlTableName, urlTmpTableName, minValue, maxValue }), connection))
                     {
@@ -558,7 +558,7 @@ namespace Yandex.Transfer
 
                 for (int i = 0; i < 10; i++)
                 {
-                    int maxValue = (int)((i + 1) / 10.0 * (maxSessionId - minSessionId + 1));
+                    int maxValue = (int)((i + 1) / 10.0 * (maxSessionId - minSessionId + 1)) + minSessionId;
                     tic(String.Format("{0,2}/{1} ({2,-10} <= url_id < {3,10})", new object[] { i + 1, 10, minValue, maxValue }));
                     using (NpgsqlCommand cmd = new NpgsqlCommand(String.Format("INSERT INTO {0}.{1} (result_id, time_passed) " +
                         "SELECT u.result_id, c.time_passed FROM " +
