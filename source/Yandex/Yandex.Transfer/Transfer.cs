@@ -17,12 +17,12 @@ namespace Yandex.Transfer
         /// <summary>
         /// Katalog do przechowywania przetworzonych plików z danymi.
         /// </summary>
-        const string workDir = @"C:\tmp1\";
+        readonly string workDir;
 
         /// <summary>
         /// Nazwa schematu w bazie danych.
         /// </summary>
-        const String schemaName = "train";
+        readonly String schemaName;
 
         /// <summary>
         /// Określa, czy należy za każdym razem tworzyć nowe pliki tymczasowe
@@ -36,7 +36,7 @@ namespace Yandex.Transfer
         /// </summary>
         const int LINES_LIMIT = 0;
 
-        const int MAX_CMD_TIMEOUT = 5 * 3600;
+        const int MAX_CMD_TIMEOUT = 2 * 3600;
 
         // Nazwy tabel/plików.
         const string sessionTableName = "session";
@@ -61,8 +61,11 @@ namespace Yandex.Transfer
         /// <param name="connstring">Connstring używany do połączenia z bazą.</param>
         /// <param name="schemaName">Nazwa schematu, w którym mają zostać zapisane dane.</param>
         /// <param name="transactional">Określa, czy cały proces ma być wykonany transakcyjnie.</param>
-        public Transfer(String connstring, bool transactional = true)
+        public Transfer(String connstring, String schemaName, String workDir, bool transactional = false)
         {
+            this.schemaName = schemaName;
+            this.workDir = workDir;
+
             connection = new NpgsqlConnection(connstring);
             connection.Open();
 
@@ -141,11 +144,20 @@ namespace Yandex.Transfer
             BoolFunction[] functions = new BoolFunction[] { createSchema, delegate { return rewriteData(filename); }, importData, createConstraints1, createIndexes1, copyTables, removeTables, createConstraints2, createIndexes2 };
 
             foreach (BoolFunction function in functions)
+            {
                 if (!function())
                 {
                     rollback();
                     return;
                 }
+
+                if (transaction != null)
+                {
+                    transaction.Commit();
+                    Console.WriteLine("Beginning new transaction");
+                    transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
+                }
+            }
 
             if (transaction != null)
             {
@@ -274,7 +286,10 @@ namespace Yandex.Transfer
                     any = any || (writer != null);
 
                 if (!any)
+                {
+                    toc();
                     return true;
+                }
             }
 
             using (BufferedBinaryReader reader = new BufferedBinaryReader(filename))
@@ -470,24 +485,97 @@ namespace Yandex.Transfer
         /// </summary>
         private bool copyTables()
         {
-            tic(String.Format("Inserting into {0}:", urlTableName));
+            {
+                int minUrlId = 0;
+                int maxUrlId = 0;
+                tic("Getting min and max");
+                using (NpgsqlCommand command = new NpgsqlCommand(String.Format("SELECT MIN(url_id), MAX(url_id) FROM {0}.{1};", schemaName, urlTmpTableName), connection))
+                {
+                    command.CommandTimeout = MAX_CMD_TIMEOUT;
+                    using (var result = command.ExecuteReader())
+                    {
+                        if (!result.HasRows)
+                            throw new Exception("Something went wrong");
 
-            NpgsqlCommand cmd = new NpgsqlCommand(String.Format("INSERT INTO {0}.{1} (url_id, domain_id) SELECT DISTINCT ON (url_id) url_id, domain_id FROM {0}.{2};", schemaName, urlTableName, urlTmpTableName), connection);
-            cmd.CommandTimeout = MAX_CMD_TIMEOUT;
-            cmd.ExecuteNonQuery();
+                        result.Read();
 
-            toc();
+                        minUrlId = Convert.ToInt32(result[0]);
+                        maxUrlId = Convert.ToInt32(result[1]) + 1;
+                    }
+                }
+                toc();
 
-            tic(String.Format("Inserting into {0}:", clickTableName));
+                Console.WriteLine(String.Format("Min value: {0}", minUrlId));
+                Console.WriteLine(String.Format("Max value: {0}", maxUrlId));
 
-            cmd = new NpgsqlCommand(String.Format("INSERT INTO {0}.{1} (result_id, time_passed) " +
-            "SELECT u.result_id, c.time_passed FROM " +
-            "{0}.{2} u INNER JOIN {0}.{3} q ON u.q_id=q.q_id " +
-            "INNER JOIN {0}.{4} c ON c.session_id=q.session_id AND c.serpid=q.serpid AND c.url_id=u.url_id;", new object[] { schemaName, clickTableName, urlResultTableName, queryTableName, clickTmpTableName }), connection);
-            cmd.CommandTimeout = MAX_CMD_TIMEOUT;
-            cmd.ExecuteNonQuery();
+                int minValue = minUrlId;
 
-            toc();
+                tic(String.Format("Inserting into {0}:", urlTableName), true);
+
+                for (int i = 0; i < 10; i++)
+                {
+                    int maxValue = (int)((i + 1) / 10.0 * (maxUrlId - minUrlId + 1));
+                    tic(String.Format("{0,2}/{1} ({2,-10} <= url_id < {3,10})", new object[] { i + 1, 10, minValue, maxValue }));
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(String.Format("INSERT INTO {0}.{1} (url_id, domain_id) SELECT DISTINCT ON (url_id) url_id, domain_id FROM {0}.{2} WHERE url_id >= {3} AND url_id < {4};", new object[] { schemaName, urlTableName, urlTmpTableName, minValue, maxValue }), connection))
+                    {
+                        cmd.CommandTimeout = MAX_CMD_TIMEOUT;
+                        cmd.ExecuteNonQuery();
+                    }
+                    toc();
+
+                    minValue = maxValue;
+                }
+                toc(true);
+            }
+
+            {
+                int minSessionId = 0;
+                int maxSessionId = 0;
+
+                tic("Getting min and max");
+                using (NpgsqlCommand command = new NpgsqlCommand(String.Format("SELECT MIN(session_id), MAX(session_id) FROM {0}.{1};", schemaName, queryTableName), connection))
+                {
+                    command.CommandTimeout = MAX_CMD_TIMEOUT;
+                    using (var result = command.ExecuteReader())
+                    {
+                        if (!result.HasRows)
+                            throw new Exception("Something went wrong");
+
+                        result.Read();
+
+                        minSessionId = Convert.ToInt32(result[0]);
+                        maxSessionId = Convert.ToInt32(result[1]) + 1;
+                    }
+                }
+                toc();
+
+                Console.WriteLine(String.Format("Min value: {0}", minSessionId));
+                Console.WriteLine(String.Format("Max value: {0}", maxSessionId));
+
+                int minValue = minSessionId;
+
+                tic(String.Format("Inserting into {0}:", clickTableName), true);
+
+                for (int i = 0; i < 10; i++)
+                {
+                    int maxValue = (int)((i + 1) / 10.0 * (maxSessionId - minSessionId + 1));
+                    tic(String.Format("{0,2}/{1} ({2,-10} <= url_id < {3,10})", new object[] { i + 1, 10, minValue, maxValue }));
+                    using (NpgsqlCommand cmd = new NpgsqlCommand(String.Format("INSERT INTO {0}.{1} (result_id, time_passed) " +
+                        "SELECT u.result_id, c.time_passed FROM " +
+                        "{0}.{2} u INNER JOIN {0}.{3} q ON u.q_id=q.q_id " +
+                        "INNER JOIN {0}.{4} c ON c.session_id=q.session_id AND c.serpid=q.serpid AND c.url_id=u.url_id WHERE q.session_id >= {5} AND q.session_id < {6};",
+                        new object[] { schemaName, clickTableName, urlResultTableName, queryTableName, clickTmpTableName, minValue, maxValue }), connection))
+                    {
+                        cmd.CommandTimeout = MAX_CMD_TIMEOUT;
+                        cmd.ExecuteNonQuery();
+                    }
+                    toc();
+
+                    minValue = maxValue;
+                }
+
+                toc();
+            }
 
             return true;
         }
@@ -755,7 +843,7 @@ namespace Yandex.Transfer
             if (newLine)
                 prefix = prefix.Substring(2);
 
-            Console.WriteLine((newLine ? String.Format("{0, -55}", "Total:") : "") + (DateTime.Now - dateTimes.Pop()));
+            Console.WriteLine((newLine ? String.Format("{0, -55}", prefix + "Total:") : "") + (DateTime.Now - dateTimes.Pop()));
         }
     }
 }
