@@ -112,21 +112,6 @@ namespace LogProcessor
             return queries;
         }
 
-        public HashSet<YandexQuery> CreateQueryVectors1(HashSet<int> queries)
-        {
-            Console.Write("Computing queries vectors... ");
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var yandexQueries = new HashSet<YandexQuery>();
-            foreach (var query in queries)
-            {
-                yandexQueries.Add(new YandexQuery() { Id = query, Vector = FindQueryInUrlsAndTerms(query) });
-            }
-            stopwatch.Stop();
-            Console.WriteLine("took " + stopwatch.Elapsed.TotalSeconds + "s. " + yandexQueries.Count);
-            return yandexQueries;
-        }
-
         public HashSet<YandexQuery> CreateQueryVectors(HashSet<int> queries)
         {
             Console.Write("Computing queries vectors... ");
@@ -187,7 +172,7 @@ namespace LogProcessor
                 s.WaitOne();
 
             stopwatch.Stop();
-            Console.WriteLine("took " + stopwatch.Elapsed.TotalSeconds + "s. " + yandexQueries.Count);
+            Console.WriteLine("took " + stopwatch.Elapsed.TotalSeconds + "s.");
             return yandexQueries;
         }
 
