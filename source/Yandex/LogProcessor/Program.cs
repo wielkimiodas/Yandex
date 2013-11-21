@@ -23,6 +23,7 @@ namespace LogProcessor
 
             var queries = lw.ReadQueryList();
             var vectors = lw.CreateQueryVectors(queries);
+            var res = vectors.Where(x => x.Id == 490145);
         }
     }
 }

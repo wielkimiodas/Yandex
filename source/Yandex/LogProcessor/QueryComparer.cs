@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace LogProcessor
     public class QueryComparer
     {
         private readonly string _path = @"C:\Users\Wojciech\Desktop\log.txt";
+        private HashSet<int>[] SetArray;
 
         public QueryComparer()
         {
@@ -30,10 +32,16 @@ namespace LogProcessor
         //C:\Users\Wojciech\Desktop\log.txt C:\Users\Wojciech\Desktop\log2\log.txt        
         public HashSet<int> ReadQueryList()
         {
+            SetArray = new HashSet<int>[200];
             var textReader = new StreamReader(_path);
             var queries = new HashSet<int>();
             var globalStopwatch = new Stopwatch();
             var segmentStopwatch = new Stopwatch();
+
+            for (int i = 0; i < 200; i++)
+            {
+                SetArray[i] = new HashSet<int>();
+            }
 
             //******************
             //* urls segment   *
@@ -57,6 +65,7 @@ namespace LogProcessor
                 var tmp = textReader.ReadLine();
                 while (!tmp.Equals(""))
                 {
+                    SetArray[i].Add(Convert.ToInt32(tmp));
                     queries.Add(Convert.ToInt32(tmp));
                     tmp = textReader.ReadLine();
                 }
@@ -87,6 +96,7 @@ namespace LogProcessor
                 var tmp = textReader.ReadLine();
                 while (!tmp.Equals(""))
                 {
+                    SetArray[i+100].Add(Convert.ToInt32(tmp));
                     queries.Add(Convert.ToInt32(tmp));
                     tmp = textReader.ReadLine();
                 }
@@ -119,96 +129,23 @@ namespace LogProcessor
 
         private byte[] FindQueryInUrlsAndTerms(int query)
         {
-            var textReader = new StreamReader(_path);
             var vector = new byte[25];
-
-            //******************
-            //* urls segment   *
-            //******************
-
-            //eliminate count info
-            var line = textReader.ReadLine();
-            while (!line.Equals(""))
-            { line = textReader.ReadLine(); }
-
-            //read url queries
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < SetArray.Count(); i++)
             {
-                //get url id
-                //var description = textReader.ReadLine();
-                //var leftSide = description.Remove(description.IndexOf(':'));
-                //var id = leftSide.Remove(0, leftSide.LastIndexOf(' '));
-
-                //ignore description
-                var debug = textReader.ReadLine();
-                
-                var tmp = textReader.ReadLine();
-                while (!tmp.Equals(""))
+                var hashset = SetArray[i];
+                for (int j = 0; j < hashset.Count; j++)
                 {
-                    var curr = Convert.ToInt32(tmp);
+                    var elem = hashset.ElementAt(j);
 
-                    //end finding in this block - only bigger id queries left
-                    if (curr > query)
+                    if (elem > query) break;
+                    if (elem == query)
                     {
-                        while (!textReader.ReadLine().Equals(""))
-                        {
-                        }
-                        break;
-                    }
-
-                    if (curr == query)
-                    {
-                        int arrayIterator = i/8;
-                        int offset = i%8;
+                        int arrayIterator = i / 8;
+                        int offset = i % 8;
                         vector[arrayIterator] |= Convert.ToByte(1 << offset);
                     }
-
-                    tmp = textReader.ReadLine();
                 }
             }
-
-            //******************
-            //* terms segment  *
-            //******************
-
-            //eliminate count info
-            line = textReader.ReadLine();
-            while (!line.Equals(""))
-            { line = textReader.ReadLine(); }
-
-            //read term queries
-            for (int i = 0; i < 100; i++)
-            {
-                //ignore description
-                var debug= textReader.ReadLine();
-
-                var tmp = textReader.ReadLine();
-                while (!tmp.Equals(""))
-                {
-                    var curr = Convert.ToInt32(tmp);
-
-                    //end finding in this block - only bigger id queries left
-                    if (curr > query)
-                    {
-                        while (!textReader.ReadLine().Equals(""))
-                        {
-                        }
-                        break;
-                    }
-
-                    if (curr == query)
-                    {
-                        int arrayIterator = (i+100) / 8;
-                        int offset = (i+100) % 8;
-                        vector[arrayIterator] |= Convert.ToByte(1 << offset);
-                    }
-                    tmp = textReader.ReadLine();
-                    
-                }
-            }
-
-            textReader.Close();
-
             return vector;
         }
     }
