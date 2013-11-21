@@ -17,7 +17,8 @@ namespace LogProcessor
 
     public class QueryComparer
     {
-        private readonly string _path = @"C:\tmp1\log2.txt";
+        private readonly string _path = @"C:\Users\Wojciech\Desktop\log.txt";
+        private readonly string _outputPath = @"C:\Users\Wojciech\Desktop\out.txt";
         private HashSet<int>[] SetArray;
 
         public QueryComparer()
@@ -193,6 +194,11 @@ namespace LogProcessor
 
         public void CompareQueries(HashSet<YandexQuery> yadexQueries)
         {
+            Console.Write("Comparing queries... ");
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var writer = new StreamWriter(_outputPath);
+
             for (int i = 0; i < yadexQueries.Count; i++)
             {
                 var obiektTomka = new List<Tuple<int, float>>();
@@ -202,8 +208,22 @@ namespace LogProcessor
                     var res = CompareTwoVectors(yadexQueries.ElementAt(i).Vector, yadexQueries.ElementAt(j).Vector);
                     obiektTomka.Add(new Tuple<int, float>(j,res)); 
                 }
+
+                obiektTomka.Sort((o1, o2) => (int) (o1.Item2 - o2.Item2));
+
+                writer.WriteLine(i);
+                for (int q = 0; q < 50; q++)
+                {
+                    writer.WriteLine(obiektTomka[q].Item1 + "\t" + obiektTomka[q].Item2);
+                }
+                
             }
+            stopwatch.Stop();
+            writer.Close();
+            Console.WriteLine("took " + stopwatch.Elapsed.TotalSeconds);
         }
+
+        
 
         private float CompareTwoVectors(byte[] v1, byte[] v2)
         {
