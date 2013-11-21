@@ -195,10 +195,12 @@ namespace LogProcessor
         {
             for (int i = 0; i < yadexQueries.Count; i++)
             {
+                var obiektTomka = new List<Tuple<int, float>>();
                 for (int j = 0; j < yadexQueries.Count; j++)
                 {
                     if (i == j) continue;
-                    CompareTwoVectors(yadexQueries.ElementAt(i).Vector, yadexQueries.ElementAt(j).Vector);
+                    var res = CompareTwoVectors(yadexQueries.ElementAt(i).Vector, yadexQueries.ElementAt(j).Vector);
+                    obiektTomka.Add(new Tuple<int, float>(j,res)); 
                 }
             }
         }
