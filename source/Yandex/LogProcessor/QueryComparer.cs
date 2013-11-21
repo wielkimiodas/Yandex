@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace LogProcessor
 {
@@ -17,7 +17,7 @@ namespace LogProcessor
 
     public class QueryComparer
     {
-        private readonly string _path = @"C:\Users\Wojciech\Desktop\log.txt";
+        private readonly string _path = @"C:\tmp1\log2.txt";
         private HashSet<int>[] SetArray;
 
         public QueryComparer()
@@ -53,7 +53,7 @@ namespace LogProcessor
 
             //eliminate count info
             var line = textReader.ReadLine();
-            while(!line.Equals(""))
+            while (!line.Equals(""))
             { line = textReader.ReadLine(); }
 
             //read url queries
@@ -71,7 +71,7 @@ namespace LogProcessor
                 }
             }
             segmentStopwatch.Stop();
-            Console.WriteLine("took "+ segmentStopwatch.Elapsed.TotalSeconds + "s.");
+            Console.WriteLine("took " + segmentStopwatch.Elapsed.TotalSeconds + "s.");
             Console.WriteLine("Url queries count: " + queries.Count);
 
 
@@ -96,7 +96,7 @@ namespace LogProcessor
                 var tmp = textReader.ReadLine();
                 while (!tmp.Equals(""))
                 {
-                    SetArray[i+100].Add(Convert.ToInt32(tmp));
+                    SetArray[i + 100].Add(Convert.ToInt32(tmp));
                     queries.Add(Convert.ToInt32(tmp));
                     tmp = textReader.ReadLine();
                 }
@@ -106,10 +106,25 @@ namespace LogProcessor
             globalStopwatch.Stop();
             textReader.Close();
             Console.WriteLine("took " + segmentStopwatch.Elapsed.TotalSeconds + "s.");
-            Console.WriteLine("Total count: "+ queries.Count);
+            Console.WriteLine("Total count: " + queries.Count);
             Console.WriteLine("Total time: " + globalStopwatch.Elapsed.TotalSeconds + "s.");
 
             return queries;
+        }
+
+        public HashSet<YandexQuery> CreateQueryVectors1(HashSet<int> queries)
+        {
+            Console.Write("Computing queries vectors... ");
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var yandexQueries = new HashSet<YandexQuery>();
+            foreach (var query in queries)
+            {
+                yandexQueries.Add(new YandexQuery() { Id = query, Vector = FindQueryInUrlsAndTerms(query) });
+            }
+            stopwatch.Stop();
+            Console.WriteLine("took " + stopwatch.Elapsed.TotalSeconds + "s. " + yandexQueries.Count);
+            return yandexQueries;
         }
 
         public HashSet<YandexQuery> CreateQueryVectors(HashSet<int> queries)
@@ -117,13 +132,62 @@ namespace LogProcessor
             Console.Write("Computing queries vectors... ");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var yandexQueries= new HashSet<YandexQuery>();
+            var yandexQueries = new HashSet<YandexQuery>();
+            Semaphore s = new Semaphore(0, queries.Count);
+            int waited = 0;
+            int a = 0;
+            HashSet<int> visited = new HashSet<int>();
             foreach (var query in queries)
             {
-                yandexQueries.Add(new YandexQuery() {Id = query, Vector = FindQueryInUrlsAndTerms(query)});
+                visited.Add(query);
+                a++;
+                Int32 Q = query;
+                ThreadPool.QueueUserWorkItem((WaitCallback)delegate
+                {
+                    YandexQuery q = new YandexQuery() { Id = Q, Vector = FindQueryInUrlsAndTerms(Q) };
+                    lock (yandexQueries)
+                    {
+                        yandexQueries.Add(q);
+                    }
+                    s.Release();
+                });
+
+                if (visited.Count >= 5000000)
+                {
+                    for (int i = 0; i < visited.Count; i++)
+                        s.WaitOne();
+                    int b = 0;
+                    Semaphore s2 = new Semaphore(0, SetArray.Length);
+
+                    foreach (var arr in SetArray)
+                    {
+                        var array = arr;
+                        ThreadPool.QueueUserWorkItem((WaitCallback)delegate
+                        {
+                            foreach (var v in visited)
+                            {
+                                if (array.Contains(v))
+                                    array.Remove(v);
+                            }
+
+                            s2.Release();
+                        });
+                    }
+
+                    for (int i = 0; i < SetArray.Length; i++)
+                        s2.WaitOne();
+
+                    waited += visited.Count;
+                    visited.Clear();
+                    GC.Collect();
+                }
+
             }
+            for (int i = waited; i < queries.Count; i++)
+                s.WaitOne();
+
             stopwatch.Stop();
-            Console.WriteLine("took "+stopwatch.Elapsed.TotalSeconds + "s.");
+            Console.WriteLine("took " + stopwatch.Elapsed.TotalSeconds + "s. " + yandexQueries.Count);
             return yandexQueries;
         }
 
@@ -132,18 +196,11 @@ namespace LogProcessor
             var vector = new byte[25];
             for (int i = 0; i < SetArray.Count(); i++)
             {
-                var hashset = SetArray[i];
-                for (int j = 0; j < hashset.Count; j++)
+                if (SetArray[i].Contains(query))
                 {
-                    var elem = hashset.ElementAt(j);
-
-                    if (elem > query) break;
-                    if (elem == query)
-                    {
-                        int arrayIterator = i / 8;
-                        int offset = i % 8;
-                        vector[arrayIterator] |= Convert.ToByte(1 << offset);
-                    }
+                    int arrayIterator = i / 8;
+                    int offset = i % 8;
+                    vector[arrayIterator] |= Convert.ToByte(1 << offset);
                 }
             }
             return vector;
