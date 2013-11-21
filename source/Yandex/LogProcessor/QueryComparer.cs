@@ -190,5 +190,49 @@ namespace LogProcessor
             }
             return vector;
         }
+
+        public void CompareQueries(HashSet<YandexQuery> yadexQueries)
+        {
+            for (int i = 0; i < yadexQueries.Count; i++)
+            {
+                for (int j = 0; j < yadexQueries.Count; j++)
+                {
+                    if (i == j) continue;
+                    CompareTwoVectors(yadexQueries.ElementAt(i).Vector, yadexQueries.ElementAt(j).Vector);
+                }
+            }
+        }
+
+        private float CompareTwoVectors(byte[] v1, byte[] v2)
+        {
+            var sumAnd = 0;
+            var sumOr = 0;
+
+            for (int i = 0; i < v1.Length; i++)
+            {
+                var bAnd = (byte)(v1[i] & v2[i]);
+                var bOr = (byte)(v1[i] | v2[i]);
+
+                while (bAnd > 0)
+                {
+                    while (bAnd > 0)
+                    {
+                        sumAnd += bAnd % 2;
+                        bAnd /= 2;
+                    }
+                }
+
+                while (bOr > 0)
+                {
+                    while (bOr > 0)
+                    {
+                        sumOr += bOr % 2;
+                        bOr /= 2;
+                    }
+                }
+            }
+
+            return sumAnd / (float)sumOr;
+        }
     }
 }
