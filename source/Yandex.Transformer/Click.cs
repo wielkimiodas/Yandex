@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Yandex.Transformer
 {
-    class Click : UserAction
+    internal class Click : UserAction
     {
-        byte type;
-        int sessionId;
-        int time;
-        int serpId;
-        int urlId;
+        private byte type;
+        private int sessionId;
+        private int time;
+        private int serpId;
+        private int urlId;
 
         public override bool readData(string[] array)
         {

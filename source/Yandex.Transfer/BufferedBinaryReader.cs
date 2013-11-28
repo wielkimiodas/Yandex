@@ -1,35 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace Yandex.Transfer
 {
     public class BufferedBinaryReader : IDisposable
     {
-        public const int OPTIMAL_SIZE = 128 * 1024;
+        public const int OPTIMAL_SIZE = 128*1024;
 
-        BinaryReader reader;
-        readonly int size;
-        byte[] array;
-        int offset;
-        int toRead;
-        bool ready = true;
+        private BinaryReader reader;
+        private readonly int size;
+        private byte[] array;
+        private int offset;
+        private int toRead;
+        private bool ready = true;
 
         public BufferedBinaryReader(String filename)
-            : this(filename, OPTIMAL_SIZE) { }
+            : this(filename, OPTIMAL_SIZE)
+        {
+        }
 
         public BufferedBinaryReader(BinaryReader binaryReader)
-            : this(binaryReader, OPTIMAL_SIZE) { }
+            : this(binaryReader, OPTIMAL_SIZE)
+        {
+        }
 
         public BufferedBinaryReader(String filename, int bufferSize)
-            : this(new BinaryReader(new FileStream(filename, FileMode.Open)), bufferSize) { }
+            : this(new BinaryReader(new FileStream(filename, FileMode.Open)), bufferSize)
+        {
+        }
 
         public BufferedBinaryReader(BinaryReader binaryReader, int bufferSize)
         {
             this.reader = binaryReader;
-            size = (int)Math.Min(bufferSize, binaryReader.BaseStream.Length);
+            size = (int) Math.Min(bufferSize, binaryReader.BaseStream.Length);
             array = new byte[size];
             offset = size - 1;
         }

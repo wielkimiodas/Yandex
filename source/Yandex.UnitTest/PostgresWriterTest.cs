@@ -1,8 +1,5 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Diagnostics;
-using System.Text;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Yandex.PostgresWriter;

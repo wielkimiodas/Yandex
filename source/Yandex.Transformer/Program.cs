@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace Yandex.Transformer
 {
-    class Program
+    internal class Program
     {
-        void transform(String inputFilename, String outputFilename)
+        private void transform(String inputFilename, String outputFilename)
         {
-            char[] fieldsSep = new char[] { '\t' };
-            char[] commaSep = new char[] { ',' };
+            char[] fieldsSep = new char[] {'\t'};
+            char[] commaSep = new char[] {','};
 
             int lineCounter = 0;
 
             using (StreamReader reader = new StreamReader(inputFilename))
-            //using (BinaryWriter writer = new BinaryWriter(new FileStream(outputFilename, FileMode.Create)))
+                //using (BinaryWriter writer = new BinaryWriter(new FileStream(outputFilename, FileMode.Create)))
             using (BufferedBinaryWriter writer = new BufferedBinaryWriter(outputFilename))
             {
                 while (reader.Peek() > -1)
@@ -40,7 +37,7 @@ namespace Yandex.Transformer
             }
         }
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length != 2)
                 return;

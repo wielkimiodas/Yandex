@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Npgsql;
 using System.IO;
+using Npgsql;
 
 namespace Yandex.Transfer
 {
@@ -12,47 +10,49 @@ namespace Yandex.Transfer
         /// <summary>
         /// Nazwa użytkownika w bazie danych.
         /// </summary>
-        const string user = "postgres";
+        private const string user = "postgres";
 
         /// <summary>
         /// Katalog do przechowywania przetworzonych plików z danymi.
         /// </summary>
-        readonly string workDir;
+        private readonly string workDir;
 
         /// <summary>
         /// Nazwa schematu w bazie danych.
         /// </summary>
-        readonly String schemaName;
+        private readonly String schemaName;
 
         /// <summary>
         /// Określa, czy należy za każdym razem tworzyć nowe pliki tymczasowe
         /// i na końcu przetwarzania je usuwać.
         /// </summary>
-        const bool removeTmpFiles = false;
+        private const bool removeTmpFiles = false;
 
         /// <summary>
         /// Limit nałożony na liczbę odczytywanych linii z pliku z danymi.
         /// Jeżeli nie większy od 0, odczytywane są wszystkie linie.
         /// </summary>
-        const int LINES_LIMIT = 0;
+        private const int LINES_LIMIT = 0;
 
-        const int MAX_CMD_TIMEOUT = 2 * 3600;
+        private const int MAX_CMD_TIMEOUT = 2*3600;
 
         // Nazwy tabel/plików.
-        const string sessionTableName = "session";
-        const string queryTableName = "query";
-        const string queryResultTableName = "query_result";
-        const string urlResultTableName = "url_result";
-        const string clickTableName = "click";
-        const string clickTmpTableName = "click_tmp";
-        const string urlTmpTableName = "url_tmp";
-        const string urlTableName = "url";
+        private const string sessionTableName = "session";
+        private const string queryTableName = "query";
+        private const string queryResultTableName = "query_result";
+        private const string urlResultTableName = "url_result";
+        private const string clickTableName = "click";
+        private const string clickTmpTableName = "click_tmp";
+        private const string urlTmpTableName = "url_tmp";
+        private const string urlTableName = "url";
 
-        NpgsqlConnection connection = null;
-        NpgsqlTransaction transaction = null;
+        private NpgsqlConnection connection = null;
+        private NpgsqlTransaction transaction = null;
 
-        Dictionary<string, Tuple<string[], string[]>> tables = new Dictionary<string, Tuple<string[], string[]>>();
-        bool confirmRemoveSchema = false;
+        private Dictionary<string, Tuple<string[], string[]>> tables =
+            new Dictionary<string, Tuple<string[], string[]>>();
+
+        private bool confirmRemoveSchema = false;
 
         /// <summary>
         /// Nawiązuje połączenie z bazą danych (i ew rozpoczyna transakcję).
@@ -72,37 +72,69 @@ namespace Yandex.Transfer
             if (transactional)
                 transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
 
-            tables.Add(sessionTableName, new Tuple<string[], string[]>(new string[] {
-                "session_id", "day", "user_id" }, new string[] {
-                "integer", "integer", "integer" }));
+            tables.Add(sessionTableName, new Tuple<string[], string[]>(new string[]
+            {
+                "session_id", "day", "user_id"
+            }, new string[]
+            {
+                "integer", "integer", "integer"
+            }));
 
-            tables.Add(queryTableName, new Tuple<string[], string[]>(new string[] {
-                "q_id", "query_id", "session_id", "serpid", "time_passed", "is_test" }, new string[] {
-                "integer", "integer", "integer", "integer", "integer", "boolean" }));
+            tables.Add(queryTableName, new Tuple<string[], string[]>(new string[]
+            {
+                "q_id", "query_id", "session_id", "serpid", "time_passed", "is_test"
+            }, new string[]
+            {
+                "integer", "integer", "integer", "integer", "integer", "boolean"
+            }));
 
-            tables.Add(queryResultTableName, new Tuple<string[], string[]>(new string[] {
-                "result_id", "term_id", "q_id" }, new string[] {
-                "serial", "integer", "integer" }));
+            tables.Add(queryResultTableName, new Tuple<string[], string[]>(new string[]
+            {
+                "result_id", "term_id", "q_id"
+            }, new string[]
+            {
+                "serial", "integer", "integer"
+            }));
 
-            tables.Add(urlResultTableName, new Tuple<string[], string[]>(new string[] {
-                "result_id", "url_id", "q_id" }, new string[] {
-                "serial", "integer", "integer" }));
+            tables.Add(urlResultTableName, new Tuple<string[], string[]>(new string[]
+            {
+                "result_id", "url_id", "q_id"
+            }, new string[]
+            {
+                "serial", "integer", "integer"
+            }));
 
-            tables.Add(clickTableName, new Tuple<string[], string[]>(new string[] {
-                "click_id", "result_id", "time_passed" }, new string[] {
-                "serial", "integer", "integer" }));
+            tables.Add(clickTableName, new Tuple<string[], string[]>(new string[]
+            {
+                "click_id", "result_id", "time_passed"
+            }, new string[]
+            {
+                "serial", "integer", "integer"
+            }));
 
-            tables.Add(clickTmpTableName, new Tuple<string[], string[]>(new string[] {
-                "session_id", "serpid", "url_id", "time_passed" }, new string[] {
-                "integer", "integer", "integer", "integer" }));
+            tables.Add(clickTmpTableName, new Tuple<string[], string[]>(new string[]
+            {
+                "session_id", "serpid", "url_id", "time_passed"
+            }, new string[]
+            {
+                "integer", "integer", "integer", "integer"
+            }));
 
-            tables.Add(urlTmpTableName, new Tuple<string[], string[]>(new string[] {
-                "url_id", "domain_id" }, new string[] {
-                "integer", "integer" }));
+            tables.Add(urlTmpTableName, new Tuple<string[], string[]>(new string[]
+            {
+                "url_id", "domain_id"
+            }, new string[]
+            {
+                "integer", "integer"
+            }));
 
-            tables.Add(urlTableName, new Tuple<string[], string[]>(new string[] {
-                "url_id", "domain_id" }, new string[] {
-                "integer", "integer" }));
+            tables.Add(urlTableName, new Tuple<string[], string[]>(new string[]
+            {
+                "url_id", "domain_id"
+            }, new string[]
+            {
+                "integer", "integer"
+            }));
         }
 
         public void Dispose()
@@ -117,7 +149,11 @@ namespace Yandex.Transfer
 
             if (removeTmpFiles)
             {
-                String[] filenames = new string[] { sessionTableName, queryTableName, queryResultTableName, urlResultTableName, clickTableName, clickTmpTableName, urlTmpTableName, urlTableName };
+                String[] filenames = new string[]
+                {
+                    sessionTableName, queryTableName, queryResultTableName, urlResultTableName, clickTableName,
+                    clickTmpTableName, urlTmpTableName, urlTableName
+                };
                 foreach (String filename in filenames)
                     if (File.Exists(workDir + filename))
                         File.Delete(workDir + filename);
@@ -141,7 +177,11 @@ namespace Yandex.Transfer
         /// <param name="filename">Nazwa pliku z danymi.</param>
         public void transfer(String filename)
         {
-            BoolFunction[] functions = new BoolFunction[] { createSchema, delegate { return rewriteData(filename); }, importData, createConstraints1, createIndexes1, copyTables, removeTables, createConstraints2, createIndexes2 };
+            BoolFunction[] functions = new BoolFunction[]
+            {
+                createSchema, delegate { return rewriteData(filename); }, importData, createConstraints1, createIndexes1,
+                copyTables, removeTables, createConstraints2, createIndexes2
+            };
 
             foreach (BoolFunction function in functions)
             {
@@ -234,7 +274,8 @@ namespace Yandex.Transfer
                         fields += ", " + field;
                 }
 
-                String cmdStr = String.Format("CREATE TABLE {0}.{1} ( {2} ) WITH (OIDS=FALSE);", schemaName, tableName, fields);
+                String cmdStr = String.Format("CREATE TABLE {0}.{1} ( {2} ) WITH (OIDS=FALSE);", schemaName, tableName,
+                    fields);
                 NpgsqlCommand cmd = new NpgsqlCommand(cmdStr, connection);
                 cmd.ExecuteNonQuery();
 
@@ -278,7 +319,7 @@ namespace Yandex.Transfer
             if (removeTmpFiles || !File.Exists(workDir + urlTmpTableName))
                 urlTmp = new BinaryWriter(new FileStream(workDir + urlTmpTableName, FileMode.Create));
 
-            BinaryWriter[] writers = new BinaryWriter[] { session, query, queryResult, urlResult, clickTmp, urlTmp };
+            BinaryWriter[] writers = new BinaryWriter[] {session, query, queryResult, urlResult, clickTmp, urlTmp};
 
             {
                 bool any = false;
@@ -318,89 +359,89 @@ namespace Yandex.Transfer
                     switch (type)
                     {
                         case 0:
-                            {
-                                int day = reader.ReadInt32();
-                                int user = reader.ReadInt32();
+                        {
+                            int day = reader.ReadInt32();
+                            int user = reader.ReadInt32();
 
-                                if (session != null)
-                                {
-                                    session.Write((int)sessionId);
-                                    session.Write((int)day);
-                                    session.Write((int)user);
-                                }
-                                break;
+                            if (session != null)
+                            {
+                                session.Write((int) sessionId);
+                                session.Write((int) day);
+                                session.Write((int) user);
                             }
+                            break;
+                        }
                         case 1:
                         case 2:
+                        {
+                            // TIME
+                            int time = reader.ReadInt32();
+                            // SERPID
+                            int serpid = reader.ReadInt32();
+                            // QUERYID
+                            int queryId = reader.ReadInt32();
+
+                            int q_id = q_idCount++;
+
+                            if (query != null)
                             {
-                                // TIME
-                                int time = reader.ReadInt32();
-                                // SERPID
-                                int serpid = reader.ReadInt32();
-                                // QUERYID
-                                int queryId = reader.ReadInt32();
-
-                                int q_id = q_idCount++;
-
-                                if (query != null)
-                                {
-                                    query.Write((int)q_id);
-                                    query.Write((int)queryId);
-                                    query.Write((int)sessionId);
-                                    query.Write((int)serpid);
-                                    query.Write((int)time);
-                                    query.Write((bool)(type == 2));
-                                }
-
-                                for (int i = reader.ReadInt32(); i > 0; i--)
-                                {
-                                    int term = reader.ReadInt32();
-
-                                    if (queryResult != null)
-                                    {
-                                        queryResult.Write((int)term);
-                                        queryResult.Write((int)q_id);
-                                    }
-                                }
-
-                                for (int i = reader.ReadInt32(); i > 0; i--)
-                                {
-                                    int url = reader.ReadInt32();
-                                    int domain = reader.ReadInt32();
-
-                                    if (urlResult != null)
-                                    {
-                                        urlResult.Write((int)url);
-                                        urlResult.Write((int)q_id);
-                                    }
-
-                                    if (urlTmp != null)
-                                    {
-                                        urlTmp.Write((int)url);
-                                        urlTmp.Write((int)domain);
-                                    }
-                                }
-                                break;
+                                query.Write((int) q_id);
+                                query.Write((int) queryId);
+                                query.Write((int) sessionId);
+                                query.Write((int) serpid);
+                                query.Write((int) time);
+                                query.Write((bool) (type == 2));
                             }
-                        case 3:
+
+                            for (int i = reader.ReadInt32(); i > 0; i--)
                             {
-                                // TIME
-                                int time = reader.ReadInt32();
-                                // SERPID
-                                int serpid = reader.ReadInt32();
-                                // URL
+                                int term = reader.ReadInt32();
+
+                                if (queryResult != null)
+                                {
+                                    queryResult.Write((int) term);
+                                    queryResult.Write((int) q_id);
+                                }
+                            }
+
+                            for (int i = reader.ReadInt32(); i > 0; i--)
+                            {
                                 int url = reader.ReadInt32();
+                                int domain = reader.ReadInt32();
 
-                                if (clickTmp != null)
+                                if (urlResult != null)
                                 {
-                                    clickTmp.Write((int)sessionId);
-                                    clickTmp.Write((int)serpid);
-                                    clickTmp.Write((int)url);
-                                    clickTmp.Write((int)time);
+                                    urlResult.Write((int) url);
+                                    urlResult.Write((int) q_id);
                                 }
 
-                                break;
+                                if (urlTmp != null)
+                                {
+                                    urlTmp.Write((int) url);
+                                    urlTmp.Write((int) domain);
+                                }
                             }
+                            break;
+                        }
+                        case 3:
+                        {
+                            // TIME
+                            int time = reader.ReadInt32();
+                            // SERPID
+                            int serpid = reader.ReadInt32();
+                            // URL
+                            int url = reader.ReadInt32();
+
+                            if (clickTmp != null)
+                            {
+                                clickTmp.Write((int) sessionId);
+                                clickTmp.Write((int) serpid);
+                                clickTmp.Write((int) url);
+                                clickTmp.Write((int) time);
+                            }
+
+                            break;
+                        }
                     }
                 }
             }
@@ -423,7 +464,11 @@ namespace Yandex.Transfer
 
             const int FLUSH_ROWS = 200000;
 
-            String[] toImport = new String[] { sessionTableName, queryTableName, queryResultTableName, urlResultTableName, clickTmpTableName, urlTmpTableName };
+            String[] toImport = new String[]
+            {
+                sessionTableName, queryTableName, queryResultTableName, urlResultTableName, clickTmpTableName,
+                urlTmpTableName
+            };
 
             foreach (String tableName in toImport)
             {
@@ -461,7 +506,7 @@ namespace Yandex.Transfer
 
                         serializer.EndRow();
 
-                        if ((lineCounter + 1) % FLUSH_ROWS == 0)
+                        if ((lineCounter + 1)%FLUSH_ROWS == 0)
                             serializer.Flush();
                     }
 
@@ -489,7 +534,11 @@ namespace Yandex.Transfer
                 int minUrlId = 0;
                 int maxUrlId = 0;
                 tic("Getting min and max");
-                using (NpgsqlCommand command = new NpgsqlCommand(String.Format("SELECT MIN(url_id), MAX(url_id) FROM {0}.{1};", schemaName, urlTmpTableName), connection))
+                using (
+                    NpgsqlCommand command =
+                        new NpgsqlCommand(
+                            String.Format("SELECT MIN(url_id), MAX(url_id) FROM {0}.{1};", schemaName, urlTmpTableName),
+                            connection))
                 {
                     command.CommandTimeout = MAX_CMD_TIMEOUT;
                     using (var result = command.ExecuteReader())
@@ -514,9 +563,16 @@ namespace Yandex.Transfer
 
                 for (int i = 0; i < 10; i++)
                 {
-                    int maxValue = (int)((i + 1) / 10.0 * (maxUrlId - minUrlId + 1)) + minUrlId;
-                    tic(String.Format("{0,2}/{1} ({2,-10} <= url_id < {3,10})", new object[] { i + 1, 10, minValue, maxValue }));
-                    using (NpgsqlCommand cmd = new NpgsqlCommand(String.Format("INSERT INTO {0}.{1} (url_id, domain_id) SELECT DISTINCT ON (url_id) url_id, domain_id FROM {0}.{2} WHERE url_id >= {3} AND url_id < {4};", new object[] { schemaName, urlTableName, urlTmpTableName, minValue, maxValue }), connection))
+                    int maxValue = (int) ((i + 1)/10.0*(maxUrlId - minUrlId + 1)) + minUrlId;
+                    tic(String.Format("{0,2}/{1} ({2,-10} <= url_id < {3,10})",
+                        new object[] {i + 1, 10, minValue, maxValue}));
+                    using (
+                        NpgsqlCommand cmd =
+                            new NpgsqlCommand(
+                                String.Format(
+                                    "INSERT INTO {0}.{1} (url_id, domain_id) SELECT DISTINCT ON (url_id) url_id, domain_id FROM {0}.{2} WHERE url_id >= {3} AND url_id < {4};",
+                                    new object[] {schemaName, urlTableName, urlTmpTableName, minValue, maxValue}),
+                                connection))
                     {
                         cmd.CommandTimeout = MAX_CMD_TIMEOUT;
                         cmd.ExecuteNonQuery();
@@ -533,7 +589,11 @@ namespace Yandex.Transfer
                 int maxSessionId = 0;
 
                 tic("Getting min and max");
-                using (NpgsqlCommand command = new NpgsqlCommand(String.Format("SELECT MIN(session_id), MAX(session_id) FROM {0}.{1};", schemaName, queryTableName), connection))
+                using (
+                    NpgsqlCommand command =
+                        new NpgsqlCommand(
+                            String.Format("SELECT MIN(session_id), MAX(session_id) FROM {0}.{1};", schemaName,
+                                queryTableName), connection))
                 {
                     command.CommandTimeout = MAX_CMD_TIMEOUT;
                     using (var result = command.ExecuteReader())
@@ -558,13 +618,20 @@ namespace Yandex.Transfer
 
                 for (int i = 0; i < 10; i++)
                 {
-                    int maxValue = (int)((i + 1) / 10.0 * (maxSessionId - minSessionId + 1)) + minSessionId;
-                    tic(String.Format("{0,2}/{1} ({2,-10} <= url_id < {3,10})", new object[] { i + 1, 10, minValue, maxValue }));
-                    using (NpgsqlCommand cmd = new NpgsqlCommand(String.Format("INSERT INTO {0}.{1} (result_id, time_passed) " +
-                        "SELECT u.result_id, c.time_passed FROM " +
-                        "{0}.{2} u INNER JOIN {0}.{3} q ON u.q_id=q.q_id " +
-                        "INNER JOIN {0}.{4} c ON c.session_id=q.session_id AND c.serpid=q.serpid AND c.url_id=u.url_id WHERE q.session_id >= {5} AND q.session_id < {6};",
-                        new object[] { schemaName, clickTableName, urlResultTableName, queryTableName, clickTmpTableName, minValue, maxValue }), connection))
+                    int maxValue = (int) ((i + 1)/10.0*(maxSessionId - minSessionId + 1)) + minSessionId;
+                    tic(String.Format("{0,2}/{1} ({2,-10} <= url_id < {3,10})",
+                        new object[] {i + 1, 10, minValue, maxValue}));
+                    using (
+                        NpgsqlCommand cmd =
+                            new NpgsqlCommand(String.Format("INSERT INTO {0}.{1} (result_id, time_passed) " +
+                                                            "SELECT u.result_id, c.time_passed FROM " +
+                                                            "{0}.{2} u INNER JOIN {0}.{3} q ON u.q_id=q.q_id " +
+                                                            "INNER JOIN {0}.{4} c ON c.session_id=q.session_id AND c.serpid=q.serpid AND c.url_id=u.url_id WHERE q.session_id >= {5} AND q.session_id < {6};",
+                                new object[]
+                                {
+                                    schemaName, clickTableName, urlResultTableName, queryTableName, clickTmpTableName,
+                                    minValue, maxValue
+                                }), connection))
                     {
                         cmd.CommandTimeout = MAX_CMD_TIMEOUT;
                         cmd.ExecuteNonQuery();
@@ -628,11 +695,13 @@ namespace Yandex.Transfer
         /// <returns></returns>
         private bool removeTables()
         {
-            foreach (String table in new String[] { urlTmpTableName, clickTmpTableName })
+            foreach (String table in new String[] {urlTmpTableName, clickTmpTableName})
             {
                 tic(String.Format("Dropping table {0}:", table));
 
-                using (NpgsqlCommand cmd = new NpgsqlCommand(String.Format("DROP TABLE {0}.{1};", schemaName, table), connection))
+                using (
+                    NpgsqlCommand cmd = new NpgsqlCommand(String.Format("DROP TABLE {0}.{1};", schemaName, table),
+                        connection))
                 {
                     cmd.CommandTimeout = MAX_CMD_TIMEOUT;
                     cmd.ExecuteNonQuery();
@@ -653,7 +722,11 @@ namespace Yandex.Transfer
         {
             tic(String.Format("Creating PK {0}:", tableName));
 
-            using (NpgsqlCommand cmd = new NpgsqlCommand(String.Format("ALTER TABLE {0}.{1} ADD CONSTRAINT {1}_pk PRIMARY KEY ({2});", schemaName, tableName, columnName), connection))
+            using (
+                NpgsqlCommand cmd =
+                    new NpgsqlCommand(
+                        String.Format("ALTER TABLE {0}.{1} ADD CONSTRAINT {1}_pk PRIMARY KEY ({2});", schemaName,
+                            tableName, columnName), connection))
             {
                 cmd.CommandTimeout = MAX_CMD_TIMEOUT;
                 cmd.ExecuteNonQuery();
@@ -673,8 +746,11 @@ namespace Yandex.Transfer
         {
             tic(String.Format("Creating FK {0}:", tableName));
 
-            NpgsqlCommand cmd = new NpgsqlCommand(String.Format("ALTER TABLE {0}.{1} ADD CONSTRAINT {1}_fk_{3} FOREIGN KEY ({2}) REFERENCES {0}.{3} ({4}) ON UPDATE NO ACTION ON DELETE NO ACTION;",
-                new object[] { schemaName, tableName, columnName, refTable, refColumn }), connection);
+            NpgsqlCommand cmd =
+                new NpgsqlCommand(
+                    String.Format(
+                        "ALTER TABLE {0}.{1} ADD CONSTRAINT {1}_fk_{3} FOREIGN KEY ({2}) REFERENCES {0}.{3} ({4}) ON UPDATE NO ACTION ON DELETE NO ACTION;",
+                        new object[] {schemaName, tableName, columnName, refTable, refColumn}), connection);
             cmd.CommandTimeout = MAX_CMD_TIMEOUT;
             cmd.ExecuteNonQuery();
 
@@ -688,7 +764,7 @@ namespace Yandex.Transfer
         /// <param name="columnsName">Kolumna, na której ma zostać założony indeks.</param>
         private void createIndex(String tableName, String columnsName)
         {
-            createIndex(tableName, new String[] { columnsName });
+            createIndex(tableName, new String[] {columnsName});
         }
 
         /// <summary>
@@ -714,7 +790,10 @@ namespace Yandex.Transfer
 
             tic(String.Format("Creating index {0} ({1}):", tableName, columnsNames));
 
-            NpgsqlCommand cmd = new NpgsqlCommand(String.Format("CREATE INDEX {1}_{3}_index ON {0}.{1} ({2} ASC NULLS LAST);", new object[] { schemaName, tableName, columnsNames, colsNames }), connection);
+            NpgsqlCommand cmd =
+                new NpgsqlCommand(
+                    String.Format("CREATE INDEX {1}_{3}_index ON {0}.{1} ({2} ASC NULLS LAST);",
+                        new object[] {schemaName, tableName, columnsNames, colsNames}), connection);
             cmd.CommandTimeout = MAX_CMD_TIMEOUT;
             cmd.ExecuteNonQuery();
 
@@ -779,14 +858,14 @@ namespace Yandex.Transfer
 
             createIndex(queryTableName, "q_id");
             createIndex(queryTableName, "query_id");
-            createIndex(queryTableName, new String[] { "session_id", "serpid" });
-            createIndex(queryTableName, new String[] { "query_id", "session_id", "serpid" });
+            createIndex(queryTableName, new String[] {"session_id", "serpid"});
+            createIndex(queryTableName, new String[] {"query_id", "session_id", "serpid"});
 
             createIndex(queryResultTableName, "result_id");
-            createIndex(queryResultTableName, new String[] { "q_id" });
+            createIndex(queryResultTableName, new String[] {"q_id"});
 
             createIndex(urlResultTableName, "result_id");
-            createIndex(urlResultTableName, new String[] { "q_id" });
+            createIndex(urlResultTableName, new String[] {"q_id"});
 
             toc(true);
 
@@ -812,8 +891,8 @@ namespace Yandex.Transfer
             return true;
         }
 
-        Stack<DateTime> dateTimes = new Stack<DateTime>();
-        String prefix = "";
+        private Stack<DateTime> dateTimes = new Stack<DateTime>();
+        private String prefix = "";
 
         private void tic(String text, bool newLine = false, bool shorter = false)
         {
@@ -843,7 +922,8 @@ namespace Yandex.Transfer
             if (newLine)
                 prefix = prefix.Substring(2);
 
-            Console.WriteLine((newLine ? String.Format("{0, -55}", prefix + "Total:") : "") + (DateTime.Now - dateTimes.Pop()));
+            Console.WriteLine((newLine ? String.Format("{0, -55}", prefix + "Total:") : "") +
+                              (DateTime.Now - dateTimes.Pop()));
         }
     }
 }

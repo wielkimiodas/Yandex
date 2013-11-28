@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Yandex.Transformer
 {
-    class Metadata : UserAction
+    internal class Metadata : UserAction
     {
-        byte type;
-        int sessionId;
-        int day;
-        int userId;
+        private byte type;
+        private int sessionId;
+        private int day;
+        private int userId;
 
         public override bool readData(string[] array)
         {

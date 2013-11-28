@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using Npgsql;
 
 namespace Yandex.PostgresWriter
@@ -18,7 +15,6 @@ namespace Yandex.PostgresWriter
 
         public DbConnector()
         {
-
         }
 
         public DbConnector(string server, string userId, string port, string password, string database)
@@ -32,7 +28,8 @@ namespace Yandex.PostgresWriter
 
         private void Connect()
         {
-            var connstring = String.Format("Server={0};Port={1};" + "User Id={2};Password={3};Database={4};", _server, _port, _userId, _password, _database);
+            var connstring = String.Format("Server={0};Port={1};" + "User Id={2};Password={3};Database={4};", _server,
+                _port, _userId, _password, _database);
             _connection = new NpgsqlConnection(connstring);
             _connection.Open();
         }

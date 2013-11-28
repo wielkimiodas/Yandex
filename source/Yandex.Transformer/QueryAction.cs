@@ -1,28 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Yandex.Transformer
 {
-    class QueryAction : UserAction
+    internal class QueryAction : UserAction
     {
-        static char[] commaSep = new char[] { ',' };
+        private static char[] commaSep = new char[] {','};
 
-        byte type;
-        int sessionId;
-        int time;
-        int serpId;
-        int queryId;
-        int[] terms;
-        int[] urls;
-        int[] domains;
+        private byte type;
+        private int sessionId;
+        private int time;
+        private int serpId;
+        private int queryId;
+        private int[] terms;
+        private int[] urls;
+        private int[] domains;
 
         public override bool readData(string[] array)
         {
             try
             {
-                type = (byte)(array[2][0] == 'Q' ? 1 : 2);
+                type = (byte) (array[2][0] == 'Q' ? 1 : 2);
                 sessionId = Int32.Parse(array[0]);
                 time = Int32.Parse(array[1]);
                 serpId = Int32.Parse(array[3]);

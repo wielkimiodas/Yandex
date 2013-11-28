@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 
 namespace Yandex.LogProcessor
 {
@@ -12,7 +9,7 @@ namespace Yandex.LogProcessor
     {
         private readonly string _path = @"C:\Users\Wojciech\Desktop\log.txt";
         private readonly string _outputPath = @"C:\Users\Wojciech\Desktop\out.txt";
-        private List<int>[] TopUrlsAndTermsQueries;
+        private List<int>[] _topUrlsAndTermsQueries;
 
         public QueryComparer()
         {
@@ -26,7 +23,7 @@ namespace Yandex.LogProcessor
 
         public HashSet<int> ReadQueryList()
         {
-            TopUrlsAndTermsQueries = new List<int>[200];
+            _topUrlsAndTermsQueries = new List<int>[200];
             var textReader = new StreamReader(_path);
             var queries = new HashSet<int>();
             var globalStopwatch = new Stopwatch();
@@ -34,7 +31,7 @@ namespace Yandex.LogProcessor
 
             for (int i = 0; i < 200; i++)
             {
-                TopUrlsAndTermsQueries[i] = new List<int>();
+                _topUrlsAndTermsQueries[i] = new List<int>();
             }
 
             //******************
@@ -48,7 +45,9 @@ namespace Yandex.LogProcessor
             //eliminate count info
             var line = textReader.ReadLine();
             while (!line.Equals(""))
-            { line = textReader.ReadLine(); }
+            {
+                line = textReader.ReadLine();
+            }
 
             //read url queries
             for (int i = 0; i < 100; i++)
@@ -59,7 +58,7 @@ namespace Yandex.LogProcessor
                 var tmp = textReader.ReadLine();
                 while (!tmp.Equals(""))
                 {
-                    TopUrlsAndTermsQueries[i].Add(Convert.ToInt32(tmp));
+                    _topUrlsAndTermsQueries[i].Add(Convert.ToInt32(tmp));
                     queries.Add(Convert.ToInt32(tmp));
                     tmp = textReader.ReadLine();
                 }
@@ -79,7 +78,9 @@ namespace Yandex.LogProcessor
             //eliminate count info
             line = textReader.ReadLine();
             while (!line.Equals(""))
-            { line = textReader.ReadLine(); }
+            {
+                line = textReader.ReadLine();
+            }
 
             //read term queries
             for (int i = 0; i < 100; i++)
@@ -90,7 +91,7 @@ namespace Yandex.LogProcessor
                 var tmp = textReader.ReadLine();
                 while (!tmp.Equals(""))
                 {
-                    TopUrlsAndTermsQueries[i + 100].Add(Convert.ToInt32(tmp));
+                    _topUrlsAndTermsQueries[i + 100].Add(Convert.ToInt32(tmp));
                     queries.Add(Convert.ToInt32(tmp));
                     tmp = textReader.ReadLine();
                 }
@@ -115,12 +116,12 @@ namespace Yandex.LogProcessor
             var queriesWithUrlsTermsMapped = new Dictionary<int, List<int>>();
 
             //foreach top 100 url and top 100 term
-            for (int i = 0; i < TopUrlsAndTermsQueries.Length; i++)
+            for (int i = 0; i < _topUrlsAndTermsQueries.Length; i++)
             {
                 //foreach query which occured in current url/term
-                for (int j = 0; j < TopUrlsAndTermsQueries[i].Count; j++)
+                for (int j = 0; j < _topUrlsAndTermsQueries[i].Count; j++)
                 {
-                    var query = TopUrlsAndTermsQueries[i][j];
+                    var query = _topUrlsAndTermsQueries[i][j];
                     if (!queriesWithUrlsTermsMapped.ContainsKey(query))
                     {
                         queriesWithUrlsTermsMapped.Add(query, new List<int>());
@@ -165,7 +166,7 @@ namespace Yandex.LogProcessor
             all += list1.Count - i;
             all += list2.Count - j;
 
-            return sum / (float)all;
+            return sum/(float) all;
         }
 
         public void CompareQueries(Dictionary<int, List<int>> queries)

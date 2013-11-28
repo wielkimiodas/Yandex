@@ -1,28 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace Yandex.Transformer
 {
     public class BufferedBinaryWriter : IDisposable
     {
-        public const int OPTIMAL_SIZE = 128 * 1024 * 1024;
+        public const int OPTIMAL_SIZE = 128*1024*1024;
 
-        BinaryWriter writer;
-        readonly int size;
-        byte[] array;
-        int offset;
+        private BinaryWriter writer;
+        private readonly int size;
+        private byte[] array;
+        private int offset;
 
         public BufferedBinaryWriter(String filename)
-            : this(filename, OPTIMAL_SIZE) { }
+            : this(filename, OPTIMAL_SIZE)
+        {
+        }
 
         public BufferedBinaryWriter(BinaryWriter binaryWriter)
-            : this(binaryWriter, OPTIMAL_SIZE) { }
+            : this(binaryWriter, OPTIMAL_SIZE)
+        {
+        }
 
         public BufferedBinaryWriter(String filename, int bufferSize)
-            : this(new BinaryWriter(new FileStream(filename, FileMode.Create)), bufferSize) { }
+            : this(new BinaryWriter(new FileStream(filename, FileMode.Create)), bufferSize)
+        {
+        }
 
         public BufferedBinaryWriter(BinaryWriter binaryWriter, int bufferSize)
         {
@@ -62,7 +65,7 @@ namespace Yandex.Transformer
             check(4);
             offset += 4;
 
-            Array.Copy(BitConverter.GetBytes(value), 0, array, offset - 3, sizeof(int));
+            Array.Copy(BitConverter.GetBytes(value), 0, array, offset - 3, sizeof (int));
         }
 
         private void check(int neededSize)

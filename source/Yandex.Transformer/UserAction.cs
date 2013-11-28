@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 
 namespace Yandex.Transformer
 {
     public abstract class UserAction
     {
-        static char[] fieldsSep = new char[] { '\t' };
+        private static char[] fieldsSep = new char[] {'\t'};
 
         /// <summary>
         /// Odczytuje dane z tablicy pól.
@@ -30,11 +26,10 @@ namespace Yandex.Transformer
             String[] lineArray = line.Split(fieldsSep);
             if (Char.IsLetter(lineArray[1][0]))
                 typeChar = lineArray[1][0];
+            else if (Char.IsLetter(lineArray[2][0]))
+                typeChar = lineArray[2][0];
             else
-                if (Char.IsLetter(lineArray[2][0]))
-                    typeChar = lineArray[2][0];
-                else
-                    return null;
+                return null;
 
             UserAction action = null;
 

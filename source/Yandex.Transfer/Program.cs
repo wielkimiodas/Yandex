@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Yandex.Transfer
 {
-    class Program
+    internal class Program
     {
-        const string connstr = "Server=localhost;Port=5432;User Id=postgres;Password=qwerty;Database=postgres;";
+        private const string connstr = "Server=localhost;Port=5432;User Id=postgres;Password=qwerty;Database=postgres;";
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             DateTime begin = DateTime.Now;
 

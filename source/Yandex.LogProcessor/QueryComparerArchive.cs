@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace Yandex.LogProcessor
@@ -25,9 +24,9 @@ namespace Yandex.LogProcessor
                 visited.Add(query);
                 a++;
                 Int32 Q = query;
-                ThreadPool.QueueUserWorkItem((WaitCallback)delegate
+                ThreadPool.QueueUserWorkItem((WaitCallback) delegate
                 {
-                    YandexQuery q = new YandexQuery() { Id = Q, Vector = FindQueryInUrlsAndTerms(Q) };
+                    YandexQuery q = new YandexQuery() {Id = Q, Vector = FindQueryInUrlsAndTerms(Q)};
                     lock (yandexQueries)
                     {
                         yandexQueries.Add(q);
@@ -40,12 +39,12 @@ namespace Yandex.LogProcessor
                     for (int i = 0; i < visited.Count; i++)
                         s.WaitOne();
                     int b = 0;
-                    Semaphore s2 = new Semaphore(0, TopUrlsAndTermsQueries.Length);
+                    Semaphore s2 = new Semaphore(0, _topUrlsAndTermsQueries.Length);
 
-                    foreach (var arr in TopUrlsAndTermsQueries)
+                    foreach (var arr in _topUrlsAndTermsQueries)
                     {
                         var array = arr;
-                        ThreadPool.QueueUserWorkItem((WaitCallback)delegate
+                        ThreadPool.QueueUserWorkItem((WaitCallback) delegate
                         {
                             foreach (var v in visited)
                             {
@@ -57,14 +56,13 @@ namespace Yandex.LogProcessor
                         });
                     }
 
-                    for (int i = 0; i < TopUrlsAndTermsQueries.Length; i++)
+                    for (int i = 0; i < _topUrlsAndTermsQueries.Length; i++)
                         s2.WaitOne();
 
                     waited += visited.Count;
                     visited.Clear();
                     GC.Collect();
                 }
-
             }
             for (int i = waited; i < queries.Count; i++)
                 s.WaitOne();
@@ -77,12 +75,12 @@ namespace Yandex.LogProcessor
         private byte[] FindQueryInUrlsAndTerms(int query)
         {
             var vector = new byte[25];
-            for (int i = 0; i < TopUrlsAndTermsQueries.Count(); i++)
+            for (int i = 0; i < _topUrlsAndTermsQueries.Count(); i++)
             {
-                if (TopUrlsAndTermsQueries[i].Contains(query))
+                if (_topUrlsAndTermsQueries[i].Contains(query))
                 {
-                    int arrayIterator = i / 8;
-                    int offset = i % 8;
+                    int arrayIterator = i/8;
+                    int offset = i%8;
                     vector[arrayIterator] |= Convert.ToByte(1 << offset);
                 }
             }
@@ -106,14 +104,13 @@ namespace Yandex.LogProcessor
                     obiektTomka.Add(new Tuple<int, float>(j, res));
                 }
 
-                obiektTomka.Sort((o1, o2) => (int)(o2.Item2 - o1.Item2));
+                obiektTomka.Sort((o1, o2) => (int) (o2.Item2 - o1.Item2));
 
                 writer.WriteLine(i);
                 for (int q = 0; q < 50; q++)
                 {
                     writer.WriteLine(obiektTomka[q].Item1 + "\t" + obiektTomka[q].Item2);
                 }
-
             }
             stopwatch.Stop();
             writer.Close();
@@ -127,14 +124,14 @@ namespace Yandex.LogProcessor
 
             for (int i = 0; i < v1.Length; i++)
             {
-                var bAnd = (byte)(v1[i] & v2[i]);
-                var bOr = (byte)(v1[i] | v2[i]);
+                var bAnd = (byte) (v1[i] & v2[i]);
+                var bOr = (byte) (v1[i] | v2[i]);
 
                 while (bAnd > 0)
                 {
                     while (bAnd > 0)
                     {
-                        sumAnd += bAnd % 2;
+                        sumAnd += bAnd%2;
                         bAnd /= 2;
                     }
                 }
@@ -143,13 +140,13 @@ namespace Yandex.LogProcessor
                 {
                     while (bOr > 0)
                     {
-                        sumOr += bOr % 2;
+                        sumOr += bOr%2;
                         bOr /= 2;
                     }
                 }
             }
 
-            return sumAnd / (float)sumOr;
+            return sumAnd/(float) sumOr;
         }
     }
 
