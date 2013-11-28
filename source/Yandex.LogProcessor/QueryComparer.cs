@@ -8,29 +8,22 @@ using System.Threading;
 
 namespace Yandex.LogProcessor
 {
-    public class YandexQuery
-    {
-        public int Id { get; set; }
-        public byte[] Vector { get; set; }
-    }
-
-    public class QueryComparer
+    public partial class QueryComparer
     {
         private readonly string _path = @"C:\Users\Wojciech\Desktop\log.txt";
-        private readonly string _outputPath = @"C:\Users\Wojciech\Desktop\out2.txt";
+        private readonly string _outputPath = @"C:\Users\Wojciech\Desktop\out.txt";
         private List<int>[] TopUrlsAndTermsQueries;
-
 
         public QueryComparer()
         {
         }
 
-        public QueryComparer(string path)
+        public QueryComparer(string path, string outputPath)
         {
             this._path = path;
+            this._outputPath = outputPath;
         }
 
-        //C:\Users\Wojciech\Desktop\log.txt C:\Users\Wojciech\Desktop\log2\log.txt        
         public HashSet<int> ReadQueryList()
         {
             TopUrlsAndTermsQueries = new List<int>[200];
@@ -113,70 +106,6 @@ namespace Yandex.LogProcessor
             return queries;
         }
 
-        public HashSet<YandexQuery> CreateQueryVectors(HashSet<int> queries)
-        {
-            Console.Write("Computing queries vectors... ");
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var yandexQueries = new HashSet<YandexQuery>();
-            Semaphore s = new Semaphore(0, queries.Count);
-            int waited = 0;
-            int a = 0;
-            HashSet<int> visited = new HashSet<int>();
-            foreach (var query in queries)
-            {
-                visited.Add(query);
-                a++;
-                Int32 Q = query;
-                ThreadPool.QueueUserWorkItem((WaitCallback)delegate
-                {
-                    YandexQuery q = new YandexQuery() { Id = Q, Vector = FindQueryInUrlsAndTerms(Q) };
-                    lock (yandexQueries)
-                    {
-                        yandexQueries.Add(q);
-                    }
-                    s.Release();
-                });
-
-                if (visited.Count >= 5000000)
-                {
-                    for (int i = 0; i < visited.Count; i++)
-                        s.WaitOne();
-                    int b = 0;
-                    Semaphore s2 = new Semaphore(0, TopUrlsAndTermsQueries.Length);
-
-                    foreach (var arr in TopUrlsAndTermsQueries)
-                    {
-                        var array = arr;
-                        ThreadPool.QueueUserWorkItem((WaitCallback)delegate
-                        {
-                            foreach (var v in visited)
-                            {
-                                if (array.Contains(v))
-                                    array.Remove(v);
-                            }
-
-                            s2.Release();
-                        });
-                    }
-
-                    for (int i = 0; i < TopUrlsAndTermsQueries.Length; i++)
-                        s2.WaitOne();
-
-                    waited += visited.Count;
-                    visited.Clear();
-                    GC.Collect();
-                }
-
-            }
-            for (int i = waited; i < queries.Count; i++)
-                s.WaitOne();
-
-            stopwatch.Stop();
-            Console.WriteLine("took " + stopwatch.Elapsed.TotalSeconds + "s.");
-            return yandexQueries;
-        }
-
         public Dictionary<int, List<int>> CreateQueryLists(HashSet<int> queries)
         {
             Console.Write("Computing queries lists... ");
@@ -210,53 +139,7 @@ namespace Yandex.LogProcessor
             return queriesWithUrlsTermsMapped;
         }
 
-        private byte[] FindQueryInUrlsAndTerms(int query)
-        {
-            var vector = new byte[25];
-            for (int i = 0; i < TopUrlsAndTermsQueries.Count(); i++)
-            {
-                if (TopUrlsAndTermsQueries[i].Contains(query))
-                {
-                    int arrayIterator = i / 8;
-                    int offset = i % 8;
-                    vector[arrayIterator] |= Convert.ToByte(1 << offset);
-                }
-            }
-            return vector;
-        }
-
-        public void CompareQueries(HashSet<YandexQuery> yadexQueries)
-        {
-            Console.Write("Comparing queries... ");
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var writer = new StreamWriter(_outputPath);
-
-            for (int i = 0; i < yadexQueries.Count; i++)
-            {
-                var obiektTomka = new List<Tuple<int, float>>();
-                for (int j = 0; j < yadexQueries.Count; j++)
-                {
-                    if (i == j) continue;
-                    var res = CompareTwoVectors(yadexQueries.ElementAt(i).Vector, yadexQueries.ElementAt(j).Vector);
-                    obiektTomka.Add(new Tuple<int, float>(j, res));
-                }
-
-                obiektTomka.Sort((o1, o2) => (int)(o2.Item2 - o1.Item2));
-
-                writer.WriteLine(i);
-                for (int q = 0; q < 50; q++)
-                {
-                    writer.WriteLine(obiektTomka[q].Item1 + "\t" + obiektTomka[q].Item2);
-                }
-
-            }
-            stopwatch.Stop();
-            writer.Close();
-            Console.WriteLine("took " + stopwatch.Elapsed.TotalSeconds);
-        }
-
-        public static float CompareTwoLists(List<int> list1, List<int> list2)
+        private static float CompareTwoLists(List<int> list1, List<int> list2)
         {
             int i = 0, j = 0;
             int sum = 0;
@@ -285,62 +168,16 @@ namespace Yandex.LogProcessor
             return sum / (float)all;
         }
 
-
-        private float CompareTwoVectors(byte[] v1, byte[] v2)
+        public void CompareQueries(Dictionary<int, List<int>> queries)
         {
-            var sumAnd = 0;
-            var sumOr = 0;
-
-            for (int i = 0; i < v1.Length; i++)
-            {
-                var bAnd = (byte)(v1[i] & v2[i]);
-                var bOr = (byte)(v1[i] | v2[i]);
-
-                while (bAnd > 0)
-                {
-                    while (bAnd > 0)
-                    {
-                        sumAnd += bAnd % 2;
-                        bAnd /= 2;
-                    }
-                }
-
-                while (bOr > 0)
-                {
-                    while (bOr > 0)
-                    {
-                        sumOr += bOr % 2;
-                        bOr /= 2;
-                    }
-                }
-            }
-
-            return sumAnd / (float)sumOr;
-        }
-
-        public void CompareQueries2(Dictionary<int, List<int>> queries)
-        {
-
             Console.Write("Comparing queries... ");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var writer = new StreamWriter(_outputPath);
 
-            //for (int i = 0; i < 100; i++) //koncepcyjnie queries.count, ale wybieramy tylko dla 100
-            //{
-            //    for (int j = i; j < queries.Count; j++)
-            //    {
-            //        var res = CompareTwoLists(queries.ElementAt(i).Value, queries.ElementAt(j).Value);
-            //        writer.WriteLine(queries.ElementAt(i).Key + "\t" + res);
-            //    }
-            //}
-
             int count = 0;
             foreach (var q1 in queries)
             {
-                //if (count++ >= 2)
-                //    break;
-
                 foreach (var q2 in queries)
                 {
                     if (q1.Key == q2.Key)
@@ -352,8 +189,7 @@ namespace Yandex.LogProcessor
 
             stopwatch.Stop();
             writer.Close();
-            Console.WriteLine("took " + stopwatch.Elapsed.TotalSeconds);
+            Console.WriteLine("took " + stopwatch.Elapsed.TotalSeconds + "s.");
         }
-
     }
 }
