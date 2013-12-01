@@ -2,19 +2,29 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-
+using System.Threading;
 namespace Yandex.LogProcessor
 {
     public partial class QueryComparer
     {
         //@"H:\Projects\EDWD\Yandex\data\logs\log-example.txt";
         //@"C:\Users\Wojciech\Desktop\test_output\test_output.txt";
-        private readonly string _path = @"C:\Users\Wojciech\Desktop\test_output\test_output.txt";
-        private readonly string _outputPath = @"C:\Users\Wojciech\Desktop\out.txt";
+        private static readonly string mode = "train";
+        private string _path = @"C:\Users\Wojciech\Desktop\test_output\" + mode + "_output.txt";
+        private string _outputPath = @"C:\Users\Wojciech\Desktop\" + mode + "_out.txt";
         private List<int>[] _topUrlsAndTermsQueries;
 
         public QueryComparer()
         {
+            try
+            {
+                using (StreamReader reader = new StreamReader(@"C:\paths.txt"))
+                {
+                    _path = reader.ReadLine() + mode +"_output.txt";
+                    _outputPath = reader.ReadLine() + mode + "_out.txt";
+                }
+            }
+            catch { }
         }
 
         public QueryComparer(string path, string outputPath)
@@ -175,22 +185,62 @@ namespace Yandex.LogProcessor
 
         public void CompareQueries(Dictionary<int, List<int>> queries)
         {
+            const int TO_COMPARE = 100;
+            const int N_NEIGHBOURS = 50;
+
             Console.Write("Comparing queries... ");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var writer = new StreamWriter(_outputPath);
 
+            int MAX_IN_PROGRESS = 16;
+            Semaphore finished = new Semaphore(0, TO_COMPARE);
+            Semaphore inProgress = new Semaphore(MAX_IN_PROGRESS - 1, MAX_IN_PROGRESS);
+
             int count = 0;
             foreach (var q1 in queries)
             {
-                foreach (var q2 in queries)
+                if (++count > TO_COMPARE)
+                    break;
+
+                KeyValuePair<int, List<int>> element = q1;
+
+                new Thread(delegate()
                 {
-                    if (q1.Key == q2.Key)
-                        continue;
-                    var res = CompareTwoLists(q1.Value, q2.Value);
-                    writer.WriteLine(q1.Key + "\t" + res);
-                }
+                    List<Tuple<int, float>> sims = new List<Tuple<int, float>>();
+                    foreach (var q2 in queries)
+                    {
+                        if (q1.Key == q2.Key)
+                            continue;
+                        var res = CompareTwoLists(q1.Value, q2.Value);
+                        sims.Add(new Tuple<int, float>(q2.Key, res));
+                        if (sims.Count > 5 * N_NEIGHBOURS)
+                        {
+                            sims.Sort((o1, o2) => { return (int)(1000000 * (o2.Item2 - o1.Item2)); });
+                            sims.RemoveRange(N_NEIGHBOURS, sims.Count - N_NEIGHBOURS);
+                        }
+                    }
+
+                    sims.Sort((o1, o2) => { return (int)(1000000 * (o2.Item2 - o1.Item2)); });
+                    sims.RemoveRange(N_NEIGHBOURS, sims.Count - N_NEIGHBOURS);
+
+                    lock (writer)
+                    {
+                        writer.WriteLine(q1.Key + ":");
+                        foreach (var sim in sims)
+                            writer.WriteLine(sim.Item1 + "\t" + sim.Item2);
+                        writer.WriteLine();
+                    }
+
+                    inProgress.Release();
+                    finished.Release();
+                }).Start();
+
+                inProgress.WaitOne();
             }
+
+            for (int i = 0; i < TO_COMPARE; i++)
+                finished.WaitOne();
 
             stopwatch.Stop();
             writer.Close();
