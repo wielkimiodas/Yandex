@@ -7,7 +7,9 @@ namespace Yandex.LogProcessor
 {
     public partial class QueryComparer
     {
-        private readonly string _path = @"C:\Users\Wojciech\Desktop\log.txt";
+        //@"H:\Projects\EDWD\Yandex\data\logs\log-example.txt";
+        //@"C:\Users\Wojciech\Desktop\test_output\test_output.txt";
+        private readonly string _path = @"C:\Users\Wojciech\Desktop\test_output\test_output.txt";
         private readonly string _outputPath = @"C:\Users\Wojciech\Desktop\out.txt";
         private List<int>[] _topUrlsAndTermsQueries;
 
@@ -56,7 +58,7 @@ namespace Yandex.LogProcessor
                 textReader.ReadLine();
 
                 var tmp = textReader.ReadLine();
-                while (!tmp.Equals(""))
+                while (tmp != null && !tmp.Equals(""))
                 {
                     _topUrlsAndTermsQueries[i].Add(Convert.ToInt32(tmp));
                     queries.Add(Convert.ToInt32(tmp));
@@ -85,14 +87,19 @@ namespace Yandex.LogProcessor
             //read term queries
             for (int i = 0; i < 100; i++)
             {
+                string whateva = null;
+                if (i == 99) whateva = whateva;
+
                 //skip the line with description
-                textReader.ReadLine();
+                whateva = textReader.ReadLine();
 
                 var tmp = textReader.ReadLine();
-                while (!tmp.Equals(""))
+                while (tmp != null && !tmp.Equals(""))
                 {
-                    _topUrlsAndTermsQueries[i + 100].Add(Convert.ToInt32(tmp));
-                    queries.Add(Convert.ToInt32(tmp));
+                    var term = Convert.ToInt32(tmp);
+                    if (term == 21411205) whateva = whateva;
+                    _topUrlsAndTermsQueries[i + 100].Add(term);
+                    queries.Add(term);
                     tmp = textReader.ReadLine();
                 }
             }
@@ -166,7 +173,7 @@ namespace Yandex.LogProcessor
             all += list1.Count - i;
             all += list2.Count - j;
 
-            return sum/(float) all;
+            return sum / (float)all;
         }
 
         public void CompareQueries(Dictionary<int, List<int>> queries)
