@@ -55,13 +55,14 @@ namespace Yandex.LogProcessor
             for (int i = 0; i < 100; i++)
             {
                 //skip the line with description
-                textReader.ReadLine();
+                var debug = textReader.ReadLine();
 
                 var tmp = textReader.ReadLine();
                 while (tmp != null && !tmp.Equals(""))
                 {
-                    _topUrlsAndTermsQueries[i].Add(Convert.ToInt32(tmp));
-                    queries.Add(Convert.ToInt32(tmp));
+                    var url = Convert.ToInt32(tmp);
+                    _topUrlsAndTermsQueries[i].Add(url);
+                    queries.Add(url);
                     tmp = textReader.ReadLine();
                 }
             }
@@ -87,17 +88,13 @@ namespace Yandex.LogProcessor
             //read term queries
             for (int i = 0; i < 100; i++)
             {
-                string whateva = null;
-                if (i == 99) whateva = whateva;
-
                 //skip the line with description
-                whateva = textReader.ReadLine();
+                var debug = textReader.ReadLine();
 
                 var tmp = textReader.ReadLine();
                 while (tmp != null && !tmp.Equals(""))
                 {
                     var term = Convert.ToInt32(tmp);
-                    if (term == 21411205) whateva = whateva;
                     _topUrlsAndTermsQueries[i + 100].Add(term);
                     queries.Add(term);
                     tmp = textReader.ReadLine();
