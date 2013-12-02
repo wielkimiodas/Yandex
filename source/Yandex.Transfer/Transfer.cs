@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Npgsql;
+using System.Threading;
 
 namespace Yandex.Transfer
 {
@@ -39,11 +40,11 @@ namespace Yandex.Transfer
         // Nazwy tabel/plików.
         private const string sessionTableName = "session";
         private const string queryTableName = "query";
-        private const string queryResultTableName = "query_result";
-        private const string urlResultTableName = "url_result";
+        private const string queryTermTableName = "query_term";
+        private const string queryUrlTableName = "query_url";
         private const string clickTableName = "click";
-        private const string clickTmpTableName = "click_tmp";
-        private const string urlTmpTableName = "url_tmp";
+        //private const string clickTmpTableName = "click_tmp";
+        //private const string urlTmpTableName = "url_tmp";
         private const string urlTableName = "url";
 
         private NpgsqlConnection connection = null;
@@ -53,6 +54,9 @@ namespace Yandex.Transfer
             new Dictionary<string, Tuple<string[], string[]>>();
 
         private bool confirmRemoveSchema = false;
+
+        private bool toQuery = true;
+        private string allQueries = "";
 
         /// <summary>
         /// Nawiązuje połączenie z bazą danych (i ew rozpoczyna transakcję).
@@ -88,45 +92,45 @@ namespace Yandex.Transfer
                 "integer", "integer", "integer", "integer", "integer", "boolean"
             }));
 
-            tables.Add(queryResultTableName, new Tuple<string[], string[]>(new string[]
+            tables.Add(queryTermTableName, new Tuple<string[], string[]>(new string[]
             {
-                "result_id", "term_id", "q_id"
+                "result_id", "term_id", "query_id"
             }, new string[]
             {
                 "serial", "integer", "integer"
             }));
 
-            tables.Add(urlResultTableName, new Tuple<string[], string[]>(new string[]
+            tables.Add(queryUrlTableName, new Tuple<string[], string[]>(new string[]
             {
-                "result_id", "url_id", "q_id"
+                "result_id", "url_id", "query_id"
             }, new string[]
             {
-                "serial", "integer", "integer"
+                "integer", "integer", "integer"
             }));
 
             tables.Add(clickTableName, new Tuple<string[], string[]>(new string[]
             {
-                "click_id", "result_id", "time_passed"
+                "click_id", "url_id", "q_id", "time_passed"
             }, new string[]
             {
-                "serial", "integer", "integer"
+                "serial", "integer", "integer", "integer"
             }));
 
-            tables.Add(clickTmpTableName, new Tuple<string[], string[]>(new string[]
+            /*tables.Add(clickTmpTableName, new Tuple<string[], string[]>(new string[]
             {
                 "session_id", "serpid", "url_id", "time_passed"
             }, new string[]
             {
                 "integer", "integer", "integer", "integer"
-            }));
+            }));*/
 
-            tables.Add(urlTmpTableName, new Tuple<string[], string[]>(new string[]
+            /*tables.Add(urlTmpTableName, new Tuple<string[], string[]>(new string[]
             {
                 "url_id", "domain_id"
             }, new string[]
             {
                 "integer", "integer"
-            }));
+            }));*/
 
             tables.Add(urlTableName, new Tuple<string[], string[]>(new string[]
             {
@@ -151,8 +155,7 @@ namespace Yandex.Transfer
             {
                 String[] filenames = new string[]
                 {
-                    sessionTableName, queryTableName, queryResultTableName, urlResultTableName, clickTableName,
-                    clickTmpTableName, urlTmpTableName, urlTableName
+                    sessionTableName, queryTableName, queryTermTableName, queryUrlTableName, clickTableName, urlTableName
                 };
                 foreach (String filename in filenames)
                     if (File.Exists(workDir + filename))
@@ -203,6 +206,24 @@ namespace Yandex.Transfer
             {
                 transaction.Commit();
                 transaction = null;
+            }
+
+            if (toQuery)
+            {
+                while (true)
+                {
+                    Thread th = new Thread((ThreadStart)delegate
+                    {
+                        System.Windows.Forms.Clipboard.SetText(allQueries);
+                    });
+                    th.SetApartmentState(ApartmentState.STA);
+                    th.Start();
+
+                    Console.Write("Queries copied to clipboard (y) ");
+                    String line = Console.ReadLine();
+                    if (line.ToLower().Equals("y"))
+                        break;
+                }
             }
         }
 
@@ -301,25 +322,19 @@ namespace Yandex.Transfer
 
             BinaryWriter session = null;
             BinaryWriter query = null;
-            BinaryWriter queryResult = null;
-            BinaryWriter urlResult = null;
-            BinaryWriter clickTmp = null;
-            BinaryWriter urlTmp = null;
+            BinaryWriter queryTerm = null;
+            BinaryWriter queryUrl = null;
+            BinaryWriter click = null;
+            BinaryWriter urlFile = null;
 
-            if (removeTmpFiles || !File.Exists(workDir + sessionTableName))
-                session = new BinaryWriter(new FileStream(workDir + sessionTableName, FileMode.Create));
-            if (removeTmpFiles || !File.Exists(workDir + queryTableName))
-                query = new BinaryWriter(new FileStream(workDir + queryTableName, FileMode.Create));
-            if (removeTmpFiles || !File.Exists(workDir + queryResultTableName))
-                queryResult = new BinaryWriter(new FileStream(workDir + queryResultTableName, FileMode.Create));
-            if (removeTmpFiles || !File.Exists(workDir + urlResultTableName))
-                urlResult = new BinaryWriter(new FileStream(workDir + urlResultTableName, FileMode.Create));
-            if (removeTmpFiles || !File.Exists(workDir + clickTmpTableName))
-                clickTmp = new BinaryWriter(new FileStream(workDir + clickTmpTableName, FileMode.Create));
-            if (removeTmpFiles || !File.Exists(workDir + urlTmpTableName))
-                urlTmp = new BinaryWriter(new FileStream(workDir + urlTmpTableName, FileMode.Create));
+            session = new BinaryWriter(new FileStream(workDir + sessionTableName, FileMode.Create));
+            query = new BinaryWriter(new FileStream(workDir + queryTableName, FileMode.Create));
+            queryTerm = new BinaryWriter(new FileStream(workDir + queryTermTableName, FileMode.Create));
+            queryUrl = new BinaryWriter(new FileStream(workDir + queryUrlTableName, FileMode.Create));
+            click = new BinaryWriter(new FileStream(workDir + clickTableName, FileMode.Create));
+            urlFile = new BinaryWriter(new FileStream(workDir + urlTableName, FileMode.Create));
 
-            BinaryWriter[] writers = new BinaryWriter[] {session, query, queryResult, urlResult, clickTmp, urlTmp};
+            BinaryWriter[] writers = new BinaryWriter[] {session, query, queryTerm, queryUrl, click };
 
             {
                 bool any = false;
@@ -336,8 +351,14 @@ namespace Yandex.Transfer
             using (BufferedBinaryReader reader = new BufferedBinaryReader(filename))
             {
                 int lineCounter = 0;
-
                 int q_idCount = 0;
+                int queryUrl_id = 0;
+
+                /// rzutuje parę (url, serpid) na (result_id, q_id)
+                Dictionary<Tuple<int, int>, int> urlInfo = new Dictionary<Tuple<int, int>, int>();
+                int lastTime = 0;
+                HashSet<int> urlsAdded = new HashSet<int>();
+                HashSet<int> queriesAdded = new HashSet<int>();
 
                 while (reader.PeekChar() > -1)
                 {
@@ -363,12 +384,12 @@ namespace Yandex.Transfer
                             int day = reader.ReadInt32();
                             int user = reader.ReadInt32();
 
-                            if (session != null)
-                            {
-                                session.Write((int) sessionId);
-                                session.Write((int) day);
-                                session.Write((int) user);
-                            }
+                            session.Write((int) sessionId);
+                            session.Write((int) day);
+                            session.Write((int) user);
+                            
+                            urlInfo.Clear();
+                            lastTime = 0;
                             break;
                         }
                         case 1:
@@ -383,24 +404,26 @@ namespace Yandex.Transfer
 
                             int q_id = q_idCount++;
 
-                            if (query != null)
-                            {
-                                query.Write((int) q_id);
-                                query.Write((int) queryId);
-                                query.Write((int) sessionId);
-                                query.Write((int) serpid);
-                                query.Write((int) time);
-                                query.Write((bool) (type == 2));
-                            }
+                            query.Write((int) q_id);
+                            query.Write((int) queryId);
+                            query.Write((int) sessionId);
+                            query.Write((int) serpid);
+                            query.Write((int) (time - lastTime));
+                            lastTime = time;
+                            query.Write((bool) (type == 2));
+
+                            bool processQuery = !queriesAdded.Contains(queryId);
+                            if (processQuery)
+                                queriesAdded.Add(queryId);
 
                             for (int i = reader.ReadInt32(); i > 0; i--)
                             {
                                 int term = reader.ReadInt32();
 
-                                if (queryResult != null)
+                                if (processQuery)
                                 {
-                                    queryResult.Write((int) term);
-                                    queryResult.Write((int) q_id);
+                                    queryTerm.Write((int)term);
+                                    queryTerm.Write((int)queryId);
                                 }
                             }
 
@@ -409,16 +432,24 @@ namespace Yandex.Transfer
                                 int url = reader.ReadInt32();
                                 int domain = reader.ReadInt32();
 
-                                if (urlResult != null)
-                                {
-                                    urlResult.Write((int) url);
-                                    urlResult.Write((int) q_id);
-                                }
+                                Tuple<int, int> tuple = new Tuple<int, int>(url, serpid);
+                                if (!urlInfo.ContainsKey(tuple))
+                                    urlInfo.Add(tuple, q_id);
 
-                                if (urlTmp != null)
+                                if (processQuery)
                                 {
-                                    urlTmp.Write((int) url);
-                                    urlTmp.Write((int) domain);
+                                    queryUrl.Write((int)queryUrl_id);
+                                    queryUrl_id++;
+
+                                    queryUrl.Write((int)url);
+                                    queryUrl.Write((int)queryId);
+
+                                    if (!urlsAdded.Contains(url))
+                                    {
+                                        urlFile.Write((int)url);
+                                        urlFile.Write((int)domain);
+                                        urlsAdded.Add(url);
+                                    }
                                 }
                             }
                             break;
@@ -432,13 +463,12 @@ namespace Yandex.Transfer
                             // URL
                             int url = reader.ReadInt32();
 
-                            if (clickTmp != null)
-                            {
-                                clickTmp.Write((int) sessionId);
-                                clickTmp.Write((int) serpid);
-                                clickTmp.Write((int) url);
-                                clickTmp.Write((int) time);
-                            }
+                            int q_id = urlInfo[new Tuple<int, int>(url, serpid)];
+
+                            click.Write((int)url);
+                            click.Write((int)q_id);
+                            click.Write((int)(time - lastTime));
+                            lastTime = time;
 
                             break;
                         }
@@ -466,8 +496,7 @@ namespace Yandex.Transfer
 
             String[] toImport = new String[]
             {
-                sessionTableName, queryTableName, queryResultTableName, urlResultTableName, clickTmpTableName,
-                urlTmpTableName
+                sessionTableName, queryTableName, queryTermTableName, queryUrlTableName, clickTableName, urlTableName
             };
 
             foreach (String tableName in toImport)
@@ -530,7 +559,7 @@ namespace Yandex.Transfer
         /// </summary>
         private bool copyTables()
         {
-            {
+            /*{
                 int minUrlId = 0;
                 int maxUrlId = 0;
                 tic("Getting min and max");
@@ -582,9 +611,9 @@ namespace Yandex.Transfer
                     minValue = maxValue;
                 }
                 toc(true);
-            }
+            }*/
 
-            {
+            /*{
                 int minSessionId = 0;
                 int maxSessionId = 0;
 
@@ -629,7 +658,7 @@ namespace Yandex.Transfer
                                                             "INNER JOIN {0}.{4} c ON c.session_id=q.session_id AND c.serpid=q.serpid AND c.url_id=u.url_id WHERE q.session_id >= {5} AND q.session_id < {6};",
                                 new object[]
                                 {
-                                    schemaName, clickTableName, urlResultTableName, queryTableName, clickTmpTableName,
+                                    schemaName, clickTableName, queryUrlTableName, queryTableName, clickTmpTableName,
                                     minValue, maxValue
                                 }), connection))
                     {
@@ -642,7 +671,7 @@ namespace Yandex.Transfer
                 }
 
                 toc();
-            }
+            }*/
 
             return true;
         }
@@ -695,7 +724,7 @@ namespace Yandex.Transfer
         /// <returns></returns>
         private bool removeTables()
         {
-            foreach (String table in new String[] {urlTmpTableName, clickTmpTableName})
+            /*foreach (String table in new String[] {urlTmpTableName, clickTmpTableName})
             {
                 tic(String.Format("Dropping table {0}:", table));
 
@@ -708,7 +737,7 @@ namespace Yandex.Transfer
                 }
 
                 toc();
-            }
+            }*/
 
             return true;
         }
@@ -722,14 +751,17 @@ namespace Yandex.Transfer
         {
             tic(String.Format("Creating PK {0}:", tableName));
 
-            using (
-                NpgsqlCommand cmd =
-                    new NpgsqlCommand(
-                        String.Format("ALTER TABLE {0}.{1} ADD CONSTRAINT {1}_pk PRIMARY KEY ({2});", schemaName,
-                            tableName, columnName), connection))
+            String text = String.Format("ALTER TABLE {0}.{1} ADD CONSTRAINT {1}_pk PRIMARY KEY ({2});", schemaName,
+                            tableName, columnName);
+            if (toQuery)
+                allQueries += text + Environment.NewLine;
+            else
             {
-                cmd.CommandTimeout = MAX_CMD_TIMEOUT;
-                cmd.ExecuteNonQuery();
+                using (NpgsqlCommand cmd = new NpgsqlCommand(text, connection))
+                {
+                    cmd.CommandTimeout = MAX_CMD_TIMEOUT;
+                    cmd.ExecuteNonQuery();
+                }
             }
 
             toc();
@@ -746,13 +778,19 @@ namespace Yandex.Transfer
         {
             tic(String.Format("Creating FK {0}:", tableName));
 
-            NpgsqlCommand cmd =
-                new NpgsqlCommand(
-                    String.Format(
-                        "ALTER TABLE {0}.{1} ADD CONSTRAINT {1}_fk_{3} FOREIGN KEY ({2}) REFERENCES {0}.{3} ({4}) ON UPDATE NO ACTION ON DELETE NO ACTION;",
-                        new object[] {schemaName, tableName, columnName, refTable, refColumn}), connection);
-            cmd.CommandTimeout = MAX_CMD_TIMEOUT;
-            cmd.ExecuteNonQuery();
+            String text = String.Format("ALTER TABLE {0}.{1} ADD CONSTRAINT {1}_fk_{3} FOREIGN KEY ({2}) REFERENCES {0}.{3} ({4}) ON UPDATE NO ACTION ON DELETE NO ACTION;",
+                        new object[] { schemaName, tableName, columnName, refTable, refColumn });
+
+            if (toQuery)
+                allQueries += text + Environment.NewLine;
+            else
+            {
+                using (NpgsqlCommand cmd = new NpgsqlCommand(text, connection))
+                {
+                    cmd.CommandTimeout = MAX_CMD_TIMEOUT;
+                    cmd.ExecuteNonQuery();
+                }
+            }
 
             toc();
         }
@@ -790,13 +828,20 @@ namespace Yandex.Transfer
 
             tic(String.Format("Creating index {0} ({1}):", tableName, columnsNames));
 
-            NpgsqlCommand cmd =
-                new NpgsqlCommand(
-                    String.Format("CREATE INDEX {1}_{3}_index ON {0}.{1} ({2} ASC NULLS LAST);",
-                        new object[] {schemaName, tableName, columnsNames, colsNames}), connection);
-            cmd.CommandTimeout = MAX_CMD_TIMEOUT;
-            cmd.ExecuteNonQuery();
+            String text = String.Format("CREATE INDEX {1}_{3}_index ON {0}.{1} ({2} ASC NULLS LAST);",
+                        new object[] { schemaName, tableName, columnsNames, colsNames });
 
+            if (toQuery)
+                allQueries += text + Environment.NewLine;
+            else
+            {
+                using (NpgsqlCommand cmd = new NpgsqlCommand(text, connection))
+                {
+                    cmd.CommandTimeout = MAX_CMD_TIMEOUT;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            
             toc();
         }
 
@@ -810,14 +855,14 @@ namespace Yandex.Transfer
             tic("Primary keys:", true);
             createPK(sessionTableName, "session_id");
             createPK(queryTableName, "q_id");
-            createPK(queryResultTableName, "result_id");
-            createPK(urlResultTableName, "result_id");
+            createPK(queryTermTableName, "result_id");
+            createPK(queryUrlTableName, "result_id");
             toc(true);
 
             tic("Foreign keys:", true);
             createFK(queryTableName, "session_id", sessionTableName, "session_id");
-            createFK(queryResultTableName, "q_id", queryTableName, "q_id");
-            createFK(urlResultTableName, "q_id", queryTableName, "q_id");
+            //createFK(queryTermTableName, "query_id", queryTableName, "query_id");
+            //createFK(queryUrlTableName, "query_id", queryTableName, "query_id");
             toc(true);
 
             toc(true);
@@ -838,8 +883,9 @@ namespace Yandex.Transfer
             toc(true);
 
             tic("Foreign keys:", true);
-            createFK(clickTableName, "result_id", urlResultTableName, "result_id");
-            createFK(urlResultTableName, "url_id", urlTableName, "url_id");
+            createFK(clickTableName, "q_id", queryTableName, "q_id");
+            //createFK(clickTableName, "url_id", urlTableName, "url_id");
+            createFK(queryUrlTableName, "url_id", urlTableName, "url_id");
             toc(true);
 
             toc(true);
@@ -858,14 +904,12 @@ namespace Yandex.Transfer
 
             createIndex(queryTableName, "q_id");
             createIndex(queryTableName, "query_id");
-            createIndex(queryTableName, new String[] {"session_id", "serpid"});
-            createIndex(queryTableName, new String[] {"query_id", "session_id", "serpid"});
+            
+            createIndex(queryTermTableName, "result_id");
+            createIndex(queryTermTableName, new String[] { "query_id" });
 
-            createIndex(queryResultTableName, "result_id");
-            createIndex(queryResultTableName, new String[] {"q_id"});
-
-            createIndex(urlResultTableName, "result_id");
-            createIndex(urlResultTableName, new String[] {"q_id"});
+            createIndex(queryUrlTableName, "result_id");
+            createIndex(queryUrlTableName, new String[] { "query_id" });
 
             toc(true);
 
@@ -879,12 +923,13 @@ namespace Yandex.Transfer
         {
             tic("Creating indexes 2:", true);
 
-            createIndex(clickTableName, "result_id");
+            createIndex(clickTableName, "url_id");
+            createIndex(clickTableName, "q_id");
 
             createIndex(urlTableName, "url_id");
             createIndex(urlTableName, "domain_id");
 
-            createIndex(urlResultTableName, "url_id");
+            createIndex(queryUrlTableName, "url_id");
 
             toc(true);
 

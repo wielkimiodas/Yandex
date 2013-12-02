@@ -8,14 +8,16 @@ namespace Yandex.Transfer
 
         private static void Main(string[] args)
         {
+            args = new String[] { @"D:\Downloads\EDWD\train_tr" };
             DateTime begin = DateTime.Now;
 
-            using (Transfer t = new Transfer(connstr, "NAZWA_SCHEMATU", @"ŚCIEŻKA DO WORK DIRA"))
+            using (Transfer t = new Transfer(connstr, "train", @"C:\tmp1\"))
             {
                 t.transfer(args[0]);
             }
 
             Console.WriteLine("Total time: " + (DateTime.Now - begin));
+            Console.ReadLine();
         }
     }
 }
