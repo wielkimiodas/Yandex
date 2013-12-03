@@ -280,15 +280,29 @@ dyskusji na temat napotkanych trudności.
 \begin_layout Standard
 Dane zostały podzielone na sześć tabel w bazie PostgreSQL.
  Wszystkie kolumny poza jedną są typu integer.
- Pierwsza to tabela Session, zawierająca podstawowe informacje o sesji.
+ Przyjęto, że klucze główne będą oznaczane 
+\bar under
+podkreśleniem
+\bar default
+, a klucze obce - 
+\emph on
+kursywą
+\emph default
+.
 \end_layout
 
 \begin_layout Standard
-Session:
+Pierwsza to tabela 
+\series bold
+Session
+\series default
+, zawierająca podstawowe informacje o sesji.
 \end_layout
 
 \begin_layout Itemize
-session_id (PK) 
+
+\bar under
+session_id
 \end_layout
 
 \begin_layout Itemize
@@ -300,33 +314,75 @@ user_id
 \end_layout
 
 \begin_layout Standard
-Druga tabela to Query, zawiera informacje dotyczące pojedynczego zapytania.
+Druga tabela to 
+\series bold
+Query
+\series default
+, zawiera informacje dotyczące pojedynczego zapytania.
 \end_layout
 
-\begin_layout Standard
-Query q_id (PK) query_id session_id (FK Session) serpid time_passed is_test
- (boolean)
+\begin_layout Itemize
+
+\bar under
+q_id
+\end_layout
+
+\begin_layout Itemize
+query_id
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+session_id
+\emph default
+ (Session)
+\end_layout
+
+\begin_layout Itemize
+serpid
+\end_layout
+
+\begin_layout Itemize
+time_passed
+\end_layout
+
+\begin_layout Itemize
+is_test (boolean)
 \end_layout
 
 \begin_layout Standard
 q_id jest sztucznie nadanym kluczem głównym tabeli, query_id jest wartością
  odczytaną z pliku z danymi.
- Warto zauważyć, że dla jednej wartości query_id może się pojawić kilka
- wpisów w tej tabeli, wynika to z tego, że unikalna jest dopiero para query_id
- i serpid (pierwsza wartość występuje tylko w jednej sesji, druga jest w
- obrębie sesji unikalna).
  time_passed, podobnie jak w jednej z kolejnych tabel, reprezentuje czas
- od ostatniej akcji użytkownika (a nie od rozpoczęcia sesji, jak to było
- w pliku z danymi).
+ od ostatniej akcji użytkownika (a nie od rozpoczęcia sesji, jak było to
+ zapisane w pliku z danymi).
 \end_layout
 
 \begin_layout Standard
-Trzecia tabela to Query_result, przechowująca informację o pojedynczym termie
- użytym w zapytaniu.
+Trzecia tabela to 
+\series bold
+Query_term
+\series default
+, przechowująca informację o pojedynczym termie użytym w zapytaniu.
 \end_layout
 
-\begin_layout Standard
-Query_result result_id (PK) term_id q_id (FK Query) pos
+\begin_layout Itemize
+
+\bar under
+result_id
+\end_layout
+
+\begin_layout Itemize
+term_id
+\end_layout
+
+\begin_layout Itemize
+query_id
+\end_layout
+
+\begin_layout Itemize
+pos
 \end_layout
 
 \begin_layout Standard
@@ -334,34 +390,122 @@ Wątpliwości może budzić jedynie kolumna pos, będąca pozycją termu w zapyt
 \end_layout
 
 \begin_layout Standard
-Czwarta tabela, Url_result, zawiera informacje o pojedynczym wyniku zapytania.
+Czwarta tabela, 
+\series bold
+Query_url
+\series default
+, zawiera informacje o pojedynczym rezultacie zapytania.
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+result_id
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+url_id
+\emph default
+ (Url)
+\end_layout
+
+\begin_layout Itemize
+query_id
+\end_layout
+
+\begin_layout Itemize
+pos
 \end_layout
 
 \begin_layout Standard
-Url_result result_id (PK) url_id (FK Url) q_id (FK Query) pos
+Piąta tabela, 
+\series bold
+Click
+\series default
+, reprezentuje pojedyncze kliknięcie linku przez użytkownika.
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+click_id
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+url_id
+\emph default
+ (Url)
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+q_id
+\emph default
+ (Query)
+\end_layout
+
+\begin_layout Itemize
+time_passed
 \end_layout
 
 \begin_layout Standard
-Piąta tabela, Click, reprezentuje pojedyncze kliknięcie linku przez użytkownika.
+Ostatnia tabela, 
+\series bold
+Url
+\series default
+, zawiera informację o domenie linku.
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+url_id
+\end_layout
+
+\begin_layout Itemize
+domain_id
 \end_layout
 
 \begin_layout Standard
-Click click_id (PK) result_id (FK Query_result) time_passed
+Początkowo schemat miał minimalnie inną postać (tabele Query_term i Query_url
+ zamiast kolumny query_id miały kolumnę q_id, a tabela Click zamiast pary
+ (url_id, q_id) - klucz obcy do Query_url).
+ Podczas pracy nad danymi zorientowaliśmy się jednak, że taka sama wartość
+ query_id może występować w różnych sesjach (okazało się, że jest to wartość
+ unikalna dla danego zestawu termów i adresów url).
+ Ta stosunkowo niewielka zmiana pozwoliła na znaczne zredukowanie wielkości
+ tabel Query_term i Query_url - z 200 mln.
+ i 700 mln.
+ na 
+\emph on
+jedynie
+\emph default
+ 80 mln.
+ i 200 mln (oczywiście są to wartości dla zbioru treningowego, zbiór testowy
+ ma te wartości mniejsze o ponad rząd wielkości).
 \end_layout
 
 \begin_layout Standard
-Ostatnia tabela, Url, zawiera informację o domenie linku.
+Czas potrzebny na umieszczenie danych w bazie podzieliliśmy na trzy części:
 \end_layout
 
-\begin_layout Standard
-Url url_id (PK) domain_id
+\begin_layout Itemize
+przepisanie pliku z danymi na sześć plików odpowiadających kolejnym tabelom
+ w bazie danych - 344s
 \end_layout
 
-\begin_layout Standard
-Podstawową wadą prezentowanego rozwiązania jest rozmiar tabel (przede wszystkim
- Url_result, która zawiera prawie 717 milionów krotek, ale również 200 milionowa
- Query_result).
- Zalety to łatwość wykonywania zapytań
+\begin_layout Itemize
+właściwe przerzucenie danych do bazy - 3873s (1h 4min 33s)
+\end_layout
+
+\begin_layout Itemize
+założenie indeksów i nałożenie ograniczeń (klucze podstawowe i obce) - 5992s
+ (1h 39min 52s)
 \end_layout
 
 \begin_layout Section
@@ -385,6 +529,82 @@ dyskusji na temat czasu wczytywania do pamięci, dostępu do danych i objętośc
 \begin_layout Itemize
 dyskusji na temat napotkanych trudności.
  
+\end_layout
+
+\begin_layout Standard
+// opis grupowania
+\end_layout
+
+\begin_layout Standard
+Wyszukiwanie najbliżych sąsiadów miało polegać na wyznaczeniu 100 najczęściej
+ występujących termów i 100 najczęściej występujących urli, a następnie
+ obliczaniu współczynnika Jaccarda dla poszczególnych zapytań w odniesieniu
+ do wspomnianych termów i urli.
+ Okazało się, że już wyznaczenie 100 najczęściej występujących urli znacznie
+ przerosło możliwości bazy danych - zapytanie
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+SELECT url_id, COUNT(*) AS c FROM (SELECT DISTINCT ON (q_id, url_id) url_id
+ FROM query_url) q GROUP BY url_id ORDER BY c DESC LIMIT 100
+\begin_inset Quotes erd
+\end_inset
+
+ (wykonywane jeszcze na starej wersji schematu danych)
+\end_layout
+
+\begin_layout Standard
+zwracające wyniki nie do końca poprawne wyniki, było wykonywane przez ponad
+ godzinę, natomiast zapytanie (tym razem zwracające w pełni oczekiwane wyniki)
+ postaci:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+SELECT url_id, COUNT(*) AS c FROM (SELECT DISTINCT ON (q.query_id, u.url_id)
+ u.url_id FROM query_url u INNER JOIN {0}.query q ON u.q_id=q.q_id) q GROUP
+ BY url_id ORDER BY c DESC LIMIT 100
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+wykonywało się przez ok.
+ 35 godzin, po czym zostało przerwane.
+\end_layout
+
+\begin_layout Standard
+Wtedy postanowiono wrócić do oryginalnego pliku z danymi (ale w postaci
+ binarnej zamiast tekstowej) i wydobycie danych bezpośrednio z niego.
+ Wymagało to czterokrotnego przejrzenia całego pliku - po razie na zliczenie
+ zapytań dla każdego urla i termu, i po kolejnym razie dla pobrania query_id
+ dla każdego z najlepszych termów i urli (teoretycznie można by zmieścić
+ się w dwóch przejrzeniach, jednak problemem okazała się zbyt mała ilość
+ pamięci ram, aby pomieścić obszerne mapowania id na ilośc wystąpień i zbiór
+ przeanalizowanych zapytań).
+ Dopiero na etapia pisania tego programu udało się dojść do unikalności
+ query_id (co było powodem zmiany schematu bazy danych), co pozwoliłoby
+ na uzyskanie oczekiwanych wyników za pomocą zapytania zbliżonego do 
+\begin_inset Quotes eld
+\end_inset
+
+ZAPYTANIA PIERWSZEGO
+\begin_inset Quotes erd
+\end_inset
+
+, jednak po pierwsze nawet biorąc poprawkę na 3,5 krotne zmniejszenie objętości
+ tabeli, to i tak samo znalezienie 100 najlepszych urli zajęłoby prawie
+ 20 minut, a pobieranie listy zapytań dla każdego z urli trwałoby 2-3 minuty,
+ co po dodaniu analogicznych operacji dla termów złożyłoby się na minimum
+ 7-8 godzin, a po drugie był już gotowy program, który zwracał dokładnie
+ te same wyniki, ale w czasie 7-8 minut.
 \end_layout
 
 \begin_layout Section
@@ -513,6 +733,37 @@ W zależności od rodzaju problemu, proszę stosować się do niżej opisanych
 (maks.
  4 strony razem z tabelami).
  
+\end_layout
+
+\begin_layout Standard
+Na czas wyszukiwania najbliższych sąsiadów składa się czas przetwarzania
+ dwóch programów:
+\end_layout
+
+\begin_layout Itemize
+wydobywającego top100 urli i termów i powiązanych z nimi zapytań - 469s
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+top100 urli - 133s
+\end_layout
+
+\begin_layout Itemize
+top100 termów - 83s
+\end_layout
+
+\begin_layout Itemize
+zapytania związane z urlami - 145s
+\end_layout
+
+\begin_layout Itemize
+zapytania związane z termami - 107s
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+przeliczającego podobieństwa między zapytaniami - 264s (71s po zrównolegleniu)
 \end_layout
 
 \begin_layout Subsection
