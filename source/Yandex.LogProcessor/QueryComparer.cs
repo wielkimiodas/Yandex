@@ -187,13 +187,13 @@ namespace Yandex.LogProcessor
         {
             const int TO_COMPARE = 100;
             const int N_NEIGHBOURS = 50;
+            const int MAX_IN_PROGRESS = 16;
 
             Console.Write("Comparing queries... ");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var writer = new StreamWriter(_outputPath);
 
-            int MAX_IN_PROGRESS = 16;
             Semaphore finished = new Semaphore(0, TO_COMPARE);
             Semaphore inProgress = new Semaphore(MAX_IN_PROGRESS - 1, MAX_IN_PROGRESS);
 
