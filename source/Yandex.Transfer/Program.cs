@@ -11,9 +11,14 @@ namespace Yandex.Transfer
             args = new String[] { @"D:\Downloads\EDWD\train_tr" };
             DateTime begin = DateTime.Now;
 
-            using (Transfer t = new Transfer(connstr, "train", @"C:\tmp1\"))
+            //using (Transfer t = new Transfer(connstr, "train", @"C:\tmp1\"))
+            //{
+            //    t.transfer(args[0]);
+            //}
+
+            using (var log = new LogTableInitializer(connstr,"train")            )
             {
-                t.transfer(args[0]);
+                log.transfer(@"C:\Users\Wojciech\Desktop\test_out.txt");
             }
 
             Console.WriteLine("Total time: " + (DateTime.Now - begin));

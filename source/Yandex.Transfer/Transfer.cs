@@ -180,7 +180,7 @@ namespace Yandex.Transfer
         /// <param name="filename">Nazwa pliku z danymi.</param>
         public void transfer(String filename)
         {
-            BoolFunction[] functions = new BoolFunction[]
+            var functions = new BoolFunction[]
             {
                 createSchema, delegate { return rewriteData(filename); }, importData, createConstraints1, createIndexes1,
                 copyTables, removeTables, createConstraints2, createIndexes2

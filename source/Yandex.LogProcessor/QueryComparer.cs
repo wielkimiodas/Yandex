@@ -9,7 +9,7 @@ namespace Yandex.LogProcessor
     {
         //@"H:\Projects\EDWD\Yandex\data\logs\log-example.txt";
         //@"C:\Users\Wojciech\Desktop\test_output\test_output.txt";
-        private static readonly string mode = "train";
+        private static readonly string mode = "test";
         private string _path = @"C:\Users\Wojciech\Desktop\test_output\" + mode + "_output.txt";
         private string _outputPath = @"C:\Users\Wojciech\Desktop\" + mode + "_out.txt";
         private List<int>[] _topUrlsAndTermsQueries;
