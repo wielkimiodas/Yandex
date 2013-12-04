@@ -53,6 +53,24 @@ namespace Yandex.Transfer
             tables.Add(logTableName, new Tuple<string[], string[]>(CreateColumnNamesArray(), CreateColumnTypesArray()));
         }
 
+        private bool dropTables()
+        {
+            foreach (var element in tables)
+            {
+                String tableName = element.Key;
+
+                String cmdStr = String.Format("DROP TABLE {0}.{1};", schemaName, tableName);
+                NpgsqlCommand cmd = new NpgsqlCommand(cmdStr, connection);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch { }
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Tworzy tabele.
         /// </summary>
@@ -101,7 +119,8 @@ namespace Yandex.Transfer
             this.inputFile = filename;
             var functions = new BoolFunction[]
             {
-                //createTables,
+                dropTables,
+                createTables,
                 import, export
             };
 
@@ -245,17 +264,17 @@ namespace Yandex.Transfer
 
         public string CreateInsertCmd()
         {
-            var cmd = "COPY "+logTableName+ " (";
-            for (int i = 0; i < 100; i++)
+            var cmd = "COPY "+ schemaName + "." + logTableName+ " (query_id, ";
+            for (int i = 1; i < 101; i++)
             {
                 cmd += "url" + i +", ";
             }
-            for (int i = 0; i < 100; i++)
+            for (int i = 1; i < 101; i++)
             {
                 cmd += "term" + i +", ";
             }
             //obciecie ostatniego przecinka
-            cmd = cmd.Substring(0, cmd.Length - 3);
+            cmd = cmd.Substring(0, cmd.Length - 2);
             cmd += ") FROM STDIN";
             return cmd;
         }
@@ -270,10 +289,14 @@ namespace Yandex.Transfer
             var linecounter = 0;
             foreach (var queryList in _queryLists)
             {
+                bool[] array = new bool[200];
+                foreach (int i in queryList.Value)
+                    array[i] = true;
+
+                serializer.AddInt32(queryList.Key);
+
                 for (int i = 0; i < 200; i++)
-                {
-                    serializer.AddBool(queryList.Value.Contains(i));
-                }
+                    serializer.AddBool(array[i]);
                 serializer.EndRow();
 
                 if(linecounter++ %FLUSH_ROWS==0) serializer.Flush();
@@ -287,12 +310,13 @@ namespace Yandex.Transfer
 
         public string[] CreateColumnNamesArray()
         {
-            var res = new string[200];
-            for (int i = 0; i < 100; i++)
+            var res = new string[201];
+            res[0] = "query_id";
+            for (int i = 1; i < 101; i++)
             {
                 res[i] = "url" + i;
             }
-            for (int i = 0; i < 100; i++)
+            for (int i = 1; i < 101; i++)
             {
                 res[i+100] = "term" + i;
             }
@@ -301,8 +325,9 @@ namespace Yandex.Transfer
 
         public string[] CreateColumnTypesArray()
         {
-            var res = new string[200];
-            for (int i = 0; i < 200; i++)
+            var res = new string[201];
+            res[0] = "integer";
+            for (int i = 1; i < 201; i++)
             {
                 res[i] = "boolean";
             }

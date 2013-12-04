@@ -16,9 +16,9 @@ namespace Yandex.Transfer
             //    t.transfer(args[0]);
             //}
 
-            using (var log = new LogTableInitializer(connstr,"train")            )
+            using (var log = new LogTableInitializer(connstr,"test"))
             {
-                log.transfer(@"C:\Users\Wojciech\Desktop\test_output\test_output.txt");
+                log.transfer(@"D:\Downloads\EDWD\test_output.txt");
             }
 
             Console.WriteLine("Total time: " + (DateTime.Now - begin));
