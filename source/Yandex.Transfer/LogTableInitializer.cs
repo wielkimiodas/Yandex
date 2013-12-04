@@ -101,7 +101,8 @@ namespace Yandex.Transfer
             this.inputFile = filename;
             var functions = new BoolFunction[]
             {
-                createTables,import, export
+                //createTables,
+                import, export
             };
 
             foreach (BoolFunction function in functions)
@@ -244,7 +245,7 @@ namespace Yandex.Transfer
 
         public string CreateInsertCmd()
         {
-            var cmd = "COPY LOG (";
+            var cmd = "COPY "+logTableName+ " (";
             for (int i = 0; i < 100; i++)
             {
                 cmd += "url" + i +", ";
