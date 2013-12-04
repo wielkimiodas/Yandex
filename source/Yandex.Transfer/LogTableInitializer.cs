@@ -101,7 +101,7 @@ namespace Yandex.Transfer
             this.inputFile = filename;
             var functions = new BoolFunction[]
             {
-                import
+                import, export
             };
 
             foreach (BoolFunction function in functions)
@@ -127,11 +127,11 @@ namespace Yandex.Transfer
             }
         }
 
-        private Dictionary<int, List<int>> queryLists;
+        private Dictionary<int, List<int>> _queryLists;
         public bool import()
         {
             var q = ReadQueryList();
-            queryLists = CreateQueryLists(q);
+            _queryLists = CreateQueryLists(q);
 
             return true;
         }
@@ -259,7 +259,7 @@ namespace Yandex.Transfer
             return cmd;
         }
 
-        public void export()
+        public bool export()
         {
             NpgsqlCommand cmd = new NpgsqlCommand(CreateInsertCmd(), connection);
             NpgsqlCopySerializer serializer = new NpgsqlCopySerializer(connection);
@@ -267,7 +267,7 @@ namespace Yandex.Transfer
             const int FLUSH_ROWS = 200000;
             copyIn.Start();
             var linecounter = 0;
-            foreach (var queryList in queryLists)
+            foreach (var queryList in _queryLists)
             {
                 for (int i = 0; i < 200; i++)
                 {
@@ -281,6 +281,7 @@ namespace Yandex.Transfer
             serializer.Flush();
             serializer.Close();
             copyIn.End();
+            return true;
         }
 
         public string[] CreateColumnNamesArray()
