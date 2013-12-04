@@ -101,7 +101,7 @@ namespace Yandex.Transfer
             this.inputFile = filename;
             var functions = new BoolFunction[]
             {
-                import, export
+                createTables,import, export
             };
 
             foreach (BoolFunction function in functions)

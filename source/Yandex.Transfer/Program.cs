@@ -4,7 +4,7 @@ namespace Yandex.Transfer
 {
     internal class Program
     {
-        private const string connstr = "Server=localhost;Port=5432;User Id=postgres;Password=qwerty;Database=postgres;";
+        private const string connstr = "Server=localhost;Port=5432;User Id=postgres;Password=password;Database=postgres;";
 
         private static void Main(string[] args)
         {
@@ -18,7 +18,7 @@ namespace Yandex.Transfer
 
             using (var log = new LogTableInitializer(connstr,"train")            )
             {
-                log.transfer(@"C:\Users\Wojciech\Desktop\test_out.txt");
+                log.transfer(@"C:\Users\Wojciech\Desktop\test_output\test_output.txt");
             }
 
             Console.WriteLine("Total time: " + (DateTime.Now - begin));
