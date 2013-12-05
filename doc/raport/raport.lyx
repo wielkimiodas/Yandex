@@ -545,12 +545,60 @@ Wyszukiwanie najbliżych sąsiadów miało polegać na wyznaczeniu 100 najczęś
 \end_layout
 
 \begin_layout Standard
-\begin_inset Quotes eld
+\begin_inset listings
+lstparams "breaklines=true,language=SQL,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+SELECT url_id, COUNT(*) AS c 
+\end_layout
+
+\begin_layout Plain Layout
+
+FROM (
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT DISTINCT ON (q_id, url_id) url_id 
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM query_url
+\end_layout
+
+\begin_layout Plain Layout
+
+) q 
+\end_layout
+
+\begin_layout Plain Layout
+
+GROUP BY url_id 
+\end_layout
+
+\begin_layout Plain Layout
+
+ORDER BY c DESC 
+\end_layout
+
+\begin_layout Plain Layout
+
+LIMIT 100
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Zapytanie 1
+\end_layout
+
 \end_inset
 
-SELECT url_id, COUNT(*) AS c FROM (SELECT DISTINCT ON (q_id, url_id) url_id
- FROM query_url) q GROUP BY url_id ORDER BY c DESC LIMIT 100
-\begin_inset Quotes erd
+
+\end_layout
+
 \end_inset
 
  (wykonywane jeszcze na starej wersji schematu danych)
@@ -563,19 +611,68 @@ zwracające wyniki nie do końca poprawne wyniki, było wykonywane przez ponad
 \end_layout
 
 \begin_layout Standard
-\begin_inset Quotes eld
-\end_inset
+\begin_inset listings
+lstparams "language=SQL,tabsize=4"
+inline false
+status open
 
-SELECT url_id, COUNT(*) AS c FROM (SELECT DISTINCT ON (q.query_id, u.url_id)
- u.url_id FROM query_url u INNER JOIN {0}.query q ON u.q_id=q.q_id) q GROUP
- BY url_id ORDER BY c DESC LIMIT 100
-\begin_inset Quotes erd
+\begin_layout Plain Layout
+
+SELECT url_id, COUNT(*) AS c 
+\end_layout
+
+\begin_layout Plain Layout
+
+FROM(
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT DISTINCT ON (q.query_id, u.url_id) u.url_id 
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM query_url u 
+\end_layout
+
+\begin_layout Plain Layout
+
+	INNER JOIN {0}.query q ON u.q_id=q.q_id
+\end_layout
+
+\begin_layout Plain Layout
+
+) q 
+\end_layout
+
+\begin_layout Plain Layout
+
+GROUP BY url_id 
+\end_layout
+
+\begin_layout Plain Layout
+
+ORDER BY c DESC 
+\end_layout
+
+\begin_layout Plain Layout
+
+LIMIT 100
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+Zapytanie 2
+\end_layout
+
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
+\end_inset
+
 wykonywało się przez ok.
  35 godzin, po czym zostało przerwane.
 \end_layout
@@ -591,15 +688,8 @@ Wtedy postanowiono wrócić do oryginalnego pliku z danymi (ale w postaci
  przeanalizowanych zapytań).
  Dopiero na etapia pisania tego programu udało się dojść do unikalności
  query_id (co było powodem zmiany schematu bazy danych), co pozwoliłoby
- na uzyskanie oczekiwanych wyników za pomocą zapytania zbliżonego do 
-\begin_inset Quotes eld
-\end_inset
-
-ZAPYTANIA PIERWSZEGO
-\begin_inset Quotes erd
-\end_inset
-
-, jednak nawet biorąc poprawkę na 3,5 krotne zmniejszenie objętości tabeli,
+ na uzyskanie oczekiwanych wyników za pomocą zapytania zbliżonego do Zapytania
+ 1, jednak nawet biorąc poprawkę na 3,5 krotne zmniejszenie objętości tabeli,
  to i tak samo znalezienie 100 najlepszych urli zajęłoby prawie 20 minut,
  a pobieranie listy zapytań dla każdego z urli trwałoby 2-3 minuty, co po
  dodaniu analogicznych operacji dla termów złożyłoby się na minimum 7-8
