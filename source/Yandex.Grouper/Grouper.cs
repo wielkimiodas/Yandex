@@ -47,9 +47,6 @@ namespace Yandex.Grouper
 
         private void doGroupBy(string columnsList)
         {
-            System.Threading.Thread.Sleep(id);
-            return;
-
             string cmdText = String.Format("SELECT COUNT(*), {1} FROM {0}.log GROUP BY {1};", schemaName, columnsList);
             
             using (NpgsqlCommand cmd = new NpgsqlCommand(cmdText, connection))
@@ -140,11 +137,6 @@ namespace Yandex.Grouper
         {
             doAllGroupBy(1);
             doAllGroupBy(2);
-
-            lock (writer)
-            {
-                writer.WriteLine(id + " ends");
-            }
         }
     }
 }

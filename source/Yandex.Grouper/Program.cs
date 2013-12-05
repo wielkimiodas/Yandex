@@ -18,7 +18,7 @@ namespace Yandex.Grouper
             string schema = "train";
             using (var writer = new StreamWriter(@"D:\Downloads\group_result_" + schema + ".txt", true))
             {
-                writer.WriteLine(DateTime.Now);
+                //writer.WriteLine(DateTime.Now);
                 const int N_THREADS = 8;
                 Semaphore end = new Semaphore(0, N_THREADS);
                 for (int i = 0; i < N_THREADS; i++)
