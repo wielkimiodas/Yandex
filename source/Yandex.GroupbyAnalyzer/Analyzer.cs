@@ -101,6 +101,7 @@ namespace Yandex.GroupbyAnalyzer
 
                 time.calculate("Time");
                 values.calculate("Values");
+                Console.WriteLine();
             }
         }
     }
@@ -123,6 +124,8 @@ namespace Yandex.GroupbyAnalyzer
             float devNonZero = 0;
             int min = Int32.MaxValue;
             int max = Int32.MinValue;
+            int nMin = 0;
+            int nMax = 0;
 
             foreach (int i in values)
             {
@@ -148,13 +151,25 @@ namespace Yandex.GroupbyAnalyzer
                     devNonZero += (float)Math.Pow(i - avgNonZero, 2);
             }
 
+            foreach (int i in values)
+            {
+                dev += (float)Math.Pow(i - avg, 2);
+                if (i != 0)
+                    devNonZero += (float)Math.Pow(i - avgNonZero, 2);
+
+                if (i == min)
+                    nMin++;
+                if (i == max)
+                    nMax++;
+            }
+
             dev = (float)Math.Sqrt(dev / values.Count);
             devNonZero = (float)Math.Sqrt(devNonZero / nNonZero);
 
             Console.WriteLine(name + ":");
-            Console.WriteLine("{0}\t{1}", avg, dev);
-            Console.WriteLine("{0}\t{1} ({2})", avgNonZero, devNonZero, nNonZero);
-            Console.WriteLine("{0}\t{1}", min, max);
+            Console.WriteLine("{0,-12}{1} ({2})", avg, dev, values.Count);
+            Console.WriteLine("{0,-12}{1} ({2})", avgNonZero, devNonZero, nNonZero);
+            Console.WriteLine("{0,-12}{1} ({2})", String.Format("{0} ({1})", min, nMin), max, nMax);
         }
     }
 }
