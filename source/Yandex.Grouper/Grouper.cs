@@ -21,10 +21,11 @@ namespace Yandex.Grouper
 
         StreamWriter writer = null;
 
+        int id;
         int min;
         int max;
 
-        public Grouper(String connstring, String schemaName, StreamWriter writer, int min, int max)
+        public Grouper(String connstring, String schemaName, StreamWriter writer, int id, int min, int max)
         {
             this.schemaName = schemaName;
             connection = new NpgsqlConnection(connstring);
@@ -32,6 +33,7 @@ namespace Yandex.Grouper
 
             this.writer = writer;
 
+            this.id = id;
             this.min = min;
             this.max = max;
         }
@@ -41,13 +43,13 @@ namespace Yandex.Grouper
             connection.Close();
             connection.Dispose();
             connection = null;
-
-            writer.Dispose();
-            writer = null;
         }
 
         private void doGroupBy(string columnsList)
         {
+            System.Threading.Thread.Sleep(id);
+            return;
+
             string cmdText = String.Format("SELECT COUNT(*), {1} FROM {0}.log GROUP BY {1};", schemaName, columnsList);
             
             using (NpgsqlCommand cmd = new NpgsqlCommand(cmdText, connection))
@@ -105,7 +107,7 @@ namespace Yandex.Grouper
                 {
                     lock (Console.Out)
                     {
-                        Console.SetCursorPosition(depth * 5, this.min / 25);
+                        Console.SetCursorPosition(depth * 5, this.id);
                         Console.Write(i);
                     }
                     columns[depth] = i;
@@ -138,6 +140,11 @@ namespace Yandex.Grouper
         {
             doAllGroupBy(1);
             doAllGroupBy(2);
+
+            lock (writer)
+            {
+                writer.WriteLine(id + " ends");
+            }
         }
     }
 }

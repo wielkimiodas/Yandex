@@ -23,14 +23,21 @@ namespace Yandex.Grouper
                 Semaphore end = new Semaphore(0, N_THREADS);
                 for (int i = 0; i < N_THREADS; i++)
                 {
+                    int id = i;
                     int min = (int)(i / (float)(N_THREADS) * 200) + 1;
                     int max = (int)((i+1) / (float)(N_THREADS) * 200) + 1;
                     new Thread(delegate()
                     {
-                        using (var g = new Grouper(connstr, schema, writer, min, max))
+                        using (var g = new Grouper(connstr, schema, writer, id, min, max))
                         {
                             g.group();
                             end.Release();
+
+                            lock (Console.Out)
+                            {
+                                Console.SetCursorPosition(0, id);
+                                Console.WriteLine("Processing ends");
+                            }
                         }
                     }).Start();
                 }
@@ -39,7 +46,9 @@ namespace Yandex.Grouper
                     end.WaitOne();
             }
 
+            Console.SetCursorPosition(0, 10);
             Console.WriteLine("Total time: " + watch.Elapsed);
+            Console.ReadLine();
         }
     }
 }
