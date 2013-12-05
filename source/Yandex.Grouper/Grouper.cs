@@ -18,30 +18,26 @@ namespace Yandex.Grouper
         private const int MAX_CMD_TIMEOUT = 2*3600;
 
         private NpgsqlConnection connection = null;
-        private NpgsqlTransaction transaction = null;
 
         StreamWriter writer = null;
 
-        public Grouper(String connstring, String schemaName, String output, bool transactional = false)
+        int min;
+        int max;
+
+        public Grouper(String connstring, String schemaName, StreamWriter writer, int min, int max)
         {
             this.schemaName = schemaName;
             connection = new NpgsqlConnection(connstring);
             connection.Open();
 
-            if (transactional)
-                transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
+            this.writer = writer;
 
-            writer = new StreamWriter(output);
+            this.min = min;
+            this.max = max;
         }
 
         public void Dispose()
         {
-            if (transaction != null)
-            {
-                transaction.Commit();
-                transaction = null;
-            }
-
             connection.Close();
             connection.Dispose();
             connection = null;
@@ -53,8 +49,7 @@ namespace Yandex.Grouper
         private void doGroupBy(string columnsList)
         {
             string cmdText = String.Format("SELECT COUNT(*), {1} FROM {0}.log GROUP BY {1};", schemaName, columnsList);
-            writer.WriteLine(cmdText);
-
+            
             using (NpgsqlCommand cmd = new NpgsqlCommand(cmdText, connection))
             {
                 cmd.CommandTimeout = MAX_CMD_TIMEOUT;
@@ -63,19 +58,23 @@ namespace Yandex.Grouper
                 using (var result = cmd.ExecuteReader())
                 {
                     watch.Stop();
-                    writer.WriteLine(watch.ElapsedMilliseconds);
 
-                    while (result.Read())
+                    lock (writer)
                     {
-                        for (int i = 0; i < result.FieldCount; i++)
-                            writer.Write(result[i] + "\t");
+                        writer.WriteLine(cmdText);
+                        writer.WriteLine(watch.ElapsedMilliseconds);
+
+                        while (result.Read())
+                        {
+                            for (int i = 0; i < result.FieldCount; i++)
+                                writer.Write(result[i] + "\t");
+                            writer.WriteLine();
+                        }
                         writer.WriteLine();
+                        writer.Flush();
                     }
-                    writer.WriteLine();
                 }
             }
-
-            //Console.WriteLine(columnsList);
         }
 
         private void doAllGroupBy(int depth, int[] columns, string columnsList)
@@ -91,10 +90,24 @@ namespace Yandex.Grouper
                     prefix += ", ";
 
                 int min = 1;
+                int max = 1;
                 if (depth > 0)
-                    min = columns[depth - 1] + 1;
-                for (int i = min; i < 202 - columns.Length + depth; i++)
                 {
+                    min = columns[depth - 1] + 1;
+                    max = 201 + 1 - columns.Length + depth;
+                }
+                else
+                {
+                    min = this.min;
+                    max = this.max;
+                }
+                for (int i = min; i < max; i++)
+                {
+                    lock (Console.Out)
+                    {
+                        Console.SetCursorPosition(depth * 5, this.min / 25);
+                        Console.Write(i);
+                    }
                     columns[depth] = i;
 
                     doAllGroupBy(depth + 1, columns, prefix + getColumnName(i));
@@ -124,7 +137,7 @@ namespace Yandex.Grouper
         public void group()
         {
             doAllGroupBy(1);
-            //doAllGroupBy(2);
+            doAllGroupBy(2);
         }
     }
 }

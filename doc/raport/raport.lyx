@@ -496,7 +496,7 @@ Czas potrzebny na umieszczenie danych w bazie podzieliliśmy na trzy części:
 
 \begin_layout Itemize
 przepisanie pliku z danymi na sześć plików odpowiadających kolejnym tabelom
- w bazie danych - 344s
+ w bazie danych - 344s (5min 44s)
 \end_layout
 
 \begin_layout Itemize
@@ -599,12 +599,12 @@ ZAPYTANIA PIERWSZEGO
 \begin_inset Quotes erd
 \end_inset
 
-, jednak po pierwsze nawet biorąc poprawkę na 3,5 krotne zmniejszenie objętości
- tabeli, to i tak samo znalezienie 100 najlepszych urli zajęłoby prawie
- 20 minut, a pobieranie listy zapytań dla każdego z urli trwałoby 2-3 minuty,
- co po dodaniu analogicznych operacji dla termów złożyłoby się na minimum
- 7-8 godzin, a po drugie był już gotowy program, który zwracał dokładnie
- te same wyniki, ale w czasie 7-8 minut.
+, jednak nawet biorąc poprawkę na 3,5 krotne zmniejszenie objętości tabeli,
+ to i tak samo znalezienie 100 najlepszych urli zajęłoby prawie 20 minut,
+ a pobieranie listy zapytań dla każdego z urli trwałoby 2-3 minuty, co po
+ dodaniu analogicznych operacji dla termów złożyłoby się na minimum 7-8
+ godzin, a do tego był już gotowy program, który zwracał dokładnie te same
+ wyniki, ale w czasie 7-8 minut.
 \end_layout
 
 \begin_layout Section
@@ -764,6 +764,132 @@ zapytania związane z termami - 107s
 \end_deeper
 \begin_layout Itemize
 przeliczającego podobieństwa między zapytaniami - 264s (71s po zrównolegleniu)
+\end_layout
+
+\begin_layout Standard
+Niestety otrzymane dane nie okazały się zbyt satysfakcjonujące (pierwsza
+ kolumna to współczynnik Jaccarda, druga to liczba wystąpień danej wartości
+ w 50 najbardziej zbliżonych zapytaniach).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+similarity
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+count
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4680
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0,8571429
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+106
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0,8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+169
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0,6666667
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+45
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dodatkowo ze 100 przetworzonych zapytań udało się znaleźć jedynie 13, w
+ których wystąpiła wartość różna od 1.
+ Sprawia to, że wyniki nie są zbyt miarodajne i ciężko będzie na ich podstawie
+ wydobyć jakieś wnioski.
 \end_layout
 
 \begin_layout Subsection
