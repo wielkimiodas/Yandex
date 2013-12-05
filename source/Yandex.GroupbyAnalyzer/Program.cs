@@ -11,6 +11,10 @@ namespace Yandex.GroupbyAnalyzer
         {
             var analyzer = new Analyzer();
             analyzer.ReadGroupbys();
+
+            analyzer.Show();
+
+            Console.ReadLine();
         }
     }
 }

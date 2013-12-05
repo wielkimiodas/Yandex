@@ -48,7 +48,7 @@ namespace Yandex.GroupbyAnalyzer
 
     public class Analyzer
     {
-        private const string InPath = @"C:\Users\Wojciech\Desktop\group_result_train.txt";
+        private const string InPath = @"D:\Downloads\group_result_train.txt";
         private readonly List<Groupby> _groupbies = new List<Groupby>();
 
         public void ReadGroupbys()
@@ -71,6 +71,90 @@ namespace Yandex.GroupbyAnalyzer
 
                 _groupbies.Add(new Groupby(query, timeInMs, resultList));
             }
+        }
+
+        public void Show()
+        {
+            List<Groupby> singleGroups = new List<Groupby>();
+            List<Groupby> doubleGroups = new List<Groupby>();
+
+            foreach (var group in _groupbies)
+            {
+                if (group.Columns.Length == 1)
+                    singleGroups.Add(group);
+
+                if (group.Columns.Length == 2)
+                    doubleGroups.Add(group);
+            }
+
+            foreach (var group in new List<Groupby>[] { singleGroups, doubleGroups })
+            {
+                Stats time = new Stats();
+                Stats values = new Stats();
+
+                foreach (var g in group)
+                {
+                    time.addValue(g.ExecutionTime);
+                    foreach (var val in g.CommonQueries)
+                        values.addValue((int)val);
+                }
+
+                time.calculate("Time");
+                values.calculate("Values");
+            }
+        }
+    }
+
+    public class Stats
+    {
+        List<int> values = new List<int>();
+
+        public void addValue(int value)
+        {
+            values.Add(value);
+        }
+
+        public void calculate(string name)
+        {
+            float avg = 0;
+            float avgNonZero = 0;
+            int nNonZero = 0;
+            float dev = 0;
+            float devNonZero = 0;
+            int min = Int32.MaxValue;
+            int max = Int32.MinValue;
+
+            foreach (int i in values)
+            {
+                avg += i;
+                if (i != 0)
+                {
+                    nNonZero++;
+                    if (min > i)
+                        min = i;
+                    if (max < i)
+                        max = i;
+                }
+            }
+
+            avgNonZero = avg;
+            avg /= values.Count;
+            avgNonZero /= nNonZero;
+
+            foreach (int i in values)
+            {
+                dev += (float)Math.Pow(i - avg, 2);
+                if (i != 0)
+                    devNonZero += (float)Math.Pow(i - avgNonZero, 2);
+            }
+
+            dev = (float)Math.Sqrt(dev / values.Count);
+            devNonZero = (float)Math.Sqrt(devNonZero / nNonZero);
+
+            Console.WriteLine(name + ":");
+            Console.WriteLine("{0}\t{1}", avg, dev);
+            Console.WriteLine("{0}\t{1} ({2})", avgNonZero, devNonZero, nNonZero);
+            Console.WriteLine("{0}\t{1}", min, max);
         }
     }
 }
