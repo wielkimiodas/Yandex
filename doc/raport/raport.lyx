@@ -1776,8 +1776,8 @@ Na końcu jest zawsze miejsce na krótkie podsumowanie
 Analiza danych sprawiła wiele trudności, jednak ostatecznie udało się ją
  przeprowadzić.
  Szablonowe podejście do problemu (wyszukiwanie sąsiadów) może się nie sprawdzić
- jako rozwiązanie dla tego zadania, ze względu na małe podobieństwa pomiędzy
- poszczególnymi zapytaniami.
+ jako rozwiązanie dla tego zadania, ze względu na małą różnicę podobieństw
+ pomiędzy poszczególnymi zapytaniami.
 \end_layout
 
 \begin_layout Standard
