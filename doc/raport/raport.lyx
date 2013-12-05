@@ -218,10 +218,18 @@ Dane o kliknięciu
 \end_layout
 
 \begin_layout Standard
-Rozmiar danych wygląda następująco:
+Rozmiar danych przedstawia się następująco:
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="4" columns="3">
 <features tabularvalignment="middle">
@@ -347,6 +355,23 @@ dane o kliknięciu
 </cell>
 </row>
 </lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Rozmiar danych
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -992,10 +1017,6 @@ Zapytanie 3
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
 gdzie <Lista kolumn> to albo nazwa pojedynczej kolumny (np.
  
 \begin_inset Quotes eld
@@ -1015,9 +1036,9 @@ url1, url100
 \end_inset
 
 ).
-\end_layout
+\begin_inset Newline newline
+\end_inset
 
-\begin_layout Standard
 Dodatkowo okazało się, że wąskim gardłem przy wykonywaniu zapytania nie
  był odczyt z dysku (co miało miejsce w przypadku dwóch poprzednich zapytań),
  tylko przetwarzanie na procesorze, dlatego również i ten problem udało
@@ -1199,6 +1220,14 @@ Niestety otrzymane dane nie okazały się zbyt satysfakcjonujące (pierwsza
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="5" columns="2">
 <features tabularvalignment="middle">
@@ -1311,6 +1340,23 @@ count
 
 \end_layout
 
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Podobieństwa
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 Dodatkowo ze 100 przetworzonych zapytań udało się znaleźć jedynie 13, w
  których wystąpiła wartość różna od 1.
@@ -1327,6 +1373,14 @@ Grupowanie wykorzystywało listę top100 urli i termów i powiązanych z nimi
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="5" columns="3">
 <features tabularvalignment="middle">
@@ -1485,6 +1539,23 @@ czas maksymalny
 
 \end_layout
 
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Czasy zapytań
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 przy czym warto zaznaczyć, że czas zależał od pozycji kolumny (im dalej
  się znajdowała, tym zapytanie trwało dłużej).
@@ -1495,6 +1566,14 @@ Otrzymane wyniki prezentują się następująco
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="5" columns="3">
 <features tabularvalignment="middle">
@@ -1653,130 +1732,11 @@ maksymalna liczność grupy
 
 \end_layout
 
-\begin_layout Subsection
-Tabelaryczne dane nominalne
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
+\begin_layout Plain Layout
+\begin_inset Caption
 
 \begin_layout Plain Layout
-W przypadku danych nominalnych należy przeprowadzić grupowanie: 
-\end_layout
-
-\begin_layout Itemize
-po wszystkich atrybutach (w przypadku dużej liczby atrybutów, grupowanie
- powinno dotyczyć tylko pierwszych 20 atrybutów), 
-\end_layout
-
-\begin_layout Itemize
-dla każdego z atrybutu z osobna, 
-\end_layout
-
-\begin_layout Itemize
-oraz dla każdej pary atrybutów (maksymalnie dla pierwszych 100 atrybutów).
-\end_layout
-
-\begin_layout Plain Layout
-Jako miarę podobieństwa przy wyszukiwaniu najbliższych sąsiadów należy zastosowa
-ć współczynnik Jaccarda.
- Mierzy on podobieństwo między dwoma zbiorami i jest zdefiniowany jako iloraz
- mocy części wspólnej zbiorów i mocy sumy tych zbiorów: 
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Formula 
-\[
-J(A,B)=\frac{A\cap B}{A\cup B},
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-A i B są zbiorami, które odpowiadają obiektom opisanym przez atrybuty nominalne
- (proszę zwrócić uwagę, że atrybut binarny często wskazuje, czy dana wartość
- występuje, czy też nie).
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Subsection
-Tabelaryczne dane numeryczne
-\end_layout
-
-\begin_layout Plain Layout
-W celu pogrupowania danych numerycznych dla każdego atrybutu należy przeprowadzi
-ć dyskretyzację wartości numerycznych do 5 przedziałów.
- Należy przeprowadzić dyskretyzację według równej częstości, czyli otrzymane
- przedziały są mniej więcej równoliczne.
-\end_layout
-
-\begin_layout Plain Layout
-Dla tak przekształconych atrybutów należy wykonać normalne grupowanie, zgodnie
- z z opisem w punkcie 4.1.
-\end_layout
-
-\begin_layout Plain Layout
-Przy poszukiwaniu najbliższych sąsiadów należy się posłużyć miarą euklidesową.
- Wcześniej należy jednak ustandaryzować wartości atrybutów, tzn.
- od wartości każdego atrybutu odejmujemy średnią i dzielimy przez odchylenie
- standardowe (czyli przeprowadzamy zmienne o różnych jednostkach do zmiennych
- niemianowanych).
-\end_layout
-
-\begin_layout Subsection
-Tabelaryczne dane nominalne i numeryczne
-\end_layout
-
-\begin_layout Plain Layout
-W przypadku wymieszanych danych nominalnych i numerycznych dzielimy dane
- na dwie części i wykonujemy eksperymenty osobno dla każdej części zgodnie
- z opisem w dwóch powyższych punktach.
-\end_layout
-
-\begin_layout Subsection
-Dane tekstowe
-\end_layout
-
-\begin_layout Plain Layout
-Dane tekstowe należy przekształcić do postaci danych nominalnych, gdzie
- każdy atrybut odpowiada jednemu słowu.
- Przekształcenie należy wykonać dla 100 najczęściej występujących słów.
- Można (nie jest konieczne) wykonać odpowiednie przekształcenia danych tekstowyc
-h, takie jak stematyzacja lub lematyzacja.
-\end_layout
-
-\begin_layout Plain Layout
-Dla tak przekształconych danych należy postępować zgodnie z opisem w punkcie
- 4.1.
-\end_layout
-
-\begin_layout Subsection
-Dane macierzowe
-\end_layout
-
-\begin_layout Plain Layout
-W niektórych konkursach dane mają postać zależności pomiędzy dwoma typami
- obiektów, np.
- użytkownikami i produktami.
- W takim przypadku należy potraktować jeden typ danych jako rekordy, a drugi
- jako atrybuty.
- Jako atrybuty wybieramy 100 najpopularniejszych obiektów (np.
- produktów).
- Grupowanie należy wykonać zgodnie z opisem w powyższych punktach.
-\end_layout
-
-\begin_layout Plain Layout
-W przypadku wyszukiwanie najbliższych sąsiadów postępujemy podobnie, np.
- należy wyszukiwać podobnych użytkowników ze względu na wybrane produkty
- (lub na odwrót).
- W celu obliczenia podobieństwa należy wykorzystać współczynnik Jaccarda.
+Grupowanie
 \end_layout
 
 \end_inset
