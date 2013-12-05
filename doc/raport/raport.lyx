@@ -710,7 +710,7 @@ dyskusji na temat napotkanych trudności.
 
 \end_inset
 
-// opis grupowania
+
 \end_layout
 
 \begin_layout Standard
@@ -869,6 +869,85 @@ Wtedy postanowiono wrócić do oryginalnego pliku z danymi (lecz w postaci
  dodaniu analogicznych operacji dla termów złożyłoby się na minimum 7-8
  godzin, a do tego był już gotowy program, który zwracał dokładnie te same
  wyniki, ale w czasie 7-8 minut.
+ Udało się więc ostatecznie uzyskać plik składający się z listy urli/termów
+ i odpowiadającej każdemu z nich listy zapytań.
+\end_layout
+
+\begin_layout Standard
+Samo wyszukiwanie sąsiadów polegało na wczytaniu całego pliku, przetworzeniu
+ go (w celu uzyskania listy urli/termów dla zapytania), a nastepnie porównywaniu
+ kolejnych zapytań.
+ Samo porównywanie, będące najbardziej czasochłonną częścią, udało się zrównoleg
+lić, znacznie skracając czas przetwarzania.
+\end_layout
+
+\begin_layout Standard
+Ze względu na stosunkowo wolny dostęp do danych zgromadzonych w utworzonym
+ schemacie, dla problemu grupowania postanowiliśmy utworzyć osobną tabelę.
+ Tabela ta zawiera 201 kolumn:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+query_id
+\series default
+ czyli identyfikator zapytania
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+termN
+\series default
+ (N 
+\begin_inset Formula $\in$
+\end_inset
+
+ <1, 100>) 100 kolumn typu boolean, informujących czy dany term wystąpił
+ w zapytaniu
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+urlN
+\series default
+ (N 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\in$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ <1, 100>) 100 kolumn typu boolean, informujących czy dany url wystąpił
+ w wynikach zapytania
+\end_layout
+
+\begin_layout Standard
+do której dane importowaliśmy z użyciem list urli/termów dla każdego zapytania
+ (uzyskanych identyczną metodą, jak w przypadku szukania najbliższych sąsiadów).
 \end_layout
 
 \begin_layout Section
@@ -1163,6 +1242,341 @@ Dodatkowo ze 100 przetworzonych zapytań udało się znaleźć jedynie 13, w
  których wystąpiła wartość różna od 1.
  Sprawia to, że wyniki nie są zbyt miarodajne i ciężko będzie na ich podstawie
  wydobyć jakieś wnioski.
+\end_layout
+
+\begin_layout Standard
+Grupowanie wykorzystywało listę top100 urli i termów i powiązanych z nimi
+ zapytań, uzyskanych na potrzeby szukania najbliższych sąsiadów, w dalszej
+ kolejności należało dane wrzucić do bazy danych i wykonać odpowiednie zapytania.
+ Import danych do bazy trwał 1h 23min 22s.
+ Czasy wykonywania zapytań prezentowały się następująco:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+po jednej kolumnie
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+po dwóch kolumnach
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+średni czas
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16,937s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+21,382s
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+odchylenie
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+9,010s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7,471s
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+czas minimalny
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5,918s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+65,08s
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+czas maksymalny
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+29,153s
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+29,095s
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+przy czym warto zaznaczyć, że czas zależał od pozycji kolumny (im dalej
+ się znajdowała, tym zapytanie trwało dłużej).
+\end_layout
+
+\begin_layout Standard
+Otrzymane wyniki prezentują się następująco
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+po jednej kolumnie
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+po dwóch kolumnach
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+średnia liczność grupy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5601715
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2800861 (dla niezerowych 3014466)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+odchylenie
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7792784
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6636801 (dla niezerowych 6791040)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+minimalna (niezerowa) liczność grupy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4354
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+maksymalna liczność grupy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+11199074
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+11196049
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
