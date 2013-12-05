@@ -961,6 +961,7 @@ Samo grupowanie polegało na wykonywaniu zapytań postaci:
 
 \begin_layout Standard
 \begin_inset listings
+lstparams "language=SQL,tabsize=4"
 inline false
 status open
 
@@ -977,6 +978,16 @@ FROM log
 \begin_layout Plain Layout
 
 GROUP BY <Lista kolumn>
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+Zapytanie 3
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
