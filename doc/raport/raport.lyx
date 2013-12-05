@@ -1732,5 +1732,13 @@ Na końcu jest zawsze miejsce na krótkie podsumowanie
 
 \end_layout
 
+\begin_layout Standard
+Analiza danych sprawiła wiele trudności, jednak ostatecznie udało się ją
+ przeprowadzić.
+ Jednak szablonowe podejście do problemu (wyszukiwanie sąsiadów) może się
+ nie sprawdzić jako rozwiązanie dla tego zadania, ze względu na małe podobieństw
+a pomiędzy poszczególnymi zapytaniami.
+\end_layout
+
 \end_body
 \end_document
