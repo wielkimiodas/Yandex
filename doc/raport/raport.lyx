@@ -513,6 +513,10 @@ Reprezentacja danych w pamięci operacyjnej
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
 Krótki opis (bardzo zwięzły i konkretny) z uwzględnieniem: 
 \end_layout
 
@@ -531,7 +535,8 @@ dyskusji na temat napotkanych trudności.
  
 \end_layout
 
-\begin_layout Standard
+\end_inset
+
 // opis grupowania
 \end_layout
 
@@ -541,7 +546,9 @@ Wyszukiwanie najbliżych sąsiadów miało polegać na wyznaczeniu 100 najczęś
  obliczaniu współczynnika Jaccarda dla poszczególnych zapytań w odniesieniu
  do wspomnianych termów i urli.
  Okazało się, że już wyznaczenie 100 najczęściej występujących urli znacznie
- przerosło możliwości bazy danych - zapytanie
+ przerosło możliwości bazy danych - poniższe zapytanie (wykonywane jeszcze
+ na starej wersji schematu danych) zwracające nie do końca poprawne wyniki,
+ było wykonywane przez ponad godzinę.
 \end_layout
 
 \begin_layout Standard
@@ -601,13 +608,9 @@ Zapytanie 1
 
 \end_inset
 
- (wykonywane jeszcze na starej wersji schematu danych)
-\end_layout
-
-\begin_layout Standard
-zwracające wyniki nie do końca poprawne wyniki, było wykonywane przez ponad
- godzinę, natomiast zapytanie (tym razem zwracające w pełni oczekiwane wyniki)
- postaci:
+Natomiast Zapytanie 2 (tym razem zwracające w pełni oczekiwane wyniki) wykonywał
+o się przez ok.
+ 35 godzin, po czym zostało przerwane.
 \end_layout
 
 \begin_layout Standard
@@ -673,20 +676,19 @@ Zapytanie 2
 
 \end_inset
 
-wykonywało się przez ok.
- 35 godzin, po czym zostało przerwane.
+
 \end_layout
 
 \begin_layout Standard
-Wtedy postanowiono wrócić do oryginalnego pliku z danymi (ale w postaci
- binarnej zamiast tekstowej) i wydobycie danych bezpośrednio z niego.
+Wtedy postanowiono wrócić do oryginalnego pliku z danymi (lecz w postaci
+ binarnej zamiast tekstowej) by wydobyć dane bezpośrednio z niego.
  Wymagało to czterokrotnego przejrzenia całego pliku - po razie na zliczenie
- zapytań dla każdego urla i termu, i po kolejnym razie dla pobrania query_id
- dla każdego z najlepszych termów i urli (teoretycznie można by zmieścić
- się w dwóch przejrzeniach, jednak problemem okazała się zbyt mała ilość
- pamięci ram, aby pomieścić obszerne mapowania id na ilośc wystąpień i zbiór
- przeanalizowanych zapytań).
- Dopiero na etapia pisania tego programu udało się dojść do unikalności
+ zapytań dla każdego urla i termu, a następnie po kolejnym razie dla pobrania
+ query_id dla każdego z najlepszych termów i urli (teoretycznie można by
+ zmieścić się w dwóch przejrzeniach, jednak problemem okazała się zbyt mała
+ ilość pamięci ram, aby pomieścić obszerne mapowania id na ilośc wystąpień
+ i zbiór przeanalizowanych zapytań).
+ Dopiero na etapie pisania tego programu udało się dojść do unikalności
  query_id (co było powodem zmiany schematu bazy danych), co pozwoliłoby
  na uzyskanie oczekiwanych wyników za pomocą zapytania zbliżonego do Zapytania
  1, jednak nawet biorąc poprawkę na 3,5 krotne zmniejszenie objętości tabeli,
@@ -702,6 +704,10 @@ Eksperyment
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
 W tym rozdziale należy umieścić wyniki eksperymentów.
  Należy zamieścić krótkie komentarze, tabele z wynikami oraz wnioski.
  
@@ -775,7 +781,7 @@ end{table}
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Należy wykonać następujące zapytania: 
 \end_layout
 
@@ -788,30 +794,30 @@ Wyszukiwanie najbliższych $k = 50$ sąsiadów.
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Dla otrzymanych partycji danych (przez grupowanie i wyszukanie najbliższych
  sąsiadów) należy zastosować dowolną funkcję agregującą na dowolnych atrybutach.
  Oczywiście, najlepiej jest wybrać atrybut decyzyjny (wyjściowy).
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Dla wszystkich eksperymentów należy podać czasy wykonania.
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Najbliższych sąsiadów należy wyszukać dla maksymalnie pierwszych 100 przykładów
  (dla chętnych 10 tys.
  przykładów), ale szukanie odbywa się w całym zbiorze danych.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Cały eksperyment można powtórzyć parokrotnie i uśrednić wyniki (można podać
  błąd standardowy).
  Przy wyznaczaniu czasów nie należy brać pod uwagę czasu wyświetlania wyników.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 W zależności od rodzaju problemu, proszę stosować się do niżej opisanych
  wytycznych.
  Jeżeli dany problem nie pasuje do żadnego wyżej opisanego typu, to proszę
@@ -819,10 +825,15 @@ W zależności od rodzaju problemu, proszę stosować się do niżej opisanych
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 (maks.
  4 strony razem z tabelami).
  
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -987,6 +998,10 @@ Tabelaryczne dane nominalne
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
 W przypadku danych nominalnych należy przeprowadzić grupowanie: 
 \end_layout
 
@@ -1003,14 +1018,14 @@ dla każdego z atrybutu z osobna,
 oraz dla każdej pary atrybutów (maksymalnie dla pierwszych 100 atrybutów).
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Jako miarę podobieństwa przy wyszukiwaniu najbliższych sąsiadów należy zastosowa
 ć współczynnik Jaccarda.
  Mierzy on podobieństwo między dwoma zbiorami i jest zdefiniowany jako iloraz
  mocy części wspólnej zbiorów i mocy sumy tych zbiorów: 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 J(A,B)=\frac{A\cap B}{A\cup B},
@@ -1021,29 +1036,33 @@ J(A,B)=\frac{A\cap B}{A\cup B},
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 A i B są zbiorami, które odpowiadają obiektom opisanym przez atrybuty nominalne
  (proszę zwrócić uwagę, że atrybut binarny często wskazuje, czy dana wartość
  występuje, czy też nie).
 \end_layout
 
+\begin_layout Plain Layout
+\begin_inset Note Note
+status collapsed
+
 \begin_layout Subsection
 Tabelaryczne dane numeryczne
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 W celu pogrupowania danych numerycznych dla każdego atrybutu należy przeprowadzi
 ć dyskretyzację wartości numerycznych do 5 przedziałów.
  Należy przeprowadzić dyskretyzację według równej częstości, czyli otrzymane
  przedziały są mniej więcej równoliczne.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Dla tak przekształconych atrybutów należy wykonać normalne grupowanie, zgodnie
  z z opisem w punkcie 4.1.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Przy poszukiwaniu najbliższych sąsiadów należy się posłużyć miarą euklidesową.
  Wcześniej należy jednak ustandaryzować wartości atrybutów, tzn.
  od wartości każdego atrybutu odejmujemy średnią i dzielimy przez odchylenie
@@ -1055,7 +1074,7 @@ Przy poszukiwaniu najbliższych sąsiadów należy się posłużyć miarą eukli
 Tabelaryczne dane nominalne i numeryczne
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 W przypadku wymieszanych danych nominalnych i numerycznych dzielimy dane
  na dwie części i wykonujemy eksperymenty osobno dla każdej części zgodnie
  z opisem w dwóch powyższych punktach.
@@ -1065,7 +1084,7 @@ W przypadku wymieszanych danych nominalnych i numerycznych dzielimy dane
 Dane tekstowe
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Dane tekstowe należy przekształcić do postaci danych nominalnych, gdzie
  każdy atrybut odpowiada jednemu słowu.
  Przekształcenie należy wykonać dla 100 najczęściej występujących słów.
@@ -1073,7 +1092,7 @@ Dane tekstowe należy przekształcić do postaci danych nominalnych, gdzie
 h, takie jak stematyzacja lub lematyzacja.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Dla tak przekształconych danych należy postępować zgodnie z opisem w punkcie
  4.1.
 \end_layout
@@ -1082,7 +1101,7 @@ Dla tak przekształconych danych należy postępować zgodnie z opisem w punkcie
 Dane macierzowe
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 W niektórych konkursach dane mają postać zależności pomiędzy dwoma typami
  obiektów, np.
  użytkownikami i produktami.
@@ -1093,11 +1112,21 @@ W niektórych konkursach dane mają postać zależności pomiędzy dwoma typami
  Grupowanie należy wykonać zgodnie z opisem w powyższych punktach.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 W przypadku wyszukiwanie najbliższych sąsiadów postępujemy podobnie, np.
  należy wyszukiwać podobnych użytkowników ze względu na wybrane produkty
  (lub na odwrót).
  W celu obliczenia podobieństwa należy wykorzystać współczynnik Jaccarda.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -1105,7 +1134,16 @@ Podsumowanie
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
 Na końcu jest zawsze miejsce na krótkie podsumowanie 
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
