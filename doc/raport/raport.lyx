@@ -180,6 +180,179 @@ Warto przedstawić postać typowych przykładów uczących oraz testowych.
 
 \end_layout
 
+\begin_layout Standard
+Zbiory treningowy i testowy mają
+\begin_inset space \space{}
+\end_inset
+
+właściwie identyczną postać.
+ Składają się z 3 rodzajów linijek:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Dane o sesji
+\series default
+ zawierają unikalny identyfikator sesji, numer dnia i identyfikator użytkownika
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Dane o zapytaniu
+\series default
+ zawierają identyfikator zapytania, identyfikator sesji, czas od rozpoczęcia
+ sesji, typ zapytania (normalne lub testowe, występujące tylko w zbiorze
+ testowym), numer zapytania w sesji, listę identyfikatorów termów i listę
+ par identyfikatorów urli i identyfikatorów domen.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Dane o kliknięciu
+\series default
+ zawierają identyfikator sesji, czas od rozpoczęcia sesji, identyfikator
+ urla i numer zapytania w sesji.
+\end_layout
+
+\begin_layout Standard
+Rozmiar danych wygląda następująco:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Typ
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Zb.
+ treningowy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Zb.
+ testowy
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+dane o sesji
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+34'573'630
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+797'867
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+dane o zapytaniu
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+65'172'853
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1'543'096 (797'867 testowych)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+dane o kliknięciu
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+64'693'054
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+632'539
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Opis metody oceny rozwiązań
 \end_layout
@@ -665,7 +838,6 @@ LIMIT 100
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 Zapytanie 2
 \end_layout
 
