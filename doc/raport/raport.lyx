@@ -154,8 +154,8 @@ Krótki i zwięzły opis zadania konkursowego.
 \begin_layout Standard
 Zadanie polega na tym aby uporządkować na nowo listę linków zwracanych przez
  przeglądarkę dla danego zapytania pod konkretnego użytkownika.
- W tym celu do dyspozycji otrzymujemy dane historyczne tej przeglądarki
- oraz obecnej sesji.
+ W tym celu do dyspozycji otrzymujemy dane historyczne przeglądarki oraz
+ obecnej sesji.
 \end_layout
 
 \begin_layout Subsection
@@ -289,9 +289,9 @@ podkreśleniem
 kursywą
 \emph default
 .
-\end_layout
+\begin_inset Newline newline
+\end_inset
 
-\begin_layout Standard
 Pierwsza to tabela 
 \series bold
 Session
@@ -357,9 +357,9 @@ q_id jest sztucznie nadanym kluczem głównym tabeli, query_id jest wartością
  time_passed, podobnie jak w jednej z kolejnych tabel, reprezentuje czas
  od ostatniej akcji użytkownika (a nie od rozpoczęcia sesji, jak było to
  zapisane w pliku z danymi).
-\end_layout
+\begin_inset Newline newline
+\end_inset
 
-\begin_layout Standard
 Trzecia tabela to 
 \series bold
 Query_term
@@ -387,9 +387,9 @@ pos
 
 \begin_layout Standard
 Wątpliwości może budzić jedynie kolumna pos, będąca pozycją termu w zapytaniu.
-\end_layout
+\begin_inset Newline newline
+\end_inset
 
-\begin_layout Standard
 Czwarta tabela, 
 \series bold
 Query_url
