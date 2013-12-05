@@ -218,15 +218,15 @@ Dane o kliknięciu
 \end_layout
 
 \begin_layout Standard
-Rozmiar danych przedstawia się następująco:
-\end_layout
-
-\begin_layout Standard
 \begin_inset Float table
 placement H
 wide false
 sideways false
 status open
+
+\begin_layout Plain Layout
+Rozmiar danych przedstawia się następująco:
+\end_layout
 
 \begin_layout Plain Layout
 \align center
@@ -398,7 +398,11 @@ Precyzyjny i formalny opis metody oceny rozwiązania.
 
 \begin_layout Standard
 Podstawowym problemem jest zakwalifikowanie każdego linka do jednej z trzech
- kategorii: 0 - nieważnych, 1 - ważnych i 2 - bardzo ważnych.
+ kategorii: 
+\series bold
+0 - nieważnych, 1 - ważnych i 2 - bardzo ważnych
+\series default
+.
  Do pierwszej powinny zaliczać się te linki, które nie zostaną wybrane przez
  użytkownika, albo wskazywane przez nie strony będą przez niego analizowane
  krócej niż 50 jednostek czasu.
@@ -894,8 +898,8 @@ Wtedy postanowiono wrócić do oryginalnego pliku z danymi (lecz w postaci
  dodaniu analogicznych operacji dla termów złożyłoby się na minimum 7-8
  godzin, a do tego był już gotowy program, który zwracał dokładnie te same
  wyniki, ale w czasie 7-8 minut.
- Udało się więc ostatecznie uzyskać plik składający się z listy urli/termów
- i odpowiadającej każdemu z nich listy zapytań.
+ Na wyjściu uzyskano plik składający się z listy urli/termów i odpowiadającej
+ każdemu z nich listy zapytań.
 \end_layout
 
 \begin_layout Standard
@@ -913,8 +917,7 @@ Ze względu na stosunkowo wolny dostęp do danych zgromadzonych w utworzonym
 \series bold
 Log
 \series default
-.
- Tabela ta zawiera 201 kolumn:
+, zawierającą 201 kolumn:
 \end_layout
 
 \begin_layout Itemize
@@ -1006,7 +1009,6 @@ GROUP BY <Lista kolumn>
 \begin_inset Caption
 
 \begin_layout Plain Layout
-
 Zapytanie 3
 \end_layout
 
@@ -1041,8 +1043,8 @@ url1, url100
 
 Dodatkowo okazało się, że wąskim gardłem przy wykonywaniu zapytania nie
  był odczyt z dysku (co miało miejsce w przypadku dwóch poprzednich zapytań),
- tylko przetwarzanie na procesorze, dlatego również i ten problem udało
- się zrównoleglić.
+ tylko przetwarzanie na procesorze, dlatego również i to zadanie udało się
+ zrównoleglić.
 \end_layout
 
 \begin_layout Section
@@ -1344,7 +1346,7 @@ count
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Podobieństwa
+Liczności prawdopodobieństw
 \end_layout
 
 \end_inset
@@ -1369,7 +1371,7 @@ Grupowanie wykorzystywało listę top100 urli i termów i powiązanych z nimi
  zapytań, uzyskanych na potrzeby szukania najbliższych sąsiadów, w dalszej
  kolejności należało dane wrzucić do bazy danych i wykonać odpowiednie zapytania.
  Import danych do bazy trwał 1h 23min 22s.
- Czasy wykonywania zapytań prezentowały się następująco:
+ 
 \end_layout
 
 \begin_layout Standard
@@ -1378,6 +1380,10 @@ placement H
 wide false
 sideways false
 status open
+
+\begin_layout Plain Layout
+Czasy wykonywania zapytań prezentowały się następująco:
+\end_layout
 
 \begin_layout Plain Layout
 \align center
@@ -1497,7 +1503,7 @@ czas minimalny
 \begin_inset Text
 
 \begin_layout Plain Layout
-65,08s
+6,508s
 \end_layout
 
 \end_inset
@@ -1543,7 +1549,7 @@ czas maksymalny
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Czasy zapytań
+Czasy wykonywania zapytań
 \end_layout
 
 \end_inset
@@ -1562,15 +1568,15 @@ przy czym warto zaznaczyć, że czas zależał od pozycji kolumny (im dalej
 \end_layout
 
 \begin_layout Standard
-Otrzymane wyniki prezentują się następująco
-\end_layout
-
-\begin_layout Standard
 \begin_inset Float table
 placement H
 wide false
 sideways false
 status open
+
+\begin_layout Plain Layout
+Otrzymane wyniki prezentują się następująco:
+\end_layout
 
 \begin_layout Plain Layout
 \align center
@@ -1769,9 +1775,16 @@ Na końcu jest zawsze miejsce na krótkie podsumowanie
 \begin_layout Standard
 Analiza danych sprawiła wiele trudności, jednak ostatecznie udało się ją
  przeprowadzić.
- Jednak szablonowe podejście do problemu (wyszukiwanie sąsiadów) może się
- nie sprawdzić jako rozwiązanie dla tego zadania, ze względu na małe podobieństw
-a pomiędzy poszczególnymi zapytaniami.
+ Szablonowe podejście do problemu (wyszukiwanie sąsiadów) może się nie sprawdzić
+ jako rozwiązanie dla tego zadania, ze względu na małe podobieństwa pomiędzy
+ poszczególnymi zapytaniami.
+\end_layout
+
+\begin_layout Standard
+W obliczu zdobytych doświadczeń nadal nie jesteśmy jeszcze w stanie określić
+ w jaki sposób przetwarzać te dane, dopuszczamy jednak możliwość, że czytanie
+ bezpośrednio z wejściowych plików, okaże się dla nas najbardziej efektywne
+ (nawet po uwzględnieniu wyższych kosztów implementacji).
 \end_layout
 
 \end_body
