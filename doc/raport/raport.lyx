@@ -883,7 +883,12 @@ lić, znacznie skracając czas przetwarzania.
 
 \begin_layout Standard
 Ze względu na stosunkowo wolny dostęp do danych zgromadzonych w utworzonym
- schemacie, dla problemu grupowania postanowiliśmy utworzyć osobną tabelę.
+ schemacie, dla problemu grupowania postanowiliśmy utworzyć osobną tabelę
+ 
+\series bold
+Log
+\series default
+.
  Tabela ta zawiera 201 kolumn:
 \end_layout
 
@@ -948,6 +953,64 @@ urlN
 \begin_layout Standard
 do której dane importowaliśmy z użyciem list urli/termów dla każdego zapytania
  (uzyskanych identyczną metodą, jak w przypadku szukania najbliższych sąsiadów).
+\end_layout
+
+\begin_layout Standard
+Samo grupowanie polegało na wykonywaniu zapytań postaci:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+SELECT COUNT(*), <Lista kolumn>
+\end_layout
+
+\begin_layout Plain Layout
+
+FROM log
+\end_layout
+
+\begin_layout Plain Layout
+
+GROUP BY <Lista kolumn>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+gdzie <Lista kolumn> to albo nazwa pojedynczej kolumny (np.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+url1
+\begin_inset Quotes erd
+\end_inset
+
+) albo nazwa dwóch kolumn oddzielonych przecinkiem (np.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+url1, url100
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Dodatkowo okazało się, że wąskim gardłem przy wykonywaniu zapytania nie
+ był odczyt z dysku (co miało miejsce w przypadku dwóch poprzednich zapytań),
+ tylko przetwarzanie na procesorze, dlatego również i ten problem udało
+ się zrównoleglić.
 \end_layout
 
 \begin_layout Section
