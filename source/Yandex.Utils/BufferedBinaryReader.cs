@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Yandex.Transfer
+namespace Yandex.Utils
 {
     public class BufferedBinaryReader : IDisposable
     {

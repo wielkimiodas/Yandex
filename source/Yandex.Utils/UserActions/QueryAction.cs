@@ -1,19 +1,34 @@
 ﻿using System;
+using System.IO;
 
-namespace Yandex.Transformer
+namespace Yandex.Utils.UserActions
 {
-    internal class QueryAction : UserAction
+    public class QueryAction : UserAction
     {
         private static char[] commaSep = new char[] {','};
 
-        private byte type;
-        private int sessionId;
-        private int time;
-        private int serpId;
-        private int queryId;
-        private int[] terms;
-        private int[] urls;
-        private int[] domains;
+        public byte type { get; protected set; }
+        public int sessionId { get; protected set; }
+        public int time { get; protected set; }
+        public int serpId { get; protected set; }
+        public int queryId { get; protected set; }
+        public int[] terms { get; protected set; }
+        public int[] urls { get; protected set; }
+        public int[] domains { get; protected set; }
+
+        public QueryAction() { }
+
+        public QueryAction(byte type, int sessionId, int time, int serpId, int queryId, int[] terms, int[] urls, int[] domains)
+        {
+            this.type = type;
+            this.sessionId = sessionId;
+            this.time = time;
+            this.serpId = serpId;
+            this.queryId = queryId;
+            this.terms = terms;
+            this.urls = urls;
+            this.domains = domains;
+        }
 
         public override bool readData(string[] array)
         {
@@ -47,7 +62,7 @@ namespace Yandex.Transformer
             return true;
         }
 
-        public override bool writeToFile(BufferedBinaryWriter writer)
+        public override bool writeToFile(BinaryWriter writer)
         {
             try
             {

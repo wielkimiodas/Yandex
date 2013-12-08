@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Npgsql;
 using System.Threading;
+using Yandex.Utils;
 
 namespace Yandex.Transfer
 {

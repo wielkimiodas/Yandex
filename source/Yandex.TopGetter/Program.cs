@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
+using Yandex.Utils;
 
 namespace Yandex.TopGetter
 {
@@ -12,7 +13,7 @@ namespace Yandex.TopGetter
         static void Main(string[] args)
         {
             string dir = @"D:\Downloads\EDWD\";
-            string data = "train";
+            string data = "test";
 
             string logFile = dir + data + "_tr";
             string topUrls = dir + data + "_top_urls.txt";
@@ -27,7 +28,7 @@ namespace Yandex.TopGetter
             getTopUrls(logFile, topUrls);
             watch1.Stop();
             Console.WriteLine("getTopUrls: " + watch1.ElapsedMilliseconds);
-            watch1.Restart();
+            /*watch1.Restart();
 
             getTopTerms(logFile, topTerms);
             watch1.Stop();
@@ -47,7 +48,7 @@ namespace Yandex.TopGetter
             }
 
             watch2.Stop();
-            Console.WriteLine("Total: " + watch2.ElapsedMilliseconds);
+            Console.WriteLine("Total: " + watch2.ElapsedMilliseconds);*/
             Console.ReadLine();
         }
 

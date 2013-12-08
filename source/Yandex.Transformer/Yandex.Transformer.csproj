@@ -70,13 +70,23 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BufferedBinaryWriter.cs" />
-    <Compile Include="Click.cs" />
-    <Compile Include="Metadata.cs" />
+    <Compile Include="..\Yandex.Utils\BufferedBinaryReader.cs">
+      <Link>Utils\BufferedBinaryReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Yandex.Utils\UserActions\Click.cs">
+      <Link>UserActions\Click.cs</Link>
+    </Compile>
+    <Compile Include="..\Yandex.Utils\UserActions\Metadata.cs">
+      <Link>UserActions\Metadata.cs</Link>
+    </Compile>
+    <Compile Include="..\Yandex.Utils\UserActions\QueryAction.cs">
+      <Link>UserActions\QueryAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Yandex.Utils\UserActions\UserAction.cs">
+      <Link>UserActions\UserAction.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryAction.cs" />
-    <Compile Include="UserAction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

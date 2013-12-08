@@ -1,13 +1,24 @@
 ﻿using System;
+using System.IO;
 
-namespace Yandex.Transformer
+namespace Yandex.Utils.UserActions
 {
-    internal class Metadata : UserAction
+    public class Metadata : UserAction
     {
-        private byte type;
-        private int sessionId;
-        private int day;
-        private int userId;
+        public byte type { get; protected set; }
+        public int sessionId { get; protected set; }
+        public int day { get; protected set; }
+        public int userId { get; protected set; }
+
+        public Metadata() { }
+
+        public Metadata(int sessionId, int day, int userId)
+        {
+            this.type = 0;
+            this.sessionId = sessionId;
+            this.day = day;
+            this.userId = userId;
+        }
 
         public override bool readData(string[] array)
         {
@@ -26,7 +37,7 @@ namespace Yandex.Transformer
             return true;
         }
 
-        public override bool writeToFile(BufferedBinaryWriter writer)
+        public override bool writeToFile(BinaryWriter writer)
         {
             try
             {

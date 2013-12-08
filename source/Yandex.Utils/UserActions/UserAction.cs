@@ -1,6 +1,7 @@
 ﻿using System;
+using System.IO;
 
-namespace Yandex.Transformer
+namespace Yandex.Utils.UserActions
 {
     public abstract class UserAction
     {
@@ -17,7 +18,7 @@ namespace Yandex.Transformer
         /// Zapisuje dane do pliku.
         /// </summary>
         /// <returns>True, jeżeli operacja zapisu powiedzie się.</returns>
-        public abstract bool writeToFile(BufferedBinaryWriter writer);
+        public abstract bool writeToFile(BinaryWriter writer);
 
         public static UserAction getAction(String line)
         {

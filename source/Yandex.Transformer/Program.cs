@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using Yandex.Utils;
+using Yandex.Utils.UserActions;
 
 namespace Yandex.Transformer
 {
@@ -13,8 +15,7 @@ namespace Yandex.Transformer
             int lineCounter = 0;
 
             using (StreamReader reader = new StreamReader(inputFilename))
-                //using (BinaryWriter writer = new BinaryWriter(new FileStream(outputFilename, FileMode.Create)))
-            using (BufferedBinaryWriter writer = new BufferedBinaryWriter(outputFilename))
+            using (BinaryWriter writer = new BinaryWriter(new FileStream(outputFilename, FileMode.Create)))
             {
                 while (reader.Peek() > -1)
                 {
