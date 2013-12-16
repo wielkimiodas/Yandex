@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 
 namespace Yandex.InputFileReader
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             string data = "train";
             InputFileReader[] readers = new InputFileReader[]
@@ -17,10 +14,10 @@ namespace Yandex.InputFileReader
                 //new TopTermsGetter(@"D:\Downloads\EDWD\"+data+"_top_terms_1.txt"),
                 //new TopDomainsGetter(@"D:\Downloads\EDWD\"+data+"_top_domains_1.txt"),
                 //new QueriesExtractor(@"D:\Downloads\EDWD\"+data+"_queries"),
-                new UsersNTerms(@"D:\Downloads\EDWD\"+data+"_users2terms.txt"),
+                new UsersNTerms(@"D:\Downloads\EDWD\" + data + "_users2terms.txt"),
             };
 
-            String filename = @"D:\Downloads\EDWD\"+data+"_tr";
+            String filename = @"D:\Downloads\EDWD\" + data + "_tr";
 
             foreach (var reader in readers)
             {

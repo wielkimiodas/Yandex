@@ -75,21 +75,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\yandex.utils\BufferedBinaryReader.cs">
-      <Link>Utils\BufferedBinaryReader.cs</Link>
-    </Compile>
-    <Compile Include="..\yandex.utils\useractions\Click.cs">
-      <Link>Utils\UserActions\Click.cs</Link>
-    </Compile>
-    <Compile Include="..\yandex.utils\useractions\Metadata.cs">
-      <Link>Utils\UserActions\Metadata.cs</Link>
-    </Compile>
-    <Compile Include="..\yandex.utils\useractions\QueryAction.cs">
-      <Link>Utils\UserActions\QueryAction.cs</Link>
-    </Compile>
-    <Compile Include="..\yandex.utils\useractions\UserAction.cs">
-      <Link>Utils\UserActions\UserAction.cs</Link>
-    </Compile>
     <Compile Include="InputFileOpener.cs" />
     <Compile Include="InputFileReaders\InputFileReader.cs" />
     <Compile Include="InputFileReaders\UsersNTerms.cs" />
@@ -99,6 +84,12 @@
     <Compile Include="InputFileReaders\TopDomainsGetter.cs" />
     <Compile Include="InputFileReaders\TopTermsGetter.cs" />
     <Compile Include="InputFileReaders\TopUrlsGetter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Yandex.Utils\Yandex.Utils.csproj">
+      <Project>{2A8E53DB-AA89-4DBD-BA22-1E7F99F8B846}</Project>
+      <Name>Yandex.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

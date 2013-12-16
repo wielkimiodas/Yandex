@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using Npgsql;
 
 namespace Yandex.Transfer
@@ -13,11 +10,12 @@ namespace Yandex.Transfer
     {
         private Dictionary<string, Tuple<string[], string[]>> tables =
             new Dictionary<string, Tuple<string[], string[]>>();
+
         private NpgsqlConnection connection = null;
         private NpgsqlTransaction transaction = null;
 
         private const string logTableName = "log";
-        
+
         /// <summary>
         /// Nazwa użytkownika w bazie danych.
         /// </summary>
@@ -32,7 +30,6 @@ namespace Yandex.Transfer
         /// Katalog do przechowywania przetworzonych plików z danymi.
         /// </summary>
         //private readonly string workDir;
-
         /// <summary>
         /// Nawiązuje połączenie z bazą danych (i ew rozpoczyna transakcję).
         /// Tworzy definicję wszystkich tabel.
@@ -65,7 +62,9 @@ namespace Yandex.Transfer
                 {
                     cmd.ExecuteNonQuery();
                 }
-                catch { }
+                catch
+                {
+                }
             }
 
             return true;
@@ -110,6 +109,7 @@ namespace Yandex.Transfer
         private string inputFile;
 
         private delegate bool BoolFunction();
+
         /// <summary>
         /// Przeprowadza wszystkie czynności związane z umieszczeniem daynch w bazie danych.
         /// </summary>
@@ -148,6 +148,7 @@ namespace Yandex.Transfer
         }
 
         private Dictionary<int, List<int>> _queryLists;
+
         public bool import()
         {
             var q = ReadQueryList();
@@ -157,6 +158,7 @@ namespace Yandex.Transfer
         }
 
         private List<int>[] _topUrlsAndTermsQueries;
+
         public HashSet<int> ReadQueryList()
         {
             _topUrlsAndTermsQueries = new List<int>[200];
@@ -264,14 +266,14 @@ namespace Yandex.Transfer
 
         public string CreateInsertCmd()
         {
-            var cmd = "COPY "+ schemaName + "." + logTableName+ " (query_id, ";
+            var cmd = "COPY " + schemaName + "." + logTableName + " (query_id, ";
             for (int i = 1; i < 101; i++)
             {
-                cmd += "url" + i +", ";
+                cmd += "url" + i + ", ";
             }
             for (int i = 1; i < 101; i++)
             {
-                cmd += "term" + i +", ";
+                cmd += "term" + i + ", ";
             }
             //obciecie ostatniego przecinka
             cmd = cmd.Substring(0, cmd.Length - 2);
@@ -299,7 +301,7 @@ namespace Yandex.Transfer
                     serializer.AddBool(array[i]);
                 serializer.EndRow();
 
-                if(linecounter++ %FLUSH_ROWS==0) serializer.Flush();
+                if (linecounter++%FLUSH_ROWS == 0) serializer.Flush();
             }
 
             serializer.Flush();
@@ -318,7 +320,7 @@ namespace Yandex.Transfer
             }
             for (int i = 1; i < 101; i++)
             {
-                res[i+100] = "term" + i;
+                res[i + 100] = "term" + i;
             }
             return res;
         }

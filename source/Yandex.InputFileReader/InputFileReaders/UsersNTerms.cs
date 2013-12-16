@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Yandex.Utils;
 using System.IO;
-using System.Diagnostics;
+using Yandex.Utils;
 
 namespace Yandex.InputFileReader
 {
     public class UsersNTerms : InputFileReader
     {
-        List<List<int>> usersTerms = null;
-        List<int> currentList;
-        string outputFile;
+        private List<List<int>> usersTerms = null;
+        private List<int> currentList;
+        private string outputFile;
 
         public UsersNTerms(String outputFile)
         {
@@ -79,7 +76,7 @@ namespace Yandex.InputFileReader
                 // TERM ID
                 int termId = reader.ReadInt32();
                 currentList.Add(termId);
-            }   
+            }
 
             for (int i = reader.ReadInt32(); i > 0; i--)
             {
@@ -114,7 +111,7 @@ namespace Yandex.InputFileReader
                     return -1;
                 return o1.Item1 - o2.Item1;
             }
-            );
+                );
 
             usersTerms = null;
             GC.Collect();
@@ -126,9 +123,9 @@ namespace Yandex.InputFileReader
                 foreach (var element in tmpList)
                 {
                     counter++;
-                    if (counter % 10000 == 0)
+                    if (counter%10000 == 0)
                     {
-                        Console.Write("Finalizing: {0} %\r", (100.0f * counter / tmpList.Count).ToString("0.000"));
+                        Console.Write("Finalizing: {0} %\r", (100.0f*counter/tmpList.Count).ToString("0.000"));
                     }
 
                     List<int> list = element.Item2;

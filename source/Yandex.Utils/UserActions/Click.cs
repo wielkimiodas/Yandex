@@ -11,7 +11,9 @@ namespace Yandex.Utils.UserActions
         public int serpId { get; protected set; }
         public int urlId { get; protected set; }
 
-        public Click() { }
+        public Click()
+        {
+        }
 
         public Click(int sessionId, int time, int serpId, int urlId)
         {

@@ -16,9 +16,12 @@ namespace Yandex.Utils.UserActions
         public int[] urls { get; protected set; }
         public int[] domains { get; protected set; }
 
-        public QueryAction() { }
+        public QueryAction()
+        {
+        }
 
-        public QueryAction(byte type, int sessionId, int time, int serpId, int queryId, int[] terms, int[] urls, int[] domains)
+        public QueryAction(byte type, int sessionId, int time, int serpId, int queryId, int[] terms, int[] urls,
+            int[] domains)
         {
             this.type = type;
             this.sessionId = sessionId;

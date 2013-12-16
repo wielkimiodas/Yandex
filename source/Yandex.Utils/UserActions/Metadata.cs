@@ -10,7 +10,9 @@ namespace Yandex.Utils.UserActions
         public int day { get; protected set; }
         public int userId { get; protected set; }
 
-        public Metadata() { }
+        public Metadata()
+        {
+        }
 
         public Metadata(int sessionId, int day, int userId)
         {

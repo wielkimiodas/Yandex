@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+
 namespace Yandex.LogProcessor
 {
     public partial class QueryComparer
@@ -20,11 +21,13 @@ namespace Yandex.LogProcessor
             {
                 using (StreamReader reader = new StreamReader(@"C:\paths.txt"))
                 {
-                    _path = reader.ReadLine() + mode +"_output.txt";
+                    _path = reader.ReadLine() + mode + "_output.txt";
                     _outputPath = reader.ReadLine() + mode + "_out.txt";
                 }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         public QueryComparer(string path, string outputPath)
@@ -180,7 +183,7 @@ namespace Yandex.LogProcessor
             all += list1.Count - i;
             all += list2.Count - j;
 
-            return sum / (float)all;
+            return sum/(float) all;
         }
 
         public void CompareQueries(Dictionary<int, List<int>> queries)
@@ -214,14 +217,14 @@ namespace Yandex.LogProcessor
                             continue;
                         var res = CompareTwoLists(q1.Value, q2.Value);
                         sims.Add(new Tuple<int, float>(q2.Key, res));
-                        if (sims.Count > 5 * N_NEIGHBOURS)
+                        if (sims.Count > 5*N_NEIGHBOURS)
                         {
-                            sims.Sort((o1, o2) => { return (int)(1000000 * (o2.Item2 - o1.Item2)); });
+                            sims.Sort((o1, o2) => { return (int) (1000000*(o2.Item2 - o1.Item2)); });
                             sims.RemoveRange(N_NEIGHBOURS, sims.Count - N_NEIGHBOURS);
                         }
                     }
 
-                    sims.Sort((o1, o2) => { return (int)(1000000 * (o2.Item2 - o1.Item2)); });
+                    sims.Sort((o1, o2) => { return (int) (1000000*(o2.Item2 - o1.Item2)); });
                     sims.RemoveRange(N_NEIGHBOURS, sims.Count - N_NEIGHBOURS);
 
                     lock (writer)

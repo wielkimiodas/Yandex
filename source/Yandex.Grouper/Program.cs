@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
 namespace Yandex.Grouper
 {
-    class Program
+    internal class Program
     {
-        private const string connstr = "Server=localhost;Port=5432;User Id=postgres;Password=password;Database=postgres;";
+        private const string connstr =
+            "Server=localhost;Port=5432;User Id=postgres;Password=password;Database=postgres;";
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var watch = Stopwatch.StartNew();
             string schema = "train";
@@ -24,8 +22,8 @@ namespace Yandex.Grouper
                 for (int i = 0; i < N_THREADS; i++)
                 {
                     int id = i;
-                    int min = (int)(i / (float)(N_THREADS) * 200) + 1;
-                    int max = (int)((i+1) / (float)(N_THREADS) * 200) + 1;
+                    int min = (int) (i/(float) (N_THREADS)*200) + 1;
+                    int max = (int) ((i + 1)/(float) (N_THREADS)*200) + 1;
                     new Thread(delegate()
                     {
                         using (var g = new Grouper(connstr, schema, writer, id, min, max))

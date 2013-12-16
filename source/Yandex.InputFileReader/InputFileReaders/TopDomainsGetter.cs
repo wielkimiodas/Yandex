@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using Yandex.Utils;
 
@@ -9,10 +7,10 @@ namespace Yandex.InputFileReader
 {
     public class TopDomainsGetter : InputFileReader
     {
-        string output;
-        Dictionary<int, int> domainsCount = new Dictionary<int, int>();
-        HashSet<int> processedQueries = new HashSet<int>();
-        HashSet<int> currentDomains = new HashSet<int>();
+        private string output;
+        private Dictionary<int, int> domainsCount = new Dictionary<int, int>();
+        private HashSet<int> processedQueries = new HashSet<int>();
+        private HashSet<int> currentDomains = new HashSet<int>();
 
         public TopDomainsGetter(string output)
         {

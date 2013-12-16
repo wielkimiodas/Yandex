@@ -4,11 +4,12 @@ namespace Yandex.Transfer
 {
     internal class Program
     {
-        private const string connstr = "Server=localhost;Port=5432;User Id=postgres;Password=password;Database=postgres;";
+        private const string connstr =
+            "Server=localhost;Port=5432;User Id=postgres;Password=password;Database=postgres;";
 
         private static void Main(string[] args)
         {
-            args = new String[] { @"D:\Downloads\EDWD\train_tr" };
+            args = new String[] {@"D:\Downloads\EDWD\train_tr"};
             DateTime begin = DateTime.Now;
 
             //using (Transfer t = new Transfer(connstr, "train", @"C:\tmp1\"))
@@ -16,7 +17,7 @@ namespace Yandex.Transfer
             //    t.transfer(args[0]);
             //}
 
-            using (var log = new LogTableInitializer(connstr,"train"))
+            using (var log = new LogTableInitializer(connstr, "train"))
             {
                 log.transfer(@"D:\Downloads\EDWD\train_output.txt");
             }

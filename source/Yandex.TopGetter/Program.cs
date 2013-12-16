@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
 using Yandex.Utils;
 
 namespace Yandex.TopGetter
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             string dir = @"D:\Downloads\EDWD\";
             string data = "test";
@@ -52,7 +50,7 @@ namespace Yandex.TopGetter
             Console.ReadLine();
         }
 
-        static void getTopUrls(string input, string output)
+        private static void getTopUrls(string input, string output)
         {
             List<Tuple<int, int>> allUrls = new List<Tuple<int, int>>();
 
@@ -80,48 +78,48 @@ namespace Yandex.TopGetter
                             break;
                         case 1:
                         case 2:
+                        {
+                            // TIME
+                            reader.ReadInt32();
+                            // SERPID
+                            reader.ReadInt32();
+                            // QUERYID
+                            int query_id = reader.ReadInt32();
+                            bool process = !processedQueries.Contains(query_id);
+                            if (process)
+                                processedQueries.Add(query_id);
+
+                            // TERMS
+                            int termsN = reader.ReadInt32();
+                            for (int i = termsN; i > 0; i--)
                             {
-                                // TIME
-                                reader.ReadInt32();
-                                // SERPID
-                                reader.ReadInt32();
-                                // QUERYID
-                                int query_id = reader.ReadInt32();
-                                bool process = !processedQueries.Contains(query_id);
-                                if (process)
-                                    processedQueries.Add(query_id);
-
-                                // TERMS
-                                int termsN = reader.ReadInt32();
-                                for (int i = termsN; i > 0; i--)
-                                {
-                                    int term = reader.ReadInt32();
-                                }
-                                // URLS & DOMAINS
-                                for (int i = reader.ReadInt32(); i > 0; i--)
-                                {
-                                    int url = reader.ReadInt32();
-                                    int domain = reader.ReadInt32();
-                                    if (!process)
-                                        continue;
-
-                                    if (urlsCount.ContainsKey(url))
-                                        urlsCount[url]++;
-                                    else
-                                        urlsCount.Add(url, 1);
-                                }
-                                break;
+                                int term = reader.ReadInt32();
                             }
-                        case 3:
+                            // URLS & DOMAINS
+                            for (int i = reader.ReadInt32(); i > 0; i--)
                             {
-                                // TIME
-                                reader.ReadInt32();
-                                // SERPID
-                                reader.ReadInt32();
-                                // URLS
                                 int url = reader.ReadInt32();
-                                break;
+                                int domain = reader.ReadInt32();
+                                if (!process)
+                                    continue;
+
+                                if (urlsCount.ContainsKey(url))
+                                    urlsCount[url]++;
+                                else
+                                    urlsCount.Add(url, 1);
                             }
+                            break;
+                        }
+                        case 3:
+                        {
+                            // TIME
+                            reader.ReadInt32();
+                            // SERPID
+                            reader.ReadInt32();
+                            // URLS
+                            int url = reader.ReadInt32();
+                            break;
+                        }
                     }
                 }
             }
@@ -164,7 +162,7 @@ namespace Yandex.TopGetter
             Console.WriteLine("Zakończono zapisywanie danych po " + watch.ElapsedMilliseconds);
         }
 
-        static void getTopTerms(string input, string output)
+        private static void getTopTerms(string input, string output)
         {
             List<Tuple<int, int>> allTerms = new List<Tuple<int, int>>();
 
@@ -193,53 +191,53 @@ namespace Yandex.TopGetter
                             break;
                         case 1:
                         case 2:
+                        {
+                            // TIME
+                            reader.ReadInt32();
+                            // SERPID
+                            reader.ReadInt32();
+                            // QUERYID
+                            int query_id = reader.ReadInt32();
+                            bool process = !processedQueries.Contains(query_id);
+                            if (process)
+                                processedQueries.Add(query_id);
+
+                            // TERMS
+                            int termsN = reader.ReadInt32();
+                            for (int i = termsN; i > 0; i--)
                             {
-                                // TIME
-                                reader.ReadInt32();
-                                // SERPID
-                                reader.ReadInt32();
-                                // QUERYID
-                                int query_id = reader.ReadInt32();
-                                bool process = !processedQueries.Contains(query_id);
+                                int term = reader.ReadInt32();
                                 if (process)
-                                    processedQueries.Add(query_id);
-
-                                // TERMS
-                                int termsN = reader.ReadInt32();
-                                for (int i = termsN; i > 0; i--)
-                                {
-                                    int term = reader.ReadInt32();
-                                    if (process)
-                                        currentTerms.Add(term);
-                                }
-                                // URLS & DOMAINS
-                                for (int i = reader.ReadInt32(); i > 0; i--)
-                                {
-                                    int url = reader.ReadInt32();
-                                    int domain = reader.ReadInt32();
-                                }
-
-                                foreach (int term in currentTerms)
-                                {
-                                    if (termsCount.ContainsKey(term))
-                                        termsCount[term]++;
-                                    else
-                                        termsCount.Add(term, 1);
-                                }
-
-                                currentTerms.Clear();
-                                break;
+                                    currentTerms.Add(term);
                             }
-                        case 3:
+                            // URLS & DOMAINS
+                            for (int i = reader.ReadInt32(); i > 0; i--)
                             {
-                                // TIME
-                                reader.ReadInt32();
-                                // SERPID
-                                reader.ReadInt32();
-                                // URLS
                                 int url = reader.ReadInt32();
-                                break;
+                                int domain = reader.ReadInt32();
                             }
+
+                            foreach (int term in currentTerms)
+                            {
+                                if (termsCount.ContainsKey(term))
+                                    termsCount[term]++;
+                                else
+                                    termsCount.Add(term, 1);
+                            }
+
+                            currentTerms.Clear();
+                            break;
+                        }
+                        case 3:
+                        {
+                            // TIME
+                            reader.ReadInt32();
+                            // SERPID
+                            reader.ReadInt32();
+                            // URLS
+                            int url = reader.ReadInt32();
+                            break;
+                        }
                     }
                 }
             }
@@ -284,7 +282,7 @@ namespace Yandex.TopGetter
             Console.WriteLine("Zakończono zapisywanie danych po " + watch.ElapsedMilliseconds);
         }
 
-        static void getUrlsFromTop(string logFilename, string topFilename, StreamWriter output)
+        private static void getUrlsFromTop(string logFilename, string topFilename, StreamWriter output)
         {
             const int N = 100;
             List<Tuple<int, int>> urls = new List<Tuple<int, int>>();
@@ -294,7 +292,7 @@ namespace Yandex.TopGetter
 
             using (StreamReader reader = new StreamReader(topFilename))
             {
-                string[] seps = new string[] { "\t" };
+                string[] seps = new string[] {"\t"};
 
                 for (int i = 0; i < N; i++)
                 {
@@ -330,53 +328,53 @@ namespace Yandex.TopGetter
                             break;
                         case 1:
                         case 2:
+                        {
+                            // TIME
+                            reader.ReadInt32();
+                            // SERPID
+                            reader.ReadInt32();
+                            // QUERYID
+                            int query_id = reader.ReadInt32();
+
+                            bool process = !processedQueries.Contains(query_id);
+                            if (process)
+                                processedQueries.Add(query_id);
+                            // TERMS
+                            int termsN = reader.ReadInt32();
+                            for (int i = termsN; i > 0; i--)
                             {
-                                // TIME
-                                reader.ReadInt32();
-                                // SERPID
-                                reader.ReadInt32();
-                                // QUERYID
-                                int query_id = reader.ReadInt32();
-
-                                bool process = !processedQueries.Contains(query_id);
-                                if (process)
-                                    processedQueries.Add(query_id);
-                                // TERMS
-                                int termsN = reader.ReadInt32();
-                                for (int i = termsN; i > 0; i--)
-                                {
-                                    int term = reader.ReadInt32();
-                                }
-                                // URLS & DOMAINS
-                                int n = reader.ReadInt32();
-                                for (int i = n; i > 0; i--)
-                                {
-                                    int url = reader.ReadInt32();
-                                    int domain = reader.ReadInt32();
-                                    if (!process)
-                                        continue;
-
-                                    for (int index = 0; index < sortedUrls.Count; index++)
-                                    {
-                                        if (sortedUrls[index] > url)
-                                            break;
-
-                                        if (sortedUrls[index] == url)
-                                            queries[index].Add(query_id);
-                                    }
-                                }
-                                break;
+                                int term = reader.ReadInt32();
                             }
-                        case 3:
+                            // URLS & DOMAINS
+                            int n = reader.ReadInt32();
+                            for (int i = n; i > 0; i--)
                             {
-                                // TIME
-                                reader.ReadInt32();
-                                // SERPID
-                                reader.ReadInt32();
-                                // URLS
                                 int url = reader.ReadInt32();
-                                break;
+                                int domain = reader.ReadInt32();
+                                if (!process)
+                                    continue;
+
+                                for (int index = 0; index < sortedUrls.Count; index++)
+                                {
+                                    if (sortedUrls[index] > url)
+                                        break;
+
+                                    if (sortedUrls[index] == url)
+                                        queries[index].Add(query_id);
+                                }
                             }
+                            break;
+                        }
+                        case 3:
+                        {
+                            // TIME
+                            reader.ReadInt32();
+                            // SERPID
+                            reader.ReadInt32();
+                            // URLS
+                            int url = reader.ReadInt32();
+                            break;
+                        }
                     }
                 }
             }
@@ -406,7 +404,7 @@ namespace Yandex.TopGetter
             }
         }
 
-        static void getTermsFromTop(string logFilename, string topFilename, StreamWriter output)
+        private static void getTermsFromTop(string logFilename, string topFilename, StreamWriter output)
         {
             const int N = 100;
             List<Tuple<int, int>> terms = new List<Tuple<int, int>>();
@@ -417,7 +415,7 @@ namespace Yandex.TopGetter
 
             using (StreamReader reader = new StreamReader(topFilename))
             {
-                string[] seps = new string[] { "\t" };
+                string[] seps = new string[] {"\t"};
 
                 for (int i = 0; i < N; i++)
                 {
@@ -453,53 +451,53 @@ namespace Yandex.TopGetter
                             break;
                         case 1:
                         case 2:
+                        {
+                            // TIME
+                            reader.ReadInt32();
+                            // SERPID
+                            reader.ReadInt32();
+                            // QUERYID
+                            int query_id = reader.ReadInt32();
+
+                            bool process = !processedQueries.Contains(query_id);
+                            if (process)
+                                processedQueries.Add(query_id);
+                            // TERMS
+                            int termsN = reader.ReadInt32();
+                            for (int i = termsN; i > 0; i--)
                             {
-                                // TIME
-                                reader.ReadInt32();
-                                // SERPID
-                                reader.ReadInt32();
-                                // QUERYID
-                                int query_id = reader.ReadInt32();
+                                int term = reader.ReadInt32();
+                                if (!process)
+                                    continue;
 
-                                bool process = !processedQueries.Contains(query_id);
-                                if (process)
-                                    processedQueries.Add(query_id);
-                                // TERMS
-                                int termsN = reader.ReadInt32();
-                                for (int i = termsN; i > 0; i--)
+                                for (int index = 0; index < sortedTerms.Count; index++)
                                 {
-                                    int term = reader.ReadInt32();
-                                    if (!process)
-                                        continue;
+                                    if (sortedTerms[index] > term)
+                                        break;
 
-                                    for (int index = 0; index < sortedTerms.Count; index++)
-                                    {
-                                        if (sortedTerms[index] > term)
-                                            break;
-
-                                        if (sortedTerms[index] == term)
-                                            queries[index].Add(query_id);
-                                    }
+                                    if (sortedTerms[index] == term)
+                                        queries[index].Add(query_id);
                                 }
-                                // URLS & DOMAINS
-                                int n = reader.ReadInt32();
-                                for (int i = n; i > 0; i--)
-                                {
-                                    int url = reader.ReadInt32();
-                                    int domain = reader.ReadInt32();
-                                }
-                                break;
                             }
-                        case 3:
+                            // URLS & DOMAINS
+                            int n = reader.ReadInt32();
+                            for (int i = n; i > 0; i--)
                             {
-                                // TIME
-                                reader.ReadInt32();
-                                // SERPID
-                                reader.ReadInt32();
-                                // URLS
                                 int url = reader.ReadInt32();
-                                break;
+                                int domain = reader.ReadInt32();
                             }
+                            break;
+                        }
+                        case 3:
+                        {
+                            // TIME
+                            reader.ReadInt32();
+                            // SERPID
+                            reader.ReadInt32();
+                            // URLS
+                            int url = reader.ReadInt32();
+                            break;
+                        }
                     }
                 }
             }

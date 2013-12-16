@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.IO;
 using Yandex.Utils;
 
@@ -9,9 +6,9 @@ namespace Yandex.InputFileReader
 {
     public class QueriesExtractor : InputFileReader
     {
-        string output;
-        HashSet<int> processedQueries = new HashSet<int>();
-        BinaryWriter writer = null;
+        private string output;
+        private HashSet<int> processedQueries = new HashSet<int>();
+        private BinaryWriter writer = null;
 
         public QueriesExtractor(string output)
         {

@@ -93,9 +93,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\yandex.utils\BufferedBinaryReader.cs">
-      <Link>Utils\BufferedBinaryReader.cs</Link>
-    </Compile>
     <Compile Include="LogTableInitializer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -122,6 +119,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Yandex.Utils\Yandex.Utils.csproj">
+      <Project>{2A8E53DB-AA89-4DBD-BA22-1E7F99F8B846}</Project>
+      <Name>Yandex.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

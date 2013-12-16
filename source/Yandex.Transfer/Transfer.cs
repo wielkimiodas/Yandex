@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Npgsql;
 using System.Threading;
+using Npgsql;
 using Yandex.Utils;
 
 namespace Yandex.Transfer
@@ -156,7 +156,8 @@ namespace Yandex.Transfer
             {
                 String[] filenames = new string[]
                 {
-                    sessionTableName, queryTableName, queryTermTableName, queryUrlTableName, clickTableName, urlTableName
+                    sessionTableName, queryTableName, queryTermTableName, queryUrlTableName, clickTableName,
+                    urlTableName
                 };
                 foreach (String filename in filenames)
                     if (File.Exists(workDir + filename))
@@ -213,10 +214,8 @@ namespace Yandex.Transfer
             {
                 while (true)
                 {
-                    Thread th = new Thread((ThreadStart)delegate
-                    {
-                        System.Windows.Forms.Clipboard.SetText(allQueries);
-                    });
+                    Thread th =
+                        new Thread((ThreadStart) delegate { System.Windows.Forms.Clipboard.SetText(allQueries); });
                     th.SetApartmentState(ApartmentState.STA);
                     th.Start();
 
@@ -335,7 +334,7 @@ namespace Yandex.Transfer
             click = new BinaryWriter(new FileStream(workDir + clickTableName, FileMode.Create));
             urlFile = new BinaryWriter(new FileStream(workDir + urlTableName, FileMode.Create));
 
-            BinaryWriter[] writers = new BinaryWriter[] {session, query, queryTerm, queryUrl, click };
+            BinaryWriter[] writers = new BinaryWriter[] {session, query, queryTerm, queryUrl, click};
 
             {
                 bool any = false;
@@ -388,7 +387,7 @@ namespace Yandex.Transfer
                             session.Write((int) sessionId);
                             session.Write((int) day);
                             session.Write((int) user);
-                            
+
                             urlInfo.Clear();
                             lastTime = 0;
                             break;
@@ -423,8 +422,8 @@ namespace Yandex.Transfer
 
                                 if (processQuery)
                                 {
-                                    queryTerm.Write((int)term);
-                                    queryTerm.Write((int)queryId);
+                                    queryTerm.Write((int) term);
+                                    queryTerm.Write((int) queryId);
                                 }
                             }
 
@@ -439,16 +438,16 @@ namespace Yandex.Transfer
 
                                 if (processQuery)
                                 {
-                                    queryUrl.Write((int)queryUrl_id);
+                                    queryUrl.Write((int) queryUrl_id);
                                     queryUrl_id++;
 
-                                    queryUrl.Write((int)url);
-                                    queryUrl.Write((int)queryId);
+                                    queryUrl.Write((int) url);
+                                    queryUrl.Write((int) queryId);
 
                                     if (!urlsAdded.Contains(url))
                                     {
-                                        urlFile.Write((int)url);
-                                        urlFile.Write((int)domain);
+                                        urlFile.Write((int) url);
+                                        urlFile.Write((int) domain);
                                         urlsAdded.Add(url);
                                     }
                                 }
@@ -466,9 +465,9 @@ namespace Yandex.Transfer
 
                             int q_id = urlInfo[new Tuple<int, int>(url, serpid)];
 
-                            click.Write((int)url);
-                            click.Write((int)q_id);
-                            click.Write((int)(time - lastTime));
+                            click.Write((int) url);
+                            click.Write((int) q_id);
+                            click.Write((int) (time - lastTime));
                             lastTime = time;
 
                             break;
@@ -753,7 +752,7 @@ namespace Yandex.Transfer
             tic(String.Format("Creating PK {0}:", tableName));
 
             String text = String.Format("ALTER TABLE {0}.{1} ADD CONSTRAINT {1}_pk PRIMARY KEY ({2});", schemaName,
-                            tableName, columnName);
+                tableName, columnName);
             if (toQuery)
                 allQueries += text + Environment.NewLine;
             else
@@ -779,8 +778,10 @@ namespace Yandex.Transfer
         {
             tic(String.Format("Creating FK {0}:", tableName));
 
-            String text = String.Format("ALTER TABLE {0}.{1} ADD CONSTRAINT {1}_fk_{3} FOREIGN KEY ({2}) REFERENCES {0}.{3} ({4}) ON UPDATE NO ACTION ON DELETE NO ACTION;",
-                        new object[] { schemaName, tableName, columnName, refTable, refColumn });
+            String text =
+                String.Format(
+                    "ALTER TABLE {0}.{1} ADD CONSTRAINT {1}_fk_{3} FOREIGN KEY ({2}) REFERENCES {0}.{3} ({4}) ON UPDATE NO ACTION ON DELETE NO ACTION;",
+                    new object[] {schemaName, tableName, columnName, refTable, refColumn});
 
             if (toQuery)
                 allQueries += text + Environment.NewLine;
@@ -830,7 +831,7 @@ namespace Yandex.Transfer
             tic(String.Format("Creating index {0} ({1}):", tableName, columnsNames));
 
             String text = String.Format("CREATE INDEX {1}_{3}_index ON {0}.{1} ({2} ASC NULLS LAST);",
-                        new object[] { schemaName, tableName, columnsNames, colsNames });
+                new object[] {schemaName, tableName, columnsNames, colsNames});
 
             if (toQuery)
                 allQueries += text + Environment.NewLine;
@@ -842,7 +843,7 @@ namespace Yandex.Transfer
                     cmd.ExecuteNonQuery();
                 }
             }
-            
+
             toc();
         }
 
@@ -905,12 +906,12 @@ namespace Yandex.Transfer
 
             createIndex(queryTableName, "q_id");
             createIndex(queryTableName, "query_id");
-            
+
             createIndex(queryTermTableName, "result_id");
-            createIndex(queryTermTableName, new String[] { "query_id" });
+            createIndex(queryTermTableName, new String[] {"query_id"});
 
             createIndex(queryUrlTableName, "result_id");
-            createIndex(queryUrlTableName, new String[] { "query_id" });
+            createIndex(queryUrlTableName, new String[] {"query_id"});
 
             toc(true);
 

@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Yandex.Utils;
-using Yandex.Utils.UserActions;
 
 namespace Yandex.InputFileReader
 {
     public class InputFileReader : IDisposable
     {
-        public virtual void Dispose() { }
+        public virtual void Dispose()
+        {
+        }
 
-        public virtual void onBeginRead() { }
+        public virtual void onBeginRead()
+        {
+        }
 
         public virtual void onMetadata(BufferedBinaryReader reader)
         {
@@ -75,6 +75,8 @@ namespace Yandex.InputFileReader
             reader.ReadInt32();
         }
 
-        public virtual void onEndRead() { }
+        public virtual void onEndRead()
+        {
+        }
     }
 }

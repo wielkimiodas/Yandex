@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Yandex.Utils;
 using System.IO;
+using Yandex.Utils;
 
 namespace Yandex.InputFileReader
 {
     public class TopTermsGetter : InputFileReader
     {
-        string output;
-        Dictionary<int, int> termsCount = new Dictionary<int, int>();
-        HashSet<int> processedQueries = new HashSet<int>();
-        HashSet<int> currentTerms = new HashSet<int>();
+        private string output;
+        private Dictionary<int, int> termsCount = new Dictionary<int, int>();
+        private HashSet<int> processedQueries = new HashSet<int>();
+        private HashSet<int> currentTerms = new HashSet<int>();
 
         public TopTermsGetter(string output)
         {
@@ -55,7 +53,7 @@ namespace Yandex.InputFileReader
                     currentTerms.Add(term);
             }
 
-            foreach(int term in currentTerms)
+            foreach (int term in currentTerms)
                 if (termsCount.ContainsKey(term))
                     termsCount[term]++;
                 else

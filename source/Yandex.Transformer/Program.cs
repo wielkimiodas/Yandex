@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Yandex.Utils;
 using Yandex.Utils.UserActions;
 
 namespace Yandex.Transformer
