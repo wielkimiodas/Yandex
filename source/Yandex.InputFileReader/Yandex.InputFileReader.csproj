@@ -92,6 +92,7 @@
     </Compile>
     <Compile Include="InputFileOpener.cs" />
     <Compile Include="InputFileReaders\InputFileReader.cs" />
+    <Compile Include="InputFileReaders\UsersNTerms.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="InputFileReaders\QueriesExtractor.cs" />

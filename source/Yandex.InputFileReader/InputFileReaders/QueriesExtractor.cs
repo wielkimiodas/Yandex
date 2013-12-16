@@ -74,6 +74,7 @@ namespace Yandex.InputFileReader
                     writer.Write(reader.ReadInt32());
 
                 int nUrls = reader.ReadInt32();
+                writer.Write(nUrls);
                 for (int i = nUrls; i > 0; i--)
                 {
                     writer.Write(reader.ReadInt32());

@@ -7,7 +7,7 @@ namespace Yandex.Utils
     {
         public const int OPTIMAL_SIZE = 128*1024;
 
-        private BinaryReader reader;
+        public BinaryReader reader;
         private readonly int size;
         private byte[] array;
         private int offset;

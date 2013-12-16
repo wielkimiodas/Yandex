@@ -28,6 +28,8 @@ namespace Yandex.InputFileReader
         {
             using (BufferedBinaryReader binaryReader = new BufferedBinaryReader(filename))
             {
+                float length = binaryReader.reader.BaseStream.Length / 100.0f;
+
                 int lineCounter = 0;
 
                 reader.onBeginRead();
@@ -36,6 +38,8 @@ namespace Yandex.InputFileReader
                 while (type > -1)
                 {
                     lineCounter++;
+                    if (lineCounter % 100000 == 0)
+                        Console.Write("                 \rRead: {0} %\r", (binaryReader.reader.BaseStream.Position / length).ToString("0.000"));
 
                     switch (type)
                     {
@@ -59,6 +63,8 @@ namespace Yandex.InputFileReader
 
                     type = binaryReader.PeekChar();
                 }
+
+                Console.Write("                  \r");
 
                 reader.onEndRead();
             }
