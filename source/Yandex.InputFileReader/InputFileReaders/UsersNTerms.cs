@@ -93,52 +93,18 @@ namespace Yandex.InputFileReader
 
         public override void onEndRead()
         {
-            List<Tuple<int, List<Tuple<int, int>>>> bigList = new List<Tuple<int, List<Tuple<int, int>>>>();
+            List<Tuple<int, List<int>>> tmpList = new List<Tuple<int, List<int>>>();
 
             for (int i = 0; i < usersTerms.Count; i++)
             {
-                if (i % 10000 == 0)
-                {
-                    Console.Write("                  \rRedoing: {0} %\r", (100.0f * i / usersTerms.Count).ToString("0.000"));
-                    if (i % 500000 == 0)
-                        GC.Collect();
-                }
-
-                List<int> list = usersTerms[i];
-                usersTerms[i] = null;
+                var list = usersTerms[i];
                 if (list == null)
                     continue;
-
-                list.Sort();
-                List<Tuple<int, int>> occurrences = new List<Tuple<int, int>>();
-                int index = 0;
-                while (index < list.Count)
-                {
-                    int start = index;
-                    while (index < list.Count - 1)
-                    {
-                        if (list[index] != list[index + 1])
-                            break;
-                        index++;
-                    }
-
-                    occurrences.Add(new Tuple<int, int>(list[index], index - start + 1));
-                    index++;
-                }
-
-                /*
-                writer.WriteLine("User {0}:", i);
-                foreach (var occurrence in occurrences)
-                    writer.WriteLine("{0}\t{1}", occurrence.Item1, occurrence.Item2);
-                writer.WriteLine();*/
-                bigList.Add(new Tuple<int, List<Tuple<int, int>>>(i, occurrences));
+                usersTerms[i] = null;
+                tmpList.Add(new Tuple<int, List<int>>(i, list));
             }
 
-            Console.Write("                 \r");
-            usersTerms = null;
-            GC.Collect();
-
-            bigList.Sort((o1, o2) =>
+            tmpList.Sort((o1, o2) =>
             {
                 int c1 = o1.Item2.Count;
                 int c2 = o2.Item2.Count;
@@ -150,16 +116,48 @@ namespace Yandex.InputFileReader
             }
             );
 
+            usersTerms = null;
+            GC.Collect();
+
             using (StreamWriter writer = new StreamWriter(outputFile))
             {
-                foreach (var element in bigList)
+                int counter = 0;
+
+                foreach (var element in tmpList)
                 {
+                    counter++;
+                    if (counter % 10000 == 0)
+                    {
+                        Console.Write("Finalizing: {0} %\r", (100.0f * counter / tmpList.Count).ToString("0.000"));
+                    }
+
+                    List<int> list = element.Item2;
+                    list.Sort();
+                    List<Tuple<int, int>> occurrences = new List<Tuple<int, int>>();
+                    int index = 0;
+                    while (index < list.Count)
+                    {
+                        int start = index;
+                        while (index < list.Count - 1)
+                        {
+                            if (list[index] != list[index + 1])
+                                break;
+                            index++;
+                        }
+
+                        occurrences.Add(new Tuple<int, int>(list[index], index - start + 1));
+                        index++;
+                    }
+
                     writer.WriteLine("User {0}:", element.Item1);
-                    foreach (var occurrence in element.Item2)
+                    foreach (var occurrence in occurrences)
                         writer.WriteLine("{0}\t{1}", occurrence.Item1, occurrence.Item2);
                     writer.WriteLine();
                 }
             }
+
+            tmpList = null;
+            GC.Collect();
         }
     }
 }
