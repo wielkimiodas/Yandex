@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Yandex.GroupbyAnalyzer
 {
-    class Groupby
+    internal class Groupby
     {
         public int ExecutionTime { get; set; }
         public string[] Columns { get; set; }
@@ -24,7 +22,7 @@ namespace Yandex.GroupbyAnalyzer
         {
             var matches = Regex.Matches(query, @"SELECT COUNT\(\*\), (.*) FROM");
             var columnsString = matches[0].Groups[1].ToString();
-            Columns = columnsString.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+            Columns = columnsString.Split(new[] {", "}, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private void ProcessResultList(IEnumerable<string> results)
@@ -34,12 +32,12 @@ namespace Yandex.GroupbyAnalyzer
 
             foreach (var result in results)
             {
-                var array = result.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                var array = result.Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
                 int modifier = 0;
                 for (int i = 1; i < array.Length; i++)
                 {
                     if (array[i].Equals("True"))
-                        modifier += (int)Math.Pow(2, array.Length - i - 1);
+                        modifier += (int) Math.Pow(2, array.Length - i - 1);
                 }
                 CommonQueries[modifier] = Convert.ToInt64(array[0]);
             }
@@ -87,7 +85,7 @@ namespace Yandex.GroupbyAnalyzer
                     doubleGroups.Add(group);
             }
 
-            foreach (var group in new List<Groupby>[] { singleGroups, doubleGroups })
+            foreach (var group in new List<Groupby>[] {singleGroups, doubleGroups})
             {
                 Stats time = new Stats();
                 Stats values = new Stats();
@@ -96,7 +94,7 @@ namespace Yandex.GroupbyAnalyzer
                 {
                     time.addValue(g.ExecutionTime);
                     foreach (var val in g.CommonQueries)
-                        values.addValue((int)val);
+                        values.addValue((int) val);
                 }
 
                 time.calculate("Time");
@@ -108,7 +106,7 @@ namespace Yandex.GroupbyAnalyzer
 
     public class Stats
     {
-        List<int> values = new List<int>();
+        private List<int> values = new List<int>();
 
         public void addValue(int value)
         {
@@ -146,16 +144,16 @@ namespace Yandex.GroupbyAnalyzer
 
             foreach (int i in values)
             {
-                dev += (float)Math.Pow(i - avg, 2);
+                dev += (float) Math.Pow(i - avg, 2);
                 if (i != 0)
-                    devNonZero += (float)Math.Pow(i - avgNonZero, 2);
+                    devNonZero += (float) Math.Pow(i - avgNonZero, 2);
             }
 
             foreach (int i in values)
             {
-                dev += (float)Math.Pow(i - avg, 2);
+                dev += (float) Math.Pow(i - avg, 2);
                 if (i != 0)
-                    devNonZero += (float)Math.Pow(i - avgNonZero, 2);
+                    devNonZero += (float) Math.Pow(i - avgNonZero, 2);
 
                 if (i == min)
                     nMin++;
@@ -163,8 +161,8 @@ namespace Yandex.GroupbyAnalyzer
                     nMax++;
             }
 
-            dev = (float)Math.Sqrt(dev / values.Count);
-            devNonZero = (float)Math.Sqrt(devNonZero / nNonZero);
+            dev = (float) Math.Sqrt(dev/values.Count);
+            devNonZero = (float) Math.Sqrt(devNonZero/nNonZero);
 
             Console.WriteLine(name + ":");
             Console.WriteLine("{0,-12}{1} ({2})", avg, dev, values.Count);

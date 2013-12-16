@@ -81,9 +81,6 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Security">
-      <HintPath>..\..\contrib\Npgsql2.0.12-bin-mono2.0\Npgsql2.0.12\Mono2.0\bin\Mono.Security.dll</HintPath>
-    </Reference>
     <Reference Include="Npgsql">
       <HintPath>..\..\contrib\Npgsql2.0.13.91-bin-ms.net4.0\Npgsql.dll</HintPath>
     </Reference>
