@@ -16,6 +16,7 @@ namespace Yandex.Utils
             while (reader.Peek() != -1)
             {
                 var prop = reader.ReadLine();
+                prop = prop.Substring(0, prop.IndexOf('/'));
                 var arr = prop.Split('=');
                 if (!pathId.Equals(arr[0].Trim())) continue;
                 res = arr[1].Trim();

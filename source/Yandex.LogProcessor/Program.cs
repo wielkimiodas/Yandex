@@ -2,12 +2,22 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Yandex.Utils;
 
 namespace Yandex.LogProcessor
 {
     internal class Program
     {
         private static void Main(string[] args)
+        {
+            //var time = ExecuteQueries(args);
+            var time = ExecuteUsersMatrix(args);
+
+            Console.WriteLine("\nAll computations took: " + time.ToString("c"));
+            Console.ReadKey();
+        }
+
+        private static TimeSpan ExecuteQueries(string[] args)
         {
             QueryComparer queryComparer;
             if (args.Count() == 2 && File.Exists(args[0]))
@@ -26,8 +36,29 @@ namespace Yandex.LogProcessor
             queryComparer.CompareQueries(vectors);
 
             stopwatch.Stop();
-            Console.WriteLine("\nAll computations took: " + stopwatch.Elapsed.ToString("c"));
-            Console.ReadKey();
+
+            return stopwatch.Elapsed;
+        }
+
+        private static TimeSpan ExecuteUsersMatrix(string[] args)
+        {
+            UserMatrixCreator userMatrixCreator = null;
+            if (args.Count() == 2 && File.Exists(args[0]))
+            {
+                //queryComparer = new QueryComparer(args[0], args[1]);
+            }
+            else
+            {
+                userMatrixCreator = new UserMatrixCreator();
+            }
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            userMatrixCreator.ReadUsersAndTerms(PathResolver.GetPath("UserMatrix"));
+
+            stopwatch.Stop();
+
+            return stopwatch.Elapsed;
         }
     }
 }

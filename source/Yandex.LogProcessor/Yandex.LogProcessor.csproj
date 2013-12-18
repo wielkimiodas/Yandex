@@ -72,6 +72,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryComparer.cs" />
     <Compile Include="QueryComparerArchive.cs" />
+    <Compile Include="UserMatrixCreator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Yandex.Utils\Yandex.Utils.csproj">
+      <Project>{2A8E53DB-AA89-4DBD-BA22-1E7F99F8B846}</Project>
+      <Name>Yandex.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
