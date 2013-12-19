@@ -66,26 +66,71 @@ namespace Yandex.LogProcessor
 
         public void CompareUsers()
         {
+            double simSum = 0;
+            int simCount = 0;
             //List<Tuple<UserId, List<Tuple<UserId, Similarity>>>>
             matrix = new List<Tuple<int, List<Tuple<int, int>>>>();
             var count = users.Count;
             var path = PathResolver.GetPath("UserMatrixOutput");
-            var stream = new FileStream(path, FileMode.Create);
-            var writer = new BinaryWriter(stream);
+            var path2 = PathResolver.GetPath("UserMatrixOutput_processed");
 
-            for (int i = 0; i < count; i++)
+            using (var writer = new BinaryWriter(new FileStream(path, FileMode.Create)))
             {
-                var list = new List<Tuple<int, int>>();
-                for (int j = i+1; j < count; j++)
+                for (int i = 0; i < count; i++)
                 {
-                    var res = CompareTwoUsers(users[i], users[j]);
-                    list.Add(new Tuple<int, int>(j,res));
+                    var list = new List<Tuple<int, int>>();
+                    for (int j = i + 1; j < count; j++)
+                    {
+                        var res = CompareTwoUsers(users[i], users[j]);
+
+                        if (res == 0)
+                            continue;
+
+                        list.Add(new Tuple<int, int>(j, res));
+
+                        simSum += res;
+                        simCount++;
+                    }
+
+                    //writer.Write(); ???
+                    
+                    // write UserId !!!!!!!!
+                    writer.Write((int)list.Count);
+                    foreach (var element in list)
+                    {
+                        writer.Write((int)element.Item1);
+                        writer.Write((int)element.Item2);
+                    }
+
+                    //matrix.Add(new Tuple<int, List<Tuple<int, int>>>(i,list));
                 }
-                
-                //writer.Write(); ???
-                
-                
-                //matrix.Add(new Tuple<int, List<Tuple<int, int>>>(i,list));
+            }
+
+            double minVal = 1.5 /* ?? */* simSum / simCount;
+
+            using (var writer = new BinaryWriter(new FileStream(path2, FileMode.Create)))
+            using (var reader = new BufferedBinaryReader(path))
+            {
+                while (reader.PeekChar() > -1)
+                {
+                    int currentUser = reader.ReadInt32();
+                    List<int> usersList = new List<int>();
+                    for(int i = reader.ReadInt32(); i > 0; i--)
+                    {
+                        int userId = reader.ReadInt32();
+                        int sim = reader.ReadInt32();
+                        if (sim > minVal)
+                            usersList.Add(userId);
+                    }
+
+                    if (usersList.Count > 0)
+                    {
+                        writer.Write((int)currentUser);
+                        writer.Write((int)usersList.Count);
+                        foreach (var userId in usersList)
+                            writer.Write((int)userId);
+                    }
+                }
             }
         }
     }
