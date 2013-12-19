@@ -55,6 +55,12 @@ namespace Yandex.LogProcessor
             stopwatch.Start();
 
             userMatrixCreator.ReadUsersAndTerms(PathResolver.GetPath("UserMatrix"));
+            userMatrixCreator.CompareUsers();
+
+            userMatrixCreator.Dispose();
+            GC.Collect();
+
+            
 
             stopwatch.Stop();
 

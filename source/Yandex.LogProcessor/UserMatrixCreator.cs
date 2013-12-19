@@ -12,10 +12,9 @@ namespace Yandex.LogProcessor
         public int Id { get; set; }
         public List<Tuple<int,int>> Terms { get; set; }
     }
-    public class UserMatrixCreator
+    public class UserMatrixCreator : IDisposable
     {
         private List<User> users;
-        private List<Tuple<int, List<Tuple<int, int>>>> matrix;
 
         public void ReadUsersAndTerms(string filePath)
         {
@@ -89,7 +88,7 @@ namespace Yandex.LogProcessor
                     }
 
                     //write UserId
-                    writer.Write(i);
+                    writer.Write(list[i].Item1);
                     writer.Write(list.Count);
                     foreach (var element in list)
                     {
@@ -126,6 +125,11 @@ namespace Yandex.LogProcessor
                     }
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            users = null;
         }
     }
 }

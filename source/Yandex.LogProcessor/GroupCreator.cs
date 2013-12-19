@@ -8,9 +8,9 @@ namespace Yandex.LogProcessor
 {
     public class GroupCreator
     {
-        static List<StaticSortedList<int>> getUsersGroups(List<Tuple<int, List<int>>> list)
+        static List<StaticSortedList<int>> GetUsersGroups(List<Tuple<int, List<int>>> list)
         {
-            List<StaticSortedList<int>> result = new List<StaticSortedList<int>>();
+            var result = new List<StaticSortedList<int>>();
 
             int processed = 0;
 
@@ -55,22 +55,22 @@ namespace Yandex.LogProcessor
             return result;
         }
 
-        public static void test()
-        {
-            List<Tuple<int, List<int>>> list = new List<Tuple<int, List<int>>>();
-            list.Add(new Tuple<int, List<int>>(1, new List<int>()));
-            list.Add(new Tuple<int, List<int>>(2, new List<int>(new int[] { 1 })));
-            list.Add(new Tuple<int, List<int>>(3, new List<int>(new int[] { })));
-            list.Add(new Tuple<int, List<int>>(4, new List<int>(new int[] { 3 })));
-            list.Add(new Tuple<int, List<int>>(5, new List<int>(new int[] { 2 })));
-            list.Add(new Tuple<int, List<int>>(6, new List<int>(new int[] { 3 })));
-            foreach (var lst in getUsersGroups(list))
-            {
-                Console.WriteLine("Nowa grupa:");
-                foreach (var value in lst)
-                    Console.Write(value + " ");
-                Console.WriteLine();
-            }
-        }
+        //public static void test()
+        //{
+        //    List<Tuple<int, List<int>>> list = new List<Tuple<int, List<int>>>();
+        //    list.Add(new Tuple<int, List<int>>(1, new List<int>()));
+        //    list.Add(new Tuple<int, List<int>>(2, new List<int>(new int[] { 1 })));
+        //    list.Add(new Tuple<int, List<int>>(3, new List<int>(new int[] { })));
+        //    list.Add(new Tuple<int, List<int>>(4, new List<int>(new int[] { 3 })));
+        //    list.Add(new Tuple<int, List<int>>(5, new List<int>(new int[] { 2 })));
+        //    list.Add(new Tuple<int, List<int>>(6, new List<int>(new int[] { 3 })));
+        //    foreach (var lst in getUsersGroups(list))
+        //    {
+        //        Console.WriteLine("Nowa grupa:");
+        //        foreach (var value in lst)
+        //            Console.Write(value + " ");
+        //        Console.WriteLine();
+        //    }
+        //}
     }
 }
