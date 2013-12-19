@@ -10,7 +10,8 @@ namespace Yandex.LogProcessor
     public class GroupCreator
     {
         private List<Tuple<int, List<int>>> _list;
-        public void ReadData()
+        
+        private void ReadData()
         {
             var path = PathResolver.GetPath("UserMatrixOutput_processed");
             _list = new List<Tuple<int, List<int>>>();
@@ -32,6 +33,8 @@ namespace Yandex.LogProcessor
 
         public List<StaticSortedList<int>> GetUsersGroups()
         {
+            ReadData();
+
             var result = new List<StaticSortedList<int>>();
 
             int processed = 0;

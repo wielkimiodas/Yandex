@@ -60,7 +60,9 @@ namespace Yandex.LogProcessor
             userMatrixCreator.Dispose();
             GC.Collect();
 
-            
+            var groupCreator = new GroupCreator();
+            groupCreator.GetUsersGroups();
+
 
             stopwatch.Stop();
 
