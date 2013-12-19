@@ -69,7 +69,7 @@ namespace Yandex.LogProcessor
             double simSum = 0;
             int simCount = 0;
             //List<Tuple<UserId, List<Tuple<UserId, Similarity>>>>
-            matrix = new List<Tuple<int, List<Tuple<int, int>>>>();
+            //matrix = new List<Tuple<int, List<Tuple<int, int>>>>();
             var count = users.Count;
             var path = PathResolver.GetPath("UserMatrixOutput");
             var path2 = PathResolver.GetPath("UserMatrixOutput_processed");
@@ -82,26 +82,20 @@ namespace Yandex.LogProcessor
                     for (int j = i + 1; j < count; j++)
                     {
                         var res = CompareTwoUsers(users[i], users[j]);
-
-                        if (res == 0)
-                            continue;
-
+                        if (res == 0) continue;
                         list.Add(new Tuple<int, int>(j, res));
-
                         simSum += res;
                         simCount++;
                     }
 
-                    //writer.Write(); ???
-                    
-                    // write UserId !!!!!!!!
-                    writer.Write((int)list.Count);
+                    //write UserId
+                    writer.Write(i);
+                    writer.Write(list.Count);
                     foreach (var element in list)
                     {
-                        writer.Write((int)element.Item1);
-                        writer.Write((int)element.Item2);
+                        writer.Write(element.Item1);
+                        writer.Write(element.Item2);
                     }
-
                     //matrix.Add(new Tuple<int, List<Tuple<int, int>>>(i,list));
                 }
             }
@@ -114,7 +108,7 @@ namespace Yandex.LogProcessor
                 while (reader.PeekChar() > -1)
                 {
                     int currentUser = reader.ReadInt32();
-                    List<int> usersList = new List<int>();
+                    var usersList = new List<int>();
                     for(int i = reader.ReadInt32(); i > 0; i--)
                     {
                         int userId = reader.ReadInt32();
@@ -125,10 +119,10 @@ namespace Yandex.LogProcessor
 
                     if (usersList.Count > 0)
                     {
-                        writer.Write((int)currentUser);
-                        writer.Write((int)usersList.Count);
+                        writer.Write(currentUser);
+                        writer.Write(usersList.Count);
                         foreach (var userId in usersList)
-                            writer.Write((int)userId);
+                            writer.Write(userId);
                     }
                 }
             }
