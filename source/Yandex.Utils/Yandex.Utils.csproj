@@ -36,8 +36,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BufferedBinaryReader.cs" />
+    <Compile Include="DynamicSortedList.cs" />
     <Compile Include="PathResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StaticSortedList.cs" />
     <Compile Include="UserActions\Click.cs" />
     <Compile Include="UserActions\Metadata.cs" />
     <Compile Include="UserActions\QueryAction.cs" />
