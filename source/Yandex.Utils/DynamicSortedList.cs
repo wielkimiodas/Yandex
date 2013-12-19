@@ -53,7 +53,7 @@ namespace Yandex.Utils
             }
 
             int cmp = comparison.Invoke(list[index], item);
-            if (cmp < 0)
+            if (cmp > 0)
                 list.Insert(index, item);
             else
                 list.Insert(index + 1, item);
