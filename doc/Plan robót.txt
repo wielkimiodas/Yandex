@@ -1,0 +1,8 @@
+Plan pracy:
+
+0. pipeline do crosswalidacji
+	przydalaby sie jakas crosswalidacja, a do tego trzeba by podzielic zbior treningowy
+1. macierz termy x domeny
+2. minhash
+3. k-means
+	cale przetwarzanie mozna by zamknac w jednym programie, ktory bedzie mial wejscie i wyjscie zgodne z kagglem
