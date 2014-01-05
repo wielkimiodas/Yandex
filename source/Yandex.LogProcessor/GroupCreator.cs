@@ -31,11 +31,11 @@ namespace Yandex.LogProcessor
             }
         }
 
-        public List<StaticSortedList<int>> GetUsersGroups()
+        public List<BinarySearchList<int>> GetUsersGroups()
         {
             ReadData();
 
-            var result = new List<StaticSortedList<int>>();
+            var result = new List<BinarySearchList<int>>();
 
             int processed = 0;
 
@@ -47,7 +47,7 @@ namespace Yandex.LogProcessor
                     Console.Write("Processed: {0} %\r", 100.0f * processed / _list.Count);
                 }
 
-                StaticSortedList<int> destination = null;
+                BinarySearchList<int> destination = null;
                 foreach (var group in result)
                 {
                     foreach (var value in element.Item2)
@@ -61,7 +61,7 @@ namespace Yandex.LogProcessor
                 }
                 if (destination == null)
                 {
-                    destination = new StaticSortedList<int>((o1, o2) => o1 - o2);
+                    destination = new BinarySearchList<int>(new DefaultIntComparer());
                     result.Add(destination);
                 }
 
