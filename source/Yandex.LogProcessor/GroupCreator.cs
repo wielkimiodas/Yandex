@@ -31,11 +31,11 @@ namespace Yandex.LogProcessor
             }
         }
 
-        public List<BinarySearchList<int>> GetUsersGroups()
+        public List<BinarySearchMultiSet<int>> GetUsersGroups()
         {
             ReadData();
 
-            var result = new List<BinarySearchList<int>>();
+            var result = new List<BinarySearchMultiSet<int>>();
 
             int processed = 0;
 
@@ -47,7 +47,7 @@ namespace Yandex.LogProcessor
                     Console.Write("Processed: {0} %\r", 100.0f * processed / _list.Count);
                 }
 
-                BinarySearchList<int> destination = null;
+                BinarySearchMultiSet<int> destination = null;
                 foreach (var group in result)
                 {
                     foreach (var value in element.Item2)
@@ -61,7 +61,7 @@ namespace Yandex.LogProcessor
                 }
                 if (destination == null)
                 {
-                    destination = new BinarySearchList<int>(new DefaultIntComparer());
+                    destination = new BinarySearchMultiSet<int>(Comparer<int>.Default);
                     result.Add(destination);
                 }
 

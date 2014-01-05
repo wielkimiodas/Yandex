@@ -5,18 +5,18 @@ using System.Text;
 
 namespace Yandex.Utils
 {
-    public class BinarySearchList<T> : ICollection<T> where T : IComparable
+    public class BinarySearchMultiSet<T> : ICollection<T> where T : IComparable
     {
         List<T> list;
         IComparer<T> comparer;
 
-        public BinarySearchList(IComparer<T> comparer)
+        public BinarySearchMultiSet(IComparer<T> comparer)
         {
             this.comparer = comparer;
             list = new List<T>();
         }
 
-        public BinarySearchList(ICollection<T> collection, IComparer<T> comparer)
+        public BinarySearchMultiSet(ICollection<T> collection, IComparer<T> comparer)
         {
             list = new List<T>(collection);
             this.comparer = comparer;
