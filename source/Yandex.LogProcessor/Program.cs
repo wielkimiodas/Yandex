@@ -54,7 +54,7 @@ namespace Yandex.LogProcessor
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            userMatrixCreator.ReadUsersAndTerms(PathResolver.GetPath("UserMatrix"));
+            userMatrixCreator.ReadUsersAndTerms(PathResolver.UserMatrix);
             userMatrixCreator.CompareUsers();
 
             userMatrixCreator.Dispose();

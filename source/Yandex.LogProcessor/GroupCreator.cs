@@ -13,7 +13,7 @@ namespace Yandex.LogProcessor
         
         private void ReadData()
         {
-            var path = PathResolver.GetPath("UserMatrixOutput_processed");
+            var path = PathResolver.UserMatrixOutputProcessed;
             _list = new List<Tuple<int, List<int>>>();
             using (var reader = new BufferedBinaryReader(path))
             {

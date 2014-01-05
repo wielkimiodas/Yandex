@@ -5,9 +5,27 @@ namespace Yandex.Utils
 {
     public static class PathResolver
     {
+
+        /// <summary>
+        /// UserMatrixOutput_processed property
+        /// </summary>
+        public static readonly string UserMatrixOutputProcessed = GetPath("UserMatrixOutput_processed");
+
+        /// <summary>
+        /// The UserMatrix property.
+        /// </summary>
+        public static readonly string UserMatrix = GetPath("UserMatrix");
+
+        /// <summary>
+        /// The UserMatrixOutput property.
+        /// </summary>
+        public static readonly string UserMatrixOutput = PathResolver.GetPath("UserMatrixOutput");
+
+
+
         private const string LogMapPath = @"C:\$EDWD_logs\LogsMap.txt";
 
-        public static string GetPath(string pathId)
+        private static string GetPath(string pathId)
         {
             if (pathId == null) throw new ArgumentNullException("pathId");
 

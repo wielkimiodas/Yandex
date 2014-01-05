@@ -70,8 +70,8 @@ namespace Yandex.LogProcessor
             //List<Tuple<UserId, List<Tuple<UserId, Similarity>>>>
             //matrix = new List<Tuple<int, List<Tuple<int, int>>>>();
             var count = users.Count;
-            var path = PathResolver.GetPath("UserMatrixOutput");
-            var path2 = PathResolver.GetPath("UserMatrixOutput_processed");
+            var path = PathResolver.UserMatrixOutput;
+            var path2 = PathResolver.UserMatrixOutputProcessed;
 
             using (var writer = new BinaryWriter(new FileStream(path, FileMode.Create)))
             {
