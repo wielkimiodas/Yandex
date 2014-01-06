@@ -29,54 +29,28 @@ namespace Yandex.InputFileReader
             writer = new BinaryWriter(new FileStream(output, FileMode.CreateNew));
         }
 
-        public override void onQueryAction(BufferedBinaryReader reader)
+        public override void onQueryAction(QueryAction queryAction)
         {
-            // TYPE
-            reader.ReadByte();
-
-            // SESSION_ID
-            int sessionId = reader.ReadInt32();
-
-            // TIME
-            reader.ReadInt32();
-            // SERPID
-            int serpid = reader.ReadInt32();
-            // QUERYID
-            int queryId = reader.ReadInt32();
-
-            bool process = !processedQueries.Contains(queryId);
+            bool process = !processedQueries.Contains(queryAction.queryId);
             if (process)
-                processedQueries.Add(queryId);
+                processedQueries.Add(queryAction.queryId);
 
             if (!process)
+                return;
+
+            writer.Write(queryAction.queryId);
+            writer.Write(queryAction.sessionId);
+            writer.Write(queryAction.serpid);
+
+            writer.Write(queryAction.nTerms);
+            for (int i = queryAction.nTerms - 1; i >= 0; i--)
+                writer.Write(queryAction.terms[i]);
+
+            writer.Write(queryAction.nUrls);
+            for (int i = queryAction.nUrls - 1; i >= 0; i--)
             {
-                for (int i = reader.ReadInt32(); i > 0; i--)
-                    reader.ReadInt32();
-
-                for (int i = reader.ReadInt32(); i > 0; i--)
-                {
-                    reader.ReadInt32();
-                    reader.ReadInt32();
-                }
-            }
-            else
-            {
-                writer.Write(queryId);
-                writer.Write(sessionId);
-                writer.Write(serpid);
-
-                int nTerms = reader.ReadInt32();
-                writer.Write(nTerms);
-                for (int i = nTerms; i > 0; i--)
-                    writer.Write(reader.ReadInt32());
-
-                int nUrls = reader.ReadInt32();
-                writer.Write(nUrls);
-                for (int i = nUrls; i > 0; i--)
-                {
-                    writer.Write(reader.ReadInt32());
-                    writer.Write(reader.ReadInt32());
-                }
+                writer.Write(queryAction.urls[i]);
+                writer.Write(queryAction.domains[i]);
             }
         }
 

@@ -26,33 +26,15 @@ namespace Yandex.InputFileReader
             GC.Collect();
         }
 
-        public override void onQueryAction(BufferedBinaryReader reader)
+        public override void onQueryAction(QueryAction queryAction)
         {
-            // TYPE
-            reader.ReadByte();
+            if (_processedQueries.Contains(queryAction.queryId))
+                return;
 
-            // SESSION_ID
-            reader.ReadInt32();
+            _processedQueries.Add(queryAction.queryId);
 
-            // TIME
-            reader.ReadInt32();
-            // SERPID
-            reader.ReadInt32();
-            // QUERYID
-            int queryId = reader.ReadInt32();
-
-            bool process = !_processedQueries.Contains(queryId);
-            if (process)
-                _processedQueries.Add(queryId);
-
-            for (int i = reader.ReadInt32(); i > 0; i--)
-            {
-                // TERM ID
-                int term = reader.ReadInt32();
-
-                if (process)
-                    _currentTerms.Add(term);
-            }
+            for (int i = queryAction.nTerms - 1; i >= 0; i--)
+                _currentTerms.Add(queryAction.terms[i]);
 
             foreach (int term in _currentTerms)
                 if (_termsCount.ContainsKey(term))
@@ -61,15 +43,6 @@ namespace Yandex.InputFileReader
                     _termsCount.Add(term, 1);
 
             _currentTerms.Clear();
-
-            for (int i = reader.ReadInt32(); i > 0; i--)
-            {
-                // URL_ID
-                reader.ReadInt32();
-
-                // DOMAIN_ID
-                reader.ReadInt32();
-            }
         }
 
         public override void onEndRead()

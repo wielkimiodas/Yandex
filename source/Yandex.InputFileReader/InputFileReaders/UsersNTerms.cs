@@ -40,52 +40,15 @@ namespace Yandex.InputFileReader
             return list;
         }
 
-        public override void onMetadata(BufferedBinaryReader reader)
+        public override void onMetadata(Metadata metadata)
         {
-            // TYPE
-            reader.ReadByte();
-
-            // SESSION_ID
-            reader.ReadInt32();
-
-            // DAY
-            reader.ReadInt32();
-
-            // USER
-            int userId = reader.ReadInt32();
-            currentList = getList(userId);
+            currentList = getList(metadata.userId);
         }
 
-        public override void onQueryAction(BufferedBinaryReader reader)
+        public override void onQueryAction(QueryAction queryAction)
         {
-            // TYPE
-            reader.ReadByte();
-
-            // SESSION_ID
-            reader.ReadInt32();
-
-            // TIME
-            reader.ReadInt32();
-            // SERPID
-            reader.ReadInt32();
-            // QUERYID
-            reader.ReadInt32();
-
-            for (int i = reader.ReadInt32(); i > 0; i--)
-            {
-                // TERM ID
-                int termId = reader.ReadInt32();
-                currentList.Add(termId);
-            }
-
-            for (int i = reader.ReadInt32(); i > 0; i--)
-            {
-                // URL_ID
-                reader.ReadInt32();
-
-                // DOMAIN_ID
-                reader.ReadInt32();
-            }
+            for (int i = queryAction.nTerms - 1; i >= 0; i--)
+                currentList.Add(queryAction.terms[i]);
         }
 
         public override void onEndRead()
