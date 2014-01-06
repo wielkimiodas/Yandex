@@ -22,7 +22,7 @@ namespace Yandex.Utils.UserActions
             this.userId = userId;
         }
 
-        public override bool readData(string[] array)
+        public override bool ReadData(string[] array)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace Yandex.Utils.UserActions
             return true;
         }
 
-        public override bool writeToFile(BinaryWriter writer)
+        public override bool WriteToFile(BinaryWriter writer)
         {
             try
             {

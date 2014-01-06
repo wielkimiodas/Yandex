@@ -5,11 +5,11 @@ namespace Yandex.Utils.UserActions
 {
     public class Click : UserAction
     {
-        public byte type { get; protected set; }
-        public int sessionId { get; protected set; }
-        public int time { get; protected set; }
-        public int serpId { get; protected set; }
-        public int urlId { get; protected set; }
+        public byte Type { get; protected set; }
+        public int SessionId { get; protected set; }
+        public int Time { get; protected set; }
+        public int SerpId { get; protected set; }
+        public int UrlId { get; protected set; }
 
         public Click()
         {
@@ -17,22 +17,22 @@ namespace Yandex.Utils.UserActions
 
         public Click(int sessionId, int time, int serpId, int urlId)
         {
-            this.type = 3;
-            this.sessionId = sessionId;
-            this.time = time;
-            this.serpId = serpId;
-            this.urlId = urlId;
+            Type = 3;
+            SessionId = sessionId;
+            Time = time;
+            SerpId = serpId;
+            UrlId = urlId;
         }
 
-        public override bool readData(string[] array)
+        public override bool ReadData(string[] array)
         {
             try
             {
-                type = 3;
-                sessionId = Int32.Parse(array[0]);
-                time = Int32.Parse(array[1]);
-                serpId = Int32.Parse(array[3]);
-                urlId = Int32.Parse(array[4]);
+                Type = 3;
+                SessionId = Int32.Parse(array[0]);
+                Time = Int32.Parse(array[1]);
+                SerpId = Int32.Parse(array[3]);
+                UrlId = Int32.Parse(array[4]);
             }
             catch
             {
@@ -42,15 +42,15 @@ namespace Yandex.Utils.UserActions
             return true;
         }
 
-        public override bool writeToFile(BinaryWriter writer)
+        public override bool WriteToFile(BinaryWriter writer)
         {
             try
             {
-                writer.Write(type);
-                writer.Write(sessionId);
-                writer.Write(time);
-                writer.Write(serpId);
-                writer.Write(urlId);
+                writer.Write(Type);
+                writer.Write(SessionId);
+                writer.Write(Time);
+                writer.Write(SerpId);
+                writer.Write(UrlId);
             }
             catch
             {

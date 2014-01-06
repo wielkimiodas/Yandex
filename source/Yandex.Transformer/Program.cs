@@ -8,27 +8,27 @@ namespace Yandex.Transformer
     {
         private void transform(String inputFilename, String outputFilename)
         {
-            char[] fieldsSep = new char[] {'\t'};
-            char[] commaSep = new char[] {','};
+            char[] fieldsSep = {'\t'};
+            char[] commaSep = {','};
 
             int lineCounter = 0;
 
-            using (StreamReader reader = new StreamReader(inputFilename))
-            using (BinaryWriter writer = new BinaryWriter(new FileStream(outputFilename, FileMode.Create)))
+            using (var reader = new StreamReader(inputFilename))
+            using (var writer = new BinaryWriter(new FileStream(outputFilename, FileMode.Create)))
             {
                 while (reader.Peek() > -1)
                 {
                     lineCounter++;
                     String line = reader.ReadLine();
 
-                    UserAction action = UserAction.getAction(line);
+                    UserAction action = UserAction.GetAction(line);
                     if (action == null)
                     {
                         Console.WriteLine("Incorrect line #" + lineCounter + ":\t" + line);
                         continue;
                     }
 
-                    if (!action.writeToFile(writer))
+                    if (!action.WriteToFile(writer))
                     {
                         Console.WriteLine("IOException in line #" + lineCounter);
                         return;
