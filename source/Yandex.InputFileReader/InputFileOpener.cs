@@ -19,10 +19,10 @@ namespace Yandex.InputFileReader
         public int serpid;
         public int queryId;
         public int nTerms;
-        public int[] terms = new int[85];
+        public int[] terms = new int[1];
         public int nUrls;
-        public int[] urls = new int[10];
-        public int[] domains = new int[10];
+        public int[] urls = new int[1];
+        public int[] domains = new int[1];
     }
 
     public class Click
@@ -68,8 +68,7 @@ namespace Yandex.InputFileReader
                 int type = binaryReader.PeekChar();
                 while (type > -1)
                 {
-                    lineCounter++;
-                    if (lineCounter%100000 == 0)
+                    if (++lineCounter%100000 == 0)
                         Console.Write("                 \rRead: {0} %\r",
                             (binaryReader.reader.BaseStream.Position/length).ToString("0.000"));
 
@@ -96,11 +95,20 @@ namespace Yandex.InputFileReader
 
                             int nTerms = binaryReader.ReadInt32();
                             queryAction.nTerms = nTerms;
+                            if (queryAction.terms.Length < nTerms)
+                                queryAction.terms = new int[nTerms];
+
                             for (int i = 0; i < nTerms; i++)
                                 queryAction.terms[i] = binaryReader.ReadInt32();
 
                             int nUrls = binaryReader.ReadInt32();
                             queryAction.nUrls = nUrls;
+                            if (queryAction.urls.Length < nUrls)
+                            {
+                                queryAction.urls = new int[nUrls];
+                                queryAction.domains = new int[nUrls];
+                            }
+
                             for (int i = 0; i < nUrls; i++)
                             {
                                 queryAction.urls[i] = binaryReader.ReadInt32();
