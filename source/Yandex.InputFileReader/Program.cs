@@ -14,7 +14,8 @@ namespace Yandex.InputFileReader
                 //new TopTermsGetter(@"D:\Downloads\EDWD\"+data+"_top_terms_1.txt"),
                 //new TopDomainsGetter(@"D:\Downloads\EDWD\"+data+"_top_domains_1.txt"),
                 //new QueriesExtractor(@"D:\Downloads\EDWD\"+data+"_queries"),
-                new UsersNTerms(@"D:\Downloads\EDWD\" + data + "_users2terms.txt"),
+                //new UsersNTerms(@"D:\Downloads\EDWD\" + data + "_users2terms.txt"),
+                new DomainsToTerms(@"D:\Downloads\EDWD\" + data + "_domains2terms.txt"),
             };
 
             const string filename = @"D:\Downloads\EDWD\" + data + "_tr";

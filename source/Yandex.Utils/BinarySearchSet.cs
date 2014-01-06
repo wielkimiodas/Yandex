@@ -80,7 +80,7 @@ namespace Yandex.Utils
             return list.GetEnumerator();
         }
 
-        public T get(int index)
+        public T Get(int index)
         {
             return list[index];
         }
