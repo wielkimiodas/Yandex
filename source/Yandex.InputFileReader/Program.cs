@@ -7,8 +7,8 @@ namespace Yandex.InputFileReader
     {
         private static void Main(string[] args)
         {
-            string data = "train";
-            InputFileReader[] readers = new InputFileReader[]
+            const string data = "train";
+            var readers = new InputFileReader[]
             {
                 //new TopUrlsGetter(@"D:\Downloads\EDWD\"+data+"_top_urls_1.txt"),
                 //new TopTermsGetter(@"D:\Downloads\EDWD\"+data+"_top_terms_1.txt"),
@@ -17,15 +17,15 @@ namespace Yandex.InputFileReader
                 new UsersNTerms(@"D:\Downloads\EDWD\" + data + "_users2terms.txt"),
             };
 
-            String filename = @"D:\Downloads\EDWD\" + data + "_tr";
+            const string filename = @"D:\Downloads\EDWD\" + data + "_tr";
 
             foreach (var reader in readers)
             {
                 var watch = Stopwatch.StartNew();
-                using (InputFileOpener opener = new InputFileOpener(filename,
+                using (var opener = new InputFileOpener(filename,
                     reader))
                 {
-                    opener.read();
+                    opener.Read();
                 }
                 watch.Stop();
                 Console.WriteLine("Time {0}", watch.Elapsed);

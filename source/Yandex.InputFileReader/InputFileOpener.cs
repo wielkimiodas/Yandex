@@ -5,30 +5,30 @@ namespace Yandex.InputFileReader
 {
     public class InputFileOpener : IDisposable
     {
-        private string filename;
+        private readonly string _filename;
 
-        private InputFileReader reader;
+        private readonly InputFileReader _reader;
 
         public InputFileOpener(string filename, InputFileReader reader)
         {
-            this.filename = filename;
-            this.reader = reader;
+            _filename = filename;
+            _reader = reader;
         }
 
         public void Dispose()
         {
-            reader.Dispose();
+            _reader.Dispose();
         }
 
-        public void read()
+        public void Read()
         {
-            using (BufferedBinaryReader binaryReader = new BufferedBinaryReader(filename))
+            using (var binaryReader = new BufferedBinaryReader(_filename))
             {
                 float length = binaryReader.reader.BaseStream.Length/100.0f;
 
                 int lineCounter = 0;
 
-                reader.onBeginRead();
+                _reader.onBeginRead();
 
                 int type = binaryReader.PeekChar();
                 while (type > -1)
@@ -42,18 +42,18 @@ namespace Yandex.InputFileReader
                     {
                         case 0:
                         {
-                            reader.onMetadata(binaryReader);
+                            _reader.onMetadata(binaryReader);
                             break;
                         }
                         case 1:
                         case 2:
                         {
-                            reader.onQueryAction(binaryReader);
+                            _reader.onQueryAction(binaryReader);
                             break;
                         }
                         case 3:
                         {
-                            reader.onClick(binaryReader);
+                            _reader.onClick(binaryReader);
                             break;
                         }
                     }
@@ -63,7 +63,7 @@ namespace Yandex.InputFileReader
 
                 Console.Write("                  \r");
 
-                reader.onEndRead();
+                _reader.onEndRead();
             }
         }
     }

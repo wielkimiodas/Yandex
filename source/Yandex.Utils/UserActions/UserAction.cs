@@ -5,26 +5,25 @@ namespace Yandex.Utils.UserActions
 {
     public abstract class UserAction
     {
-        private static char[] fieldsSep = new char[] {'\t'};
+        private static readonly char[] FieldsSep = new char[] {'\t'};
 
         /// <summary>
         /// Odczytuje dane z tablicy pól.
         /// </summary>
         /// <param name="array">Tablica z danymi odczytanymi z pliku logu.</param>
         /// <returns>True, jeżeli odczyt danych się powiedzie.</returns>
-        public abstract bool readData(String[] array);
+        public abstract bool ReadData(String[] array);
 
         /// <summary>
         /// Zapisuje dane do pliku.
         /// </summary>
         /// <returns>True, jeżeli operacja zapisu powiedzie się.</returns>
-        public abstract bool writeToFile(BinaryWriter writer);
+        public abstract bool WriteToFile(BinaryWriter writer);
 
-        public static UserAction getAction(String line)
+        public static UserAction GetAction(String line)
         {
-            String[] array = line.Split(fieldsSep);
-            char typeChar = 'A';
-            String[] lineArray = line.Split(fieldsSep);
+            char typeChar;
+            String[] lineArray = line.Split(FieldsSep);
             if (Char.IsLetter(lineArray[1][0]))
                 typeChar = lineArray[1][0];
             else if (Char.IsLetter(lineArray[2][0]))
@@ -50,7 +49,7 @@ namespace Yandex.Utils.UserActions
                     return null;
             }
 
-            if (!action.readData(array))
+            if (!action.ReadData(lineArray))
                 return null;
 
             return action;
