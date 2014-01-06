@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Yandex.Utils;
 
 namespace Yandex.InputFileReader
 {
     public class TopTermsGetter : InputFileReader
     {
-        private string output;
-        private Dictionary<int, int> termsCount = new Dictionary<int, int>();
-        private HashSet<int> processedQueries = new HashSet<int>();
-        private HashSet<int> currentTerms = new HashSet<int>();
+        private readonly string _output;
+        private readonly Dictionary<int, int> _termsCount = new Dictionary<int, int>();
+        private readonly HashSet<int> _processedQueries = new HashSet<int>();
+        private readonly HashSet<int> _currentTerms = new HashSet<int>();
 
         public TopTermsGetter(string output)
         {
-            this.output = output;
+            _output = output;
         }
 
         public override void Dispose()
         {
-            currentTerms.Clear();
-            termsCount.Clear();
-            processedQueries.Clear();
+            _currentTerms.Clear();
+            _termsCount.Clear();
+            _processedQueries.Clear();
             GC.Collect();
         }
 
@@ -40,9 +41,9 @@ namespace Yandex.InputFileReader
             // QUERYID
             int queryId = reader.ReadInt32();
 
-            bool process = !processedQueries.Contains(queryId);
+            bool process = !_processedQueries.Contains(queryId);
             if (process)
-                processedQueries.Add(queryId);
+                _processedQueries.Add(queryId);
 
             for (int i = reader.ReadInt32(); i > 0; i--)
             {
@@ -50,16 +51,16 @@ namespace Yandex.InputFileReader
                 int term = reader.ReadInt32();
 
                 if (process)
-                    currentTerms.Add(term);
+                    _currentTerms.Add(term);
             }
 
-            foreach (int term in currentTerms)
-                if (termsCount.ContainsKey(term))
-                    termsCount[term]++;
+            foreach (int term in _currentTerms)
+                if (_termsCount.ContainsKey(term))
+                    _termsCount[term]++;
                 else
-                    termsCount.Add(term, 1);
+                    _termsCount.Add(term, 1);
 
-            currentTerms.Clear();
+            _currentTerms.Clear();
 
             for (int i = reader.ReadInt32(); i > 0; i--)
             {
@@ -73,19 +74,17 @@ namespace Yandex.InputFileReader
 
         public override void onEndRead()
         {
-            List<Tuple<int, int>> allTerms = new List<Tuple<int, int>>();
+            var allTerms = _termsCount.Select(element => new Tuple<int, int>(element.Key, element.Value)).ToList();
 
-            foreach (var element in termsCount)
-                allTerms.Add(new Tuple<int, int>(element.Key, element.Value));
-            termsCount.Clear();
+            _termsCount.Clear();
             GC.Collect();
 
-            allTerms.Sort((o1, o2) => { return o2.Item2 - o1.Item2; });
+            allTerms.Sort((o1, o2) => o2.Item2 - o1.Item2);
 
             if (allTerms.Count > 1000)
                 allTerms.RemoveRange(1000, allTerms.Count - 1000);
 
-            using (StreamWriter writer = new StreamWriter(output))
+            using (var writer = new StreamWriter(_output))
             {
                 foreach (var element in allTerms)
                     writer.WriteLine(element.Item1 + "\t" + element.Item2);
