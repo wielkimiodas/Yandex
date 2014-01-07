@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Yandex.Utils;
+using Yandex.Utils.UserActions;
 
 namespace Yandex.InputFileReader
 {

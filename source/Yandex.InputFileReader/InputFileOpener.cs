@@ -1,39 +1,9 @@
 ﻿using System;
 using Yandex.Utils;
+using Yandex.Utils.UserActions;
 
 namespace Yandex.InputFileReader
 {
-    public class Metadata
-    {
-        public byte type;
-        public int sessionId;
-        public int day;
-        public int userId;
-    }
-
-    public class QueryAction
-    {
-        public byte type;
-        public int sessionId;
-        public int time;
-        public int serpid;
-        public int queryId;
-        public int nTerms;
-        public int[] terms = new int[1];
-        public int nUrls;
-        public int[] urls = new int[1];
-        public int[] domains = new int[1];
-    }
-
-    public class Click
-    {
-        public byte type;
-        public int sessionId;
-        public int time;
-        public int serpid;
-        public int urlId;
-    }
-
     public class InputFileOpener : IDisposable
     {
         private readonly string _filename;
@@ -95,7 +65,7 @@ namespace Yandex.InputFileReader
 
                             int nTerms = binaryReader.ReadInt32();
                             queryAction.nTerms = nTerms;
-                            if (queryAction.terms.Length < nTerms)
+                            if (queryAction.terms == null || queryAction.terms.Length < nTerms)
                                 queryAction.terms = new int[nTerms];
 
                             for (int i = 0; i < nTerms; i++)
@@ -103,7 +73,7 @@ namespace Yandex.InputFileReader
 
                             int nUrls = binaryReader.ReadInt32();
                             queryAction.nUrls = nUrls;
-                            if (queryAction.urls.Length < nUrls)
+                            if (queryAction.urls == null || queryAction.urls.Length < nUrls)
                             {
                                 queryAction.urls = new int[nUrls];
                                 queryAction.domains = new int[nUrls];

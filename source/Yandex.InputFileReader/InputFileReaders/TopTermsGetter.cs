@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Yandex.Utils;
+using Yandex.Utils.UserActions;
 
 namespace Yandex.InputFileReader
 {

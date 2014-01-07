@@ -5,10 +5,10 @@ namespace Yandex.Utils.UserActions
 {
     public class Metadata : UserAction
     {
-        public byte type { get; protected set; }
-        public int sessionId { get; protected set; }
-        public int day { get; protected set; }
-        public int userId { get; protected set; }
+        public byte type;
+        public int sessionId;
+        public int day;
+        public int userId;
 
         public Metadata()
         {

@@ -7,14 +7,16 @@ namespace Yandex.Utils.UserActions
     {
         private static readonly char[] CommaSep = {','};
 
-        public byte Type { get; protected set; }
-        public int SessionId { get; protected set; }
-        public int Time { get; protected set; }
-        public int SerpId { get; protected set; }
-        public int QueryId { get; protected set; }
-        public int[] Terms { get; protected set; }
-        public int[] Urls { get; protected set; }
-        public int[] Domains { get; protected set; }
+        public byte type;
+        public int sessionId;
+        public int time;
+        public int serpid;
+        public int queryId;
+        public int nTerms;
+        public int[] terms;
+        public int nUrls;
+        public int[] urls;
+        public int[] domains;
 
         public QueryAction()
         {
@@ -23,38 +25,40 @@ namespace Yandex.Utils.UserActions
         public QueryAction(byte type, int sessionId, int time, int serpId, int queryId, int[] terms, int[] urls,
             int[] domains)
         {
-            Type = type;
-            SessionId = sessionId;
-            Time = time;
-            SerpId = serpId;
-            QueryId = queryId;
-            Terms = terms;
-            Urls = urls;
-            Domains = domains;
+            this.type = type;
+            this.sessionId = sessionId;
+            this.time = time;
+            this.serpid = serpId;
+            this.queryId = queryId;
+            this.nTerms = terms.Length;
+            this.terms = terms;
+            this.nUrls = urls.Length;
+            this.urls = urls;
+            this.domains = domains;
         }
 
         public override bool ReadData(string[] array)
         {
             try
             {
-                Type = (byte) (array[2][0] == 'Q' ? 1 : 2);
-                SessionId = Int32.Parse(array[0]);
-                Time = Int32.Parse(array[1]);
-                SerpId = Int32.Parse(array[3]);
-                QueryId = Int32.Parse(array[4]);
+                type = (byte) (array[2][0] == 'Q' ? 1 : 2);
+                sessionId = Int32.Parse(array[0]);
+                time = Int32.Parse(array[1]);
+                serpid = Int32.Parse(array[3]);
+                queryId = Int32.Parse(array[4]);
 
                 string[] termsArray = array[5].Split(CommaSep);
-                Terms = new int[termsArray.Length];
+                terms = new int[termsArray.Length];
                 for (int i = 0; i < termsArray.Length; i++)
-                    Terms[i] = Int32.Parse(termsArray[i]);
+                    terms[i] = Int32.Parse(termsArray[i]);
 
-                Urls = new int[array.Length - 5];
-                Domains = new int[array.Length - 5];
+                urls = new int[array.Length - 5];
+                domains = new int[array.Length - 5];
                 for (int i = 6; i < array.Length; i++)
                 {
                     string[] pair = array[i].Split(CommaSep);
-                    Urls[i - 6] = Int32.Parse(pair[0]);
-                    Domains[i - 6] = Int32.Parse(pair[1]);
+                    urls[i - 6] = Int32.Parse(pair[0]);
+                    domains[i - 6] = Int32.Parse(pair[1]);
                 }
             }
             catch
@@ -69,21 +73,21 @@ namespace Yandex.Utils.UserActions
         {
             try
             {
-                writer.Write(Type);
-                writer.Write(SessionId);
-                writer.Write(Time);
-                writer.Write(SerpId);
-                writer.Write(QueryId);
+                writer.Write(type);
+                writer.Write(sessionId);
+                writer.Write(time);
+                writer.Write(serpid);
+                writer.Write(queryId);
 
-                writer.Write(Terms.Length);
-                for (int i = 0; i < Terms.Length; i++)
-                    writer.Write(Terms[i]);
+                writer.Write(terms.Length);
+                for (int i = 0; i < terms.Length; i++)
+                    writer.Write(terms[i]);
 
-                writer.Write(Urls.Length);
-                for (int i = 0; i < Urls.Length; i++)
+                writer.Write(urls.Length);
+                for (int i = 0; i < urls.Length; i++)
                 {
-                    writer.Write(Urls[i]);
-                    writer.Write(Domains[i]);
+                    writer.Write(urls[i]);
+                    writer.Write(domains[i]);
                 }
             }
             catch

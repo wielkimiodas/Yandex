@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InputFileOpener.cs" />
+    <Compile Include="InputFileReaders\Days.cs" />
     <Compile Include="InputFileReaders\DomainsToTerms.cs" />
     <Compile Include="InputFileReaders\InputFileReader.cs" />
     <Compile Include="InputFileReaders\UsersNTerms.cs" />

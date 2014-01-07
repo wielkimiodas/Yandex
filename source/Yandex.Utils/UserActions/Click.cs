@@ -5,11 +5,11 @@ namespace Yandex.Utils.UserActions
 {
     public class Click : UserAction
     {
-        public byte Type { get; protected set; }
-        public int SessionId { get; protected set; }
-        public int Time { get; protected set; }
-        public int SerpId { get; protected set; }
-        public int UrlId { get; protected set; }
+        public byte type;
+        public int sessionId;
+        public int time;
+        public int serpid;
+        public int urlId;
 
         public Click()
         {
@@ -17,22 +17,22 @@ namespace Yandex.Utils.UserActions
 
         public Click(int sessionId, int time, int serpId, int urlId)
         {
-            Type = 3;
-            SessionId = sessionId;
-            Time = time;
-            SerpId = serpId;
-            UrlId = urlId;
+            this.type = 3;
+            this.sessionId = sessionId;
+            this.time = time;
+            this.serpid = serpId;
+            this.urlId = urlId;
         }
 
         public override bool ReadData(string[] array)
         {
             try
             {
-                Type = 3;
-                SessionId = Int32.Parse(array[0]);
-                Time = Int32.Parse(array[1]);
-                SerpId = Int32.Parse(array[3]);
-                UrlId = Int32.Parse(array[4]);
+                type = 3;
+                sessionId = Int32.Parse(array[0]);
+                time = Int32.Parse(array[1]);
+                serpid = Int32.Parse(array[3]);
+                urlId = Int32.Parse(array[4]);
             }
             catch
             {
@@ -46,11 +46,11 @@ namespace Yandex.Utils.UserActions
         {
             try
             {
-                writer.Write(Type);
-                writer.Write(SessionId);
-                writer.Write(Time);
-                writer.Write(SerpId);
-                writer.Write(UrlId);
+                writer.Write(type);
+                writer.Write(sessionId);
+                writer.Write(time);
+                writer.Write(serpid);
+                writer.Write(urlId);
             }
             catch
             {
