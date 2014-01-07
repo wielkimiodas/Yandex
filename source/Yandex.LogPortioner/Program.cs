@@ -19,7 +19,7 @@ namespace Yandex.LogPortioner
             var opener = new InputFileOpener(PathResolver.TrainProcessedFile, portioner);
             opener.Read();
             stopwatch.Stop();
-            Console.WriteLine("Elapsed: " + stopwatch.Elapsed.Seconds + "s.");
+            Console.WriteLine("Elapsed: " + stopwatch.Elapsed.TotalSeconds + "s.");
             Console.ReadKey();
         }
     }

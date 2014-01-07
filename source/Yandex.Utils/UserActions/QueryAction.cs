@@ -79,12 +79,12 @@ namespace Yandex.Utils.UserActions
                 writer.Write(serpid);
                 writer.Write(queryId);
 
-                writer.Write(terms.Length);
-                for (int i = 0; i < terms.Length; i++)
+                writer.Write(nTerms);
+                for (int i = 0; i < nTerms; i++)
                     writer.Write(terms[i]);
 
-                writer.Write(urls.Length);
-                for (int i = 0; i < urls.Length; i++)
+                writer.Write(nUrls);
+                for (int i = 0; i < nUrls; i++)
                 {
                     writer.Write(urls[i]);
                     writer.Write(domains[i]);
