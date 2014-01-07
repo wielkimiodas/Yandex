@@ -20,7 +20,10 @@ namespace Yandex.Transformer
                 {
                     lineCounter++;
                     String line = reader.ReadLine();
-
+                    if (lineCounter==4426369)
+                    {
+                        int a = 4;
+                    }
                     UserAction action = UserAction.GetAction(line);
                     if (action == null)
                     {
@@ -39,14 +42,16 @@ namespace Yandex.Transformer
 
         private static void Main(string[] args)
         {
-            if (args.Length != 2)
-                return;
+            //if (args.Length != 2)
+              //  return;
 
             DateTime dt = DateTime.Now;
-
-            new Program().transform(args[0], args[1]);
+            var s1 = @"H:\Projects\EDWD\Personalized Web Search Challenge\data\train\train";
+            var s2 = @"H:\Projects\EDWD\Personalized Web Search Challenge\data\train\train processed";
+            new Program().transform(s1, s2);
 
             Console.WriteLine((DateTime.Now - dt));
+            Console.ReadKey();
         }
     }
 }

@@ -5,7 +5,6 @@ namespace Yandex.Utils
 {
     public static class PathResolver
     {
-
         /// <summary>
         /// UserMatrixOutput_processed property
         /// </summary>
@@ -19,9 +18,17 @@ namespace Yandex.Utils
         /// <summary>
         /// The UserMatrixOutput property.
         /// </summary>
-        public static readonly string UserMatrixOutput = PathResolver.GetPath("UserMatrixOutput");
+        public static readonly string UserMatrixOutput = GetPath("UserMatrixOutput");
 
+        /// <summary>
+        /// The path to train binary processed file
+        /// </summary>
+        public static readonly string TrainProcessedFile = GetPath("TrainProcessedFile");
 
+        /// <summary>
+        /// The path to folder where parts of the processed file will be stored
+        /// </summary>
+        public static readonly string DataPartsFolder = GetPath("PartFilesOutputFolder");
 
         private const string LogMapPath = @"C:\$EDWD_logs\LogsMap.txt";
 
@@ -34,7 +41,9 @@ namespace Yandex.Utils
             while (reader.Peek() != -1)
             {
                 var prop = reader.ReadLine();
-                prop = prop.Substring(0, prop.IndexOf('/'));
+                var commentIndex = prop.IndexOf('/');
+                if (commentIndex > 0)
+                    prop = prop.Substring(0, commentIndex);
                 var arr = prop.Split('=');
                 if (!pathId.Equals(arr[0].Trim())) continue;
                 res = arr[1].Trim();
