@@ -31,7 +31,7 @@ namespace Yandex.Utils
         public static readonly string DataPartsFolder = GetPath("PartFilesOutputFolder");
 
         private const string LogMapPath = @"C:\$EDWD_logs\LogsMap.txt";
-
+        
         private static string GetPath(string pathId)
         {
             if (pathId == null) throw new ArgumentNullException("pathId");
@@ -49,7 +49,8 @@ namespace Yandex.Utils
                 res = arr[1].Trim();
                 break;
             }
-            if (res == null) throw new Exception("Property " + pathId + " not found in " + LogMapPath);
+            if (string.IsNullOrWhiteSpace(res)) throw new Exception("Property " + pathId + " not found in " + LogMapPath);
+            
             return res;
         }
     }

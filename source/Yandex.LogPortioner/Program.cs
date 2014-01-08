@@ -12,6 +12,7 @@ namespace Yandex.LogPortioner
     {
         static void Main(string[] args)
         {
+            
             Console.WriteLine("Log portioner execution");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
