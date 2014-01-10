@@ -8,8 +8,8 @@ namespace Yandex.InputFileReader
 {
     public class UsersNTerms : InputFileReader
     {
-        private List<List<int>> usersTerms = null;
-        private List<int> currentList;
+        private List<BinarySearchSet<int>> usersTerms = null;
+        private BinarySearchSet<int> currentList;
         private string outputFile;
 
         public UsersNTerms(String outputFile)
@@ -19,22 +19,22 @@ namespace Yandex.InputFileReader
 
         public override void onBeginRead()
         {
-            usersTerms = new List<List<int>>();
+            usersTerms = new List<BinarySearchSet<int>>();
             currentList = null;
         }
 
-        public List<int> getList(int userId)
+        public BinarySearchSet<int> getList(int userId)
         {
             while (usersTerms.Count < userId)
                 usersTerms.Add(null);
 
             if (usersTerms.Count == userId)
-                usersTerms.Add(new List<int>());
+                usersTerms.Add(new BinarySearchSet<int>(Comparer<int>.Default));
 
-            List<int> list = usersTerms[userId];
+            BinarySearchSet<int> list = usersTerms[userId];
             if (list == null)
             {
-                list = new List<int>();
+                list = new BinarySearchSet<int>(Comparer<int>.Default);
                 usersTerms[userId] = list;
             }
 
@@ -54,71 +54,20 @@ namespace Yandex.InputFileReader
 
         public override void onEndRead()
         {
-            List<Tuple<int, List<int>>> tmpList = new List<Tuple<int, List<int>>>();
-
-            for (int i = 0; i < usersTerms.Count; i++)
+            using (BinaryWriter writer = new BinaryWriter(new FileStream(outputFile, FileMode.CreateNew)))
             {
-                var list = usersTerms[i];
-                if (list == null)
-                    continue;
-                usersTerms[i] = null;
-                tmpList.Add(new Tuple<int, List<int>>(i, list));
-            }
-
-            tmpList.Sort((o1, o2) =>
-            {
-                int c1 = o1.Item2.Count;
-                int c2 = o2.Item2.Count;
-                if (c1 < c2)
-                    return 1;
-                if (c1 > c2)
-                    return -1;
-                return o1.Item1 - o2.Item1;
-            }
-                );
-
-            usersTerms = null;
-            GC.Collect();
-
-            using (StreamWriter writer = new StreamWriter(outputFile))
-            {
-                int counter = 0;
-
-                foreach (var element in tmpList)
+                for (int i = 0; i < usersTerms.Count; i++)
                 {
-                    counter++;
-                    if (counter%10000 == 0)
-                    {
-                        Console.Write("Finalizing: {0} %\r", (100.0f*counter/tmpList.Count).ToString("0.000"));
-                    }
-
-                    List<int> list = element.Item2;
-                    list.Sort();
-                    List<Tuple<int, int>> occurrences = new List<Tuple<int, int>>();
-                    int index = 0;
-                    while (index < list.Count)
-                    {
-                        int start = index;
-                        while (index < list.Count - 1)
-                        {
-                            if (list[index] != list[index + 1])
-                                break;
-                            index++;
-                        }
-
-                        occurrences.Add(new Tuple<int, int>(list[index], index - start + 1));
-                        index++;
-                    }
-
-                    writer.WriteLine("User {0}:", element.Item1);
-                    foreach (var occurrence in occurrences)
-                        writer.WriteLine("{0}\t{1}", occurrence.Item1, occurrence.Item2);
-                    writer.WriteLine();
+                    var list = usersTerms[i];
+                    if (list == null)
+                        continue;
+                    usersTerms[i] = null;
+                    writer.Write((int)i);
+                    writer.Write(list.Count);
+                    foreach (int value in list)
+                        writer.Write(value);
                 }
             }
-
-            tmpList = null;
-            GC.Collect();
         }
     }
 }
