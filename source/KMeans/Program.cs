@@ -10,7 +10,7 @@ namespace KMeans
     {
         static void Main(string[] args)
         {
-            KMeans.doKMeans(PathResolver.UserMatrix, "TO DO");
+            KMeans.doKMeans(PathResolver.UserMatrix, @"D:\Downloads\EDWD\usersFinal.txt");
         }
     }
 }

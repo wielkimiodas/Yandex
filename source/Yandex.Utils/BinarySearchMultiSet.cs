@@ -7,7 +7,7 @@ namespace Yandex.Utils
 {
     public class BinarySearchMultiSet<T> : ICollection<T> where T : IComparable
     {
-        List<T> list;
+        public List<T> list;
         IComparer<T> comparer;
 
         public BinarySearchMultiSet(IComparer<T> comparer)
