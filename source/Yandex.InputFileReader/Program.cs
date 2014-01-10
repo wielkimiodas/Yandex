@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using Yandex.InputFileReader.InputFileReaders;
+using Yandex.Utils;
 
 namespace Yandex.InputFileReader
 {
@@ -15,10 +17,12 @@ namespace Yandex.InputFileReader
                 //new TopDomainsGetter(@"D:\Downloads\EDWD\"+data+"_top_domains_1.txt"),
                 //new QueriesExtractor(@"D:\Downloads\EDWD\"+data+"_queries"),
                 //new UsersNTerms(@"D:\Downloads\EDWD\" + data + "_users2terms.txt"),
-                new DomainsToTerms(@"D:\Downloads\EDWD\" + data + "_domains2terms.txt"),
+                //new DomainsToTerms(@"D:\Downloads\EDWD\" + data + "_domains2terms.txt"),
+                new DefaultRanking(PathResolver.OutputPath), 
             };
 
-            const string filename = @"D:\Downloads\EDWD\" + data + "_tr";
+            //const string filename = @"D:\Downloads\EDWD\" + data + "_tr";
+            var filename = PathResolver.TestProcessedFile;
 
             foreach (var reader in readers)
             {
@@ -33,6 +37,19 @@ namespace Yandex.InputFileReader
             }
 
             Console.ReadLine();
+
+            /******* from old Portioner:
+             * Console.WriteLine("Log portioner execution");
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var portioner = new Portioner();
+            var opener = new InputFileOpener(PathResolver.TrainProcessedFile, portioner);
+            opener.Read();
+            stopwatch.Stop();
+            Console.WriteLine("Elapsed: " + stopwatch.Elapsed.TotalSeconds + "s.");
+            Console.ReadKey();
+             * **********/
+
         }
     }
 }

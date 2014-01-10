@@ -25,10 +25,21 @@ namespace Yandex.Utils
         /// </summary>
         public static readonly string TrainProcessedFile = GetPath("TrainProcessedFile");
 
+
+        /// <summary>
+        /// The path to test binary processed file
+        /// </summary>
+        public static readonly string TestProcessedFile = GetPath("TestProcessedFile");
+
         /// <summary>
         /// The path to folder where parts of the processed file will be stored
         /// </summary>
         public static readonly string DataPartsFolder = GetPath("PartFilesOutputFolder");
+        
+        /// <summary>
+        /// The path to file with final answer (will be send to keggle)
+        /// </summary>
+        public static readonly string OutputPath = GetPath("OutputPath");
 
         private const string LogMapPath = @"C:\$EDWD_logs\LogsMap.txt";
         
