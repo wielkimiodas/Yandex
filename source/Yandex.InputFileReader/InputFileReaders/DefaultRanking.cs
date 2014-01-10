@@ -12,7 +12,7 @@ namespace Yandex.InputFileReader.InputFileReaders
     {
         private int _sessionId;
         private StreamWriter _writer;
-        private readonly string _output;
+        private string _output;
 
         public DefaultRanking(string output)
         {
@@ -28,8 +28,8 @@ namespace Yandex.InputFileReader.InputFileReaders
         {
             if (queryAction.type == 2)
             {
-                for(int i=0;i<queryAction.nUrls;i++)
-                _writer.WriteLine(_sessionId +""+ queryAction.urls[i]);
+                for(int i=0;i<queryAction.nUrls-1;i++)
+                _writer.WriteLine(_sessionId +","+ queryAction.urls[i]);
             }
         }
 
