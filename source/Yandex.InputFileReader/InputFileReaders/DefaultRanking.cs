@@ -22,6 +22,7 @@ namespace Yandex.InputFileReader.InputFileReaders
         public override void onBeginRead()
         {
             _writer = new StreamWriter(_output);
+            _writer.WriteLine("SessionID,URLID");
         }
 
         public override void onQueryAction(QueryAction queryAction)
