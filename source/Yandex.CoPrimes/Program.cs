@@ -13,7 +13,8 @@ namespace Yandex.Coprimes
             var watch = Stopwatch.StartNew();
             for(int i=0;i<10000;i++)
             {
-                var o = CoPrime.GetCoprimeTuple();
+                var coprime = new CoPrime();
+                var o = coprime.GetCoprimeTuple();
                 Console.WriteLine(o.Item1 + " " + o.Item2);
             }
             watch.Stop();

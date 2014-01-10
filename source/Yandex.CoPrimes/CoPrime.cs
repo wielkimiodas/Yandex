@@ -7,11 +7,12 @@ namespace Yandex.Coprimes
 {
     public class CoPrime
     {
-        public static Tuple<long, long> GetCoprimeTuple()
+        readonly Random _random = new Random();
+
+        public Tuple<long, long> GetCoprimeTuple()
         {
-            var random = new Random();
             const long terms = 10000; //minhash.getparams
-            long first = random.Next(100, 1000000);
+            long first = _random.Next(100, 1000000);
 
             if (first%2 == terms%2) first++;
 
