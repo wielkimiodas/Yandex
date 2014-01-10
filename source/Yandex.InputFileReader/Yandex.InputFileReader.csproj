@@ -76,6 +76,7 @@
     <Compile Include="InputFileReaders\DomainsToTerms.cs" />
     <Compile Include="InputFileReader.cs" />
     <Compile Include="InputFileReaders\Portioner.cs" />
+    <Compile Include="InputFileReaders\TermStats.cs" />
     <Compile Include="InputFileReaders\UsersNTerms.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
