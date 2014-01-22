@@ -5,7 +5,7 @@ using System.Text;
 using System.Diagnostics;
 using Yandex.Utils;
 
-namespace KMeans
+namespace Yandex.KMeans
 {
     public class MatrixReader
     {

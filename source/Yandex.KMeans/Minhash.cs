@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Yandex.Utils;
 
-namespace KMeans
+namespace Yandex.KMeans
 {
     class Minhash
     {

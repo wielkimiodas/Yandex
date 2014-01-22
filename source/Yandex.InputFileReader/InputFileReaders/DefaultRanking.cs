@@ -24,9 +24,9 @@ namespace Yandex.InputFileReader.InputFileReaders
             _swapTypes = new[]
             {
                 //insert here value - 1
-                new Tuple<int, int>(1, 2),
+                //new Tuple<int, int>(1, 2),
                 //new Tuple<int, int>(2, 3),
-                //new Tuple<int, int>(6, 7);
+                new Tuple<int, int>(5, 6),
             };
         }
 
@@ -41,7 +41,7 @@ namespace Yandex.InputFileReader.InputFileReaders
             if (queryAction.type == TestQuery)
             {
                 //swap for 50% of data
-                if (_random.Next(100) < 50)
+                if (_random.Next(100) < 67)
                 {
                     var type = _swapTypes[_random.Next(_swapTypes.Length)];
                     int p = queryAction.urls[type.Item1];
