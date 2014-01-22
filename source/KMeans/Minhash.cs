@@ -8,26 +8,27 @@ namespace KMeans
 {
     class Minhash
     {
-        public static int[] getMinhashValues(BinarySearchSet<int> row, int[][] allIndexes)
+        public static int[] getMinhashValues(BinarySearchSet<int> row, Tuple<int, int>[] allParams)
         {
-            int[] result = new int[allIndexes.Length];
+            int[] result = new int[allParams.Length];
 
             for (int i = 0; i < result.Length; i++)
-                result[i] = getMinhashValue(row, allIndexes[i]);
+                result[i] = getMinhashValue(row, allParams[i]);
 
             return result;
         }
 
-        private static int getMinhashValue(BinarySearchSet<int> row, int[] indexes)
+        private static int getMinhashValue(BinarySearchSet<int> row, Tuple<int, int> par)
         {
-            int length = indexes.Length;
+            int length = KMeans.MAX_TERM_ID;
             for (int i = 0; i < length; i++)
             {
-                if (row.Contains(indexes[i]))
+                int value = getFuncVal(i, par.Item1, par.Item2, KMeans.MAX_TERM_ID);
+                if (row.Contains(value))
                     return i;
             }
 
-            throw new Exception("Nie znaleziono");
+            return -1;
         }
 
         public static int getFuncVal(int iteration, int a, int b, int n)
@@ -35,29 +36,15 @@ namespace KMeans
             return (a * iteration + b) % n;
         }
 
-        public static int[][] getAllIndexes(int nHashes, int length)
+        public static Tuple<int, int>[] getAllParams(int nHashes, int length)
         {
-            int[][] result = new int[nHashes][];
-            var allParams = getParams(nHashes, length);
-
-            for(int i = 0; i< nHashes; i++)
-            {
-                result[i] = new int[length];
-                for(int j = 0; j < length; j++)
-                    result[i][j] = getFuncVal(j, allParams[i].Item1, allParams[i].Item2, length);
-            }
-
-            return result;
-        }
-
-        private static Tuple<int, int>[] getParams(int nHashes, int length)
-        {
+            Random r = new Random();
             Tuple<int, int>[] hashes = new Tuple<int, int>[nHashes];
 
             for (int i = 0; i < nHashes; i++)
             {
-                int A = 0; // to do
-                int B = 0; // to do
+                int A = 2 * r.Next(length / 2) + 1;
+                int B = 2 * r.Next(length / 2) + 1;
                 hashes[i] = new Tuple<int, int>(A, B);
             }
 
