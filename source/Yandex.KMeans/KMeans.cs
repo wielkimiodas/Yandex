@@ -13,21 +13,12 @@ namespace Yandex.KMeans
         public int userId;
         public BinarySearchSet<int> terms;
 
-        public static List<User> getUsers(List<Tuple<int, BinarySearchSet<int>>> matrix, Tuple<int, int>[] allParams)
+        public static List<User> GetUsers(List<Tuple<int, BinarySearchSet<int>>> matrix, Tuple<int, int>[] allParams)
         {
-            List<User> users = new List<User>();
-            
-            for(int i = 0; i < matrix.Count; i++)
-            {
-                var row = matrix[i];
-                User user = new User() { userId = row.Item1, terms = row.Item2 };
-                users.Add(user);
-            }
-
-            return users;
+            return matrix.Select(row => new User() {userId = row.Item1, terms = row.Item2}).ToList();
         }
 
-        public float getSim(User otherUser)
+        public float GetSim(User otherUser)
         {
             int both = 0;
             int single = 0;
@@ -78,9 +69,9 @@ namespace Yandex.KMeans
             }
         }
 
-        public static User getCentroid(List<User> users, Tuple<int, int>[] allParams)
+        public static User GetCentroid(List<User> users, Tuple<int, int>[] allParams)
         {
-            List<int> termsCounts = new List<int>();
+            var termsCounts = new List<int>();
             float avg = 0;
             foreach (var user in users)
             {
@@ -96,7 +87,7 @@ namespace Yandex.KMeans
 
             int finalAvg = (int)(avg / users.Count);
 
-            BinarySearchMultiSet<Tuple<int, int>> list = new BinarySearchMultiSet<Tuple<int, int>>(new CmpTuple());
+            var list = new BinarySearchMultiSet<Tuple<int, int>>(new CmpTuple());
             for (int i = 0; i < termsCounts.Count; i++)
             {
                 if (list.list.Count > 3 * finalAvg)
@@ -109,7 +100,7 @@ namespace Yandex.KMeans
 
             list.list.RemoveRange(finalAvg, list.list.Count - finalAvg);
 
-            BinarySearchSet<int> centroidTerms = new BinarySearchSet<int>(Comparer<int>.Default);
+            var centroidTerms = new BinarySearchSet<int>(Comparer<int>.Default);
             foreach(var val in list)
                 centroidTerms.Add(val.Item1);
 
@@ -122,22 +113,22 @@ namespace Yandex.KMeans
         const int N_HASHES = 30;
         public const int MAX_TERM_ID = 4853846;
 
-        public static void doKMeans(String filename, String output)
+        public static void DoKMeans(String filename, String output)
         {
             var watch = Stopwatch.StartNew();
-            var matrix = MatrixReader.getMatrix(PathResolver.UserMatrix);
+            var matrix = MatrixReader.GetMatrix(PathResolver.UserMatrix);
             watch.Stop();
             Console.WriteLine("Matrix loading:\t" + watch.Elapsed);
 
             watch = Stopwatch.StartNew();
-            var allIndexes = Minhash.getAllParams(N_HASHES, MAX_TERM_ID);
+            var allIndexes = Minhash.GetAllParams(N_HASHES, MAX_TERM_ID);
             watch.Stop();
             Console.WriteLine("Calculate indexes:\t" + watch.Elapsed);
 
-            Random r = new Random();
+            var r = new Random();
 
             watch = Stopwatch.StartNew();
-            List<User> allUsers = User.getUsers(matrix, allIndexes);
+            List<User> allUsers = User.GetUsers(matrix, allIndexes);
             watch.Stop();
             Console.WriteLine("Getting users:\t" + watch.Elapsed);
 
@@ -145,7 +136,7 @@ namespace Yandex.KMeans
             GC.Collect();
             watch = Stopwatch.StartNew();
             int N_BOXES = allUsers.Count / 10000;
-            List<User>[] boxes = new List<User>[N_BOXES];
+            var boxes = new List<User>[N_BOXES];
             for (int i = 0; i < boxes.Length; i++)
                 boxes[i] = new List<User>();
             for (int i = 0; i < allUsers.Count; i++)
@@ -164,14 +155,14 @@ namespace Yandex.KMeans
             for (int i = 0; i < ITERATIONS; i++)
             {
                 watch = Stopwatch.StartNew();
-                List<User>[] newBoxes = new List<User>[N_BOXES];
+                var newBoxes = new List<User>[N_BOXES];
                 for (int j = 0; j < newBoxes.Length; j++)
                     newBoxes[j] = new List<User>();
 
-                User[] centroids = new User[N_BOXES];
+                var centroids = new User[N_BOXES];
                 for (int j = 0; j < N_BOXES; j++)
                 {
-                    centroids[j] = User.getCentroid(boxes[j], allIndexes);
+                    centroids[j] = User.GetCentroid(boxes[j], allIndexes);
                 }
 
                 for (int j = 0; j < N_BOXES; j++)
@@ -182,7 +173,7 @@ namespace Yandex.KMeans
                         int bestBox = -1;
                         for (int k = 0; k < N_BOXES; k++)
                         {
-                            float sim = user.getSim(centroids[k]);
+                            float sim = user.GetSim(centroids[k]);
                             if (bestSim < sim)
                             {
                                 bestSim = sim;
@@ -200,7 +191,7 @@ namespace Yandex.KMeans
                 Console.WriteLine("Iteration " + i + ":\t" + watch.Elapsed);
             }
 
-            using (StreamWriter writer = new StreamWriter(output))
+            using (var writer = new StreamWriter(output))
             {
                 for (int i = 0; i < boxes.Length; i++)
                 {

@@ -8,22 +8,22 @@ namespace Yandex.KMeans
 {
     class Minhash
     {
-        public static int[] getMinhashValues(BinarySearchSet<int> row, Tuple<int, int>[] allParams)
+        public static int[] GetMinhashValues(BinarySearchSet<int> row, Tuple<int, int>[] allParams)
         {
-            int[] result = new int[allParams.Length];
+            var result = new int[allParams.Length];
 
             for (int i = 0; i < result.Length; i++)
-                result[i] = getMinhashValue(row, allParams[i]);
+                result[i] = GetMinhashValue(row, allParams[i]);
 
             return result;
         }
 
-        private static int getMinhashValue(BinarySearchSet<int> row, Tuple<int, int> par)
+        private static int GetMinhashValue(BinarySearchSet<int> row, Tuple<int, int> par)
         {
-            int length = KMeans.MAX_TERM_ID;
+            const int length = KMeans.MAX_TERM_ID;
             for (int i = 0; i < length; i++)
             {
-                int value = getFuncVal(i, par.Item1, par.Item2, KMeans.MAX_TERM_ID);
+                int value = GetFuncVal(i, par.Item1, par.Item2, KMeans.MAX_TERM_ID);
                 if (row.Contains(value))
                     return i;
             }
@@ -31,15 +31,15 @@ namespace Yandex.KMeans
             return -1;
         }
 
-        public static int getFuncVal(int iteration, int a, int b, int n)
+        public static int GetFuncVal(int iteration, int a, int b, int n)
         {
             return (a * iteration + b) % n;
         }
 
-        public static Tuple<int, int>[] getAllParams(int nHashes, int length)
+        public static Tuple<int, int>[] GetAllParams(int nHashes, int length)
         {
-            Random r = new Random();
-            Tuple<int, int>[] hashes = new Tuple<int, int>[nHashes];
+            var r = new Random();
+            var hashes = new Tuple<int, int>[nHashes];
 
             for (int i = 0; i < nHashes; i++)
             {

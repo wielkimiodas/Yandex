@@ -9,13 +9,13 @@ namespace Yandex.KMeans
 {
     public class MatrixReader
     {
-        public static List<Tuple<int, BinarySearchSet<int>>> getMatrix(String filename)
+        public static List<Tuple<int, BinarySearchSet<int>>> GetMatrix(String filename)
         {
             var watch = Stopwatch.StartNew();
 
-            List<Tuple<int, BinarySearchSet<int>>> matrix = new List<Tuple<int, BinarySearchSet<int>>>();
+            var matrix = new List<Tuple<int, BinarySearchSet<int>>>();
 
-            using (BufferedBinaryReader reader = new BufferedBinaryReader(filename))
+            using (var reader = new BufferedBinaryReader(filename))
             {
                 int lineCounter = 0;
                 float length = reader.reader.BaseStream.Length / 100.0f;
@@ -28,7 +28,7 @@ namespace Yandex.KMeans
 
                     int userId = reader.ReadInt32();
                     int nTerms = reader.ReadInt32();
-                    List<int> list = new List<int>();
+                    var list = new List<int>();
                     for (int i = 0; i < nTerms; i++)
                         list.Add(reader.ReadInt32());
                     matrix.Add(new Tuple<int, BinarySearchSet<int>>(userId, new BinarySearchSet<int>(list, Comparer<int>.Default)));
