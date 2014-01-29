@@ -18,11 +18,13 @@ namespace Yandex.InputFileReader
                 //new QueriesExtractor(@"D:\Downloads\EDWD\"+data+"_queries"),
                 //new UsersNTerms(@"D:\Downloads\EDWD\" + data + "_users2terms.txt"),
                 //new DomainsToTerms(@"D:\Downloads\EDWD\" + data + "_domains2terms.txt"),
-                new DefaultRanking(PathResolver.OutputPath), 
+                //new DefaultRanking(PathResolver.OutputPath), 
+                new LinkSorter(), 
+                
             };
 
             //const string filename = @"D:\Downloads\EDWD\" + data + "_tr";
-            var filename = PathResolver.TestProcessedFile;
+            var filename = PathResolver.TrainProcessedFile;
 
             foreach (var reader in readers)
             {

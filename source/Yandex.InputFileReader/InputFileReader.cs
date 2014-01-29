@@ -16,6 +16,7 @@ namespace Yandex.InputFileReader
 
         public virtual void onMetadata(Metadata metadata)
         {
+
         }
 
         public virtual void onQueryAction(QueryAction queryAction)

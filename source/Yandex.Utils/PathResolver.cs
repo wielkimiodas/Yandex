@@ -35,7 +35,22 @@ namespace Yandex.Utils
         /// The path to folder where parts of the processed file will be stored
         /// </summary>
         public static readonly string DataPartsFolder = GetPath("PartFilesOutputFolder");
-        
+
+        /// <summary>
+        /// The path to folder relevant urls for user are deposed
+        /// </summary>
+        public static readonly string RelevantUrlsFile = GetPath("RelevantUrlsFile");
+
+        /// <summary>
+        /// The path to folder vary relevant urls for user are deposed
+        /// </summary>
+        public static readonly string VeryRelevantUrlsFile = GetPath("VeryRelevantUrlsFile");
+
+        /// <summary>
+        /// The file with urls with positive (2 * very rel count + rel count) / occurences in searcher results 
+        /// </summary>
+        public static readonly string ClicksAnalyse = GetPath("ClicksAnalyse");
+
         /// <summary>
         /// The path to file with final answer (will be send to keggle)
         /// </summary>
