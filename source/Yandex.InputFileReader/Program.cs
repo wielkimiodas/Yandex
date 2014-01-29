@@ -2,56 +2,68 @@
 using System.Diagnostics;
 using Yandex.InputFileReader.InputFileReaders;
 using Yandex.Utils;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Yandex.InputFileReader
 {
     internal class Program
     {
+        private static void Process(List<BinarySearchSet<int>> groups, StreamWriter writer)
+        {
+            var filename = PathResolver.TrainProcessedFile;
+            using (var opener = new InputFileOpener(filename,
+                            new LinkSorter(groups, writer)))
+            {
+                opener.Read();
+            }
+            groups.Clear();
+        }
+
         private static void Main(string[] args)
         {
-            const string data = "train";
-            var readers = new InputFileReader[]
-            {
-                //new TopUrlsGetter(@"D:\Downloads\EDWD\"+data+"_top_urls_1.txt"),
-                //new TopTermsGetter(@"D:\Downloads\EDWD\"+data+"_top_terms_1.txt"),
-                //new TopDomainsGetter(@"D:\Downloads\EDWD\"+data+"_top_domains_1.txt"),
-                //new QueriesExtractor(@"D:\Downloads\EDWD\"+data+"_queries"),
-                //new UsersNTerms(@"D:\Downloads\EDWD\" + data + "_users2terms.txt"),
-                //new DomainsToTerms(@"D:\Downloads\EDWD\" + data + "_domains2terms.txt"),
-                //new DefaultRanking(PathResolver.OutputPath), 
-                new LinkSorter(), 
-                
-            };
+            List<BinarySearchSet<int>> groups = new List<BinarySearchSet<int>>();
 
-            //const string filename = @"D:\Downloads\EDWD\" + data + "_tr";
-            var filename = PathResolver.TrainProcessedFile;
-
-            foreach (var reader in readers)
+            using (System.IO.StreamReader r = new System.IO.StreamReader(@"D:\Downloads\EDWD\usersFinal1.txt"))
             {
                 var watch = Stopwatch.StartNew();
-                using (var opener = new InputFileOpener(filename,
-                    reader))
+
+                
+                int groupsCount = 0;
+
+                while(r.Peek() > -1)
                 {
-                    opener.Read();
+                    String line;
+                    List<int> group = new List<int>();
+                    while (!String.IsNullOrEmpty(line = r.ReadLine()))
+                        group.Add(Int32.Parse(line));
+
+                    groups.Add(new BinarySearchSet<int>(group, Comparer<int>.Default));
+                    groupsCount++;
                 }
+
                 watch.Stop();
-                Console.WriteLine("Time {0}", watch.Elapsed);
+                Console.WriteLine("Reading {0} groups took {1}", groupsCount, watch.Elapsed);
+            }
+
+            const int N = 16;
+            groups.Sort((o1, o2) => { return o2.Count - o1.Count; });
+
+            using (StreamWriter writer = new StreamWriter(@"D:\Downloads\EDWD\groupsRankings.txt"))
+            {
+                while (groups.Count > 0)
+                {
+                    var tmpGropus = new List<BinarySearchSet<int>>();
+                    int nGroups = Math.Min(groups.Count, N);
+
+                    tmpGropus.AddRange(groups.GetRange(0, nGroups));
+                    groups.RemoveRange(0, nGroups);
+
+                    Process(tmpGropus, writer);
+                }
             }
 
             Console.ReadLine();
-
-            /******* from old Portioner:
-             * Console.WriteLine("Log portioner execution");
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var portioner = new Portioner();
-            var opener = new InputFileOpener(PathResolver.TrainProcessedFile, portioner);
-            opener.Read();
-            stopwatch.Stop();
-            Console.WriteLine("Elapsed: " + stopwatch.Elapsed.TotalSeconds + "s.");
-            Console.ReadKey();
-             * **********/
-
         }
     }
 }
