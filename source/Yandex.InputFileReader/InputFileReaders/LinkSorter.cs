@@ -20,9 +20,9 @@ namespace Yandex.InputFileReader.InputFileReaders
         private int _currentDwellTime = -1;
         private bool _isLastActionClick;
 
-        private int[,] _relevants;
-        private int[,] _veryRelevants;
-        private int[,] _occurences;
+        private int[][] _relevants;
+        private int[][] _veryRelevants;
+        private int[][] _occurences;
         private readonly StreamWriter _writer;
         private List<List<Tuple<int, float>>> _results;
         private readonly List<BinarySearchSet<int>> _userGroupsList;
@@ -38,9 +38,15 @@ namespace Yandex.InputFileReader.InputFileReaders
 
         public override void onBeginRead()
         {
-            _relevants = new int[_userGroupsList.Count, UrlMaxId];
-            _veryRelevants = new int[_userGroupsList.Count, UrlMaxId];
-            _occurences = new int[_userGroupsList.Count, UrlMaxId];
+            _relevants = new int[_userGroupsList.Count][];
+            for (int i = 0; i < _relevants.Length; i++)
+                _relevants[i] = new int[UrlMaxId];
+            _veryRelevants = new int[_userGroupsList.Count][];
+            for (int i = 0; i < _veryRelevants.Length; i++)
+                _veryRelevants[i] = new int[UrlMaxId];
+            _occurences = new int[_userGroupsList.Count][];
+            for (int i = 0; i < _occurences.Length; i++)
+                _occurences[i] = new int[UrlMaxId];
             _results = new List<List<Tuple<int, float>>>();
         }
 
@@ -57,13 +63,13 @@ namespace Yandex.InputFileReader.InputFileReaders
             int diff = _currentDwellTime - _lastDwellTime;
             if (diff <= 399 && diff >= 50)
             {
-                _relevants[groupId, click.urlId]++;
+                _relevants[groupId][click.urlId]++;
                 //nie chcemy goscia liczyc dwa razy
                 _isLastActionClick = false;
             }
             else if (diff >= 400)
             {
-                _veryRelevants[groupId, click.urlId]++;
+                _veryRelevants[groupId][click.urlId]++;
                 //nie chcemy goscia liczyc dwa razy
                 _isLastActionClick = false;
             }
@@ -86,7 +92,7 @@ namespace Yandex.InputFileReader.InputFileReaders
             if (_isLastActionClick)
             {
 
-                _veryRelevants[groupId, _currentUrlClicked]++;
+                _veryRelevants[groupId][_currentUrlClicked]++;
             }
 
             _lastDwellTime = -1;
@@ -103,7 +109,7 @@ namespace Yandex.InputFileReader.InputFileReaders
             _currentDwellTime = queryAction.time;
             for (int i = 0; i < queryAction.nUrls; i++)
             {
-                _occurences[groupId, queryAction.urls[i]]++;
+                _occurences[groupId][queryAction.urls[i]]++;
             }
         }
 
@@ -111,7 +117,7 @@ namespace Yandex.InputFileReader.InputFileReaders
         {
             if (_isLastActionClick && groupId > -1)
             {
-                _veryRelevants[groupId, _currentUrlClicked]++;
+                _veryRelevants[groupId][_currentUrlClicked]++;
             }
 
             AnalyzeResults();
@@ -126,7 +132,7 @@ namespace Yandex.InputFileReader.InputFileReaders
             {
                 for (int i = 0; i < UrlMaxId; i++)
                 {
-                    float res = (_veryRelevants[j,i] * 2 + _relevants[j,i]) / (float)_occurences[j,i];
+                    float res = (_veryRelevants[j][i] * 2 + _relevants[j][i]) / (float)_occurences[j][i];
                     if (res > 0)
                     {
                         _results[j].Add(new Tuple<int, float>(i, res));

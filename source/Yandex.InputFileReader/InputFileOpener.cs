@@ -38,9 +38,13 @@ namespace Yandex.InputFileReader
                 int type = binaryReader.PeekChar();
                 while (type > -1)
                 {
-                    if (++lineCounter%100000 == 0)
+                    if (++lineCounter % 100000 == 0)
+                    {
                         Console.Write("                 \rRead: {0} %\r",
-                            (binaryReader.reader.BaseStream.Position/length).ToString("0.000"));
+                            (binaryReader.reader.BaseStream.Position / length).ToString("0.000"));
+                        if (lineCounter % 1000000 == 0)
+                            GC.Collect();
+                    }
 
                     switch (type)
                     {
