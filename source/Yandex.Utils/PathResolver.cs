@@ -79,7 +79,11 @@ namespace Yandex.Utils
                 res = arr[1].Trim();
                 break;
             }
-            if (string.IsNullOrWhiteSpace(res)) throw new Exception("Property " + pathId + " not found in " + LogMapPath);
+            if (string.IsNullOrWhiteSpace(res))
+            {
+                Console.WriteLine("Property " + pathId + " not found in " + LogMapPath);
+                throw new Exception("Property " + pathId + " not found in " + LogMapPath);
+            }
             
             return res;
         }
