@@ -14,42 +14,40 @@ namespace Yandex.InputFileReader.InputFileReaders
     /// </summary>
     public class LinkSorter : InputFileReader
     {
-        //private StreamWriter _relevantWriter;
-        //private StreamWriter _veryRelevantWriter;
-
         private int _currentUrlClicked = -1;
 
         private int _lastDwellTime = -1;
-        private int _currentDwellTime=-1;
+        private int _currentDwellTime = -1;
         private bool _isLastActionClick;
 
-        private List<int> _relevants;
-        private List<int> _veryRelevants;
-        private List<int> _occurences;
-        private List<Tuple<int, float>> _result;
+        private int[,] _relevants;
+        private int[,] _veryRelevants;
+        private int[,] _occurences;
+        private readonly StreamWriter _writer;
+        private List<List<Tuple<int, float>>> _results;
+        private readonly List<BinarySearchSet<int>> _userGroupsList;
+        private int groupId;
 
         private const int UrlMaxId = 71224114 + 1;
 
+        public LinkSorter(List<BinarySearchSet<int>> userGroupsList, StreamWriter writer)
+        {
+            _userGroupsList = userGroupsList;
+            _writer = writer;
+        }
+
         public override void onBeginRead()
         {
-            //_relevantWriter = new StreamWriter(PathResolver.RelevantUrlsFile);
-            //_veryRelevantWriter = new StreamWriter(PathResolver.VeryRelevantUrlsFile);
-
-            _relevants = new List<int>();
-            _veryRelevants = new List<int>();
-            _occurences = new List<int>();
-            _result = new List<Tuple<int, float>>();
-
-            for (int i = 0; i < UrlMaxId; i++)
-            {
-                _occurences.Add(0);
-                _relevants.Add(0);
-                _veryRelevants.Add(0);
-            }
+            _relevants = new int[_userGroupsList.Count, UrlMaxId];
+            _veryRelevants = new int[_userGroupsList.Count, UrlMaxId];
+            _occurences = new int[_userGroupsList.Count, UrlMaxId];
+            _results = new List<List<Tuple<int, float>>>();
         }
 
         public override void onClick(Click click)
         {
+            if (groupId == -1) return;
+
             _isLastActionClick = true;
             _currentUrlClicked = click.urlId;
 
@@ -59,29 +57,44 @@ namespace Yandex.InputFileReader.InputFileReaders
             int diff = _currentDwellTime - _lastDwellTime;
             if (diff <= 399 && diff >= 50)
             {
-                //_relevantWriter.WriteLine(click.urlId);
-                _relevants[click.urlId]++;
-
+                _relevants[groupId, click.urlId]++;
                 //nie chcemy goscia liczyc dwa razy
                 _isLastActionClick = false;
             }
             else if (diff >= 400)
             {
-                //_veryRelevantWriter.WriteLine(click.urlId);
-                _veryRelevants[click.urlId]++;
-                
+                _veryRelevants[groupId, click.urlId]++;
                 //nie chcemy goscia liczyc dwa razy
                 _isLastActionClick = false;
             }
-            
         }
 
         public override void onMetadata(Metadata metadata)
         {
+            groupId = -1;
+            for (int i = 0; i < _userGroupsList.Count; i++)
+            {
+                if (_userGroupsList[i].Contains(metadata.userId))
+                {
+                    groupId = i;
+                    break;
+                }
+            }
+
+            if (groupId == -1) return;
+
+            for (int i = 0; i < _userGroupsList.Count; i++)
+            {
+                if (_userGroupsList[i].Contains(metadata.userId))
+                {
+
+                }
+            }
+
             if (_isLastActionClick)
             {
-                //_veryRelevantWriter.WriteLine(_currentUrlClicked);
-                _veryRelevants[_currentUrlClicked]++;
+
+                _veryRelevants[groupId, _currentUrlClicked]++;
             }
 
             _lastDwellTime = -1;
@@ -89,63 +102,75 @@ namespace Yandex.InputFileReader.InputFileReaders
             _currentUrlClicked = -1;
             _isLastActionClick = false;
         }
-        
+
         public override void onQueryAction(QueryAction queryAction)
         {
+            if (groupId == -1) return;
+
             _isLastActionClick = false;
             _currentDwellTime = queryAction.time;
-            for (int i = 0; i < queryAction.nUrls;i++)
+            for (int i = 0; i < queryAction.nUrls; i++)
             {
-                _occurences[queryAction.urls[i]]++;
+                _occurences[groupId, queryAction.urls[i]]++;
             }
         }
 
         public override void onEndRead()
         {
-            if (_isLastActionClick)
+            if (_isLastActionClick && groupId > -1)
             {
-                //_veryRelevantWriter.WriteLine(_currentUrlClicked);
-                _veryRelevants[_currentUrlClicked]++;
+                _veryRelevants[groupId, _currentUrlClicked]++;
             }
 
             AnalyzeResults();
             SaveToFile();
-
-            //_veryRelevantWriter.Flush();
-            //_relevantWriter.Flush();
-            //_relevantWriter.Close();
-            //_veryRelevantWriter.Close();
-            
         }
 
         private void AnalyzeResults()
         {
             Console.WriteLine("Computing results...");
-            for (int i = 0; i < UrlMaxId; i++)
-            {
-                float res = (_veryRelevants[i]*2 + _relevants[i])/(float)_occurences[i];
-                if (res > 0)
-                {
-                    _result.Add(new Tuple<int, float>(i,res));
-                }
-            }
 
-            Console.WriteLine("Sorting...");
-            _result.Sort((x1,x2)=>x2.Item2.CompareTo(x1.Item2));
+            for (int j = 0; j < _userGroupsList.Count; j++)
+            {
+                for (int i = 0; i < UrlMaxId; i++)
+                {
+                    float res = (_veryRelevants[j,i] * 2 + _relevants[j,i]) / (float)_occurences[j,i];
+                    if (res > 0)
+                    {
+                        _results[j].Add(new Tuple<int, float>(i, res));
+                    }
+                }
+
+                Console.WriteLine("Sorting...");
+                _results[j].Sort((x1, x2) => x2.Item2.CompareTo(x1.Item2));
+            }
         }
 
         private void SaveToFile()
         {
-            Console.WriteLine("Saving to file "+_result.Count+" urls...");
-            
-            var resultWriter = new StreamWriter(PathResolver.ClicksAnalyse);
-            for (int i = 0; i < _result.Count; i++)
-            {
-                resultWriter.WriteLine(_result[i].Item1 + "\t" +_result[i].Item2);
-            }
+            Console.WriteLine("Saving to file...");
 
-            resultWriter.Flush();
-            resultWriter.Close();
+            for (int j = 0; j < _userGroupsList.Count; j++)
+            {
+                for (int i = 0; i < _userGroupsList[j].Count; i++)
+                {
+                    _writer.WriteLine(_userGroupsList[j].ElementAt(i));
+                }
+
+                _writer.WriteLine();
+
+                for (int i = 0; i < _results[j].Count; i++)
+                {
+                    var res = _results[j][i];
+                    _writer.WriteLine(res.Item1 + "\t" + res.Item2);
+                }
+
+                _writer.WriteLine();
+            }
+            
+
+            _writer.Flush();
+            _writer.Close();
         }
     }
 }

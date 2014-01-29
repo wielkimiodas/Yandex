@@ -22,9 +22,9 @@ namespace Yandex.InputFileReader
 
         private static void Main(string[] args)
         {
-            List<BinarySearchSet<int>> groups = new List<BinarySearchSet<int>>();
+            var groups = new List<BinarySearchSet<int>>();
 
-            using (System.IO.StreamReader r = new System.IO.StreamReader(@"D:\Downloads\EDWD\usersFinal1.txt"))
+            using (var r = new StreamReader(PathResolver.UsersGroups))
             {
                 var watch = Stopwatch.StartNew();
 
@@ -34,7 +34,7 @@ namespace Yandex.InputFileReader
                 while(r.Peek() > -1)
                 {
                     String line;
-                    List<int> group = new List<int>();
+                    var group = new List<int>();
                     while (!String.IsNullOrEmpty(line = r.ReadLine()))
                         group.Add(Int32.Parse(line));
 
@@ -46,10 +46,10 @@ namespace Yandex.InputFileReader
                 Console.WriteLine("Reading {0} groups took {1}", groupsCount, watch.Elapsed);
             }
 
-            const int N = 16;
-            groups.Sort((o1, o2) => { return o2.Count - o1.Count; });
+            const int N = 3;
+            groups.Sort((o1, o2) => o2.Count - o1.Count);
 
-            using (StreamWriter writer = new StreamWriter(@"D:\Downloads\EDWD\groupsRankings.txt"))
+            using (var writer = new StreamWriter(PathResolver.ClicksAnalyse))
             {
                 while (groups.Count > 0)
                 {

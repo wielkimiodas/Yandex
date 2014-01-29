@@ -25,7 +25,6 @@ namespace Yandex.Utils
         /// </summary>
         public static readonly string TrainProcessedFile = GetPath("TrainProcessedFile");
 
-
         /// <summary>
         /// The path to test binary processed file
         /// </summary>
@@ -50,6 +49,11 @@ namespace Yandex.Utils
         /// The file with urls with positive (2 * very rel count + rel count) / occurences in searcher results 
         /// </summary>
         public static readonly string ClicksAnalyse = GetPath("ClicksAnalyse");
+
+        /// <summary>
+        /// The groups of users
+        /// </summary>
+        public static readonly string UsersGroups = GetPath("UsersGroups");
 
         /// <summary>
         /// The path to file with final answer (will be send to keggle)
