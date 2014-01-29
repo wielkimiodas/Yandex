@@ -83,14 +83,6 @@ namespace Yandex.InputFileReader.InputFileReaders
 
             if (groupId == -1) return;
 
-            for (int i = 0; i < _userGroupsList.Count; i++)
-            {
-                if (_userGroupsList[i].Contains(metadata.userId))
-                {
-
-                }
-            }
-
             if (_isLastActionClick)
             {
 
