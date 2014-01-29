@@ -68,6 +68,7 @@
     <Compile Include="BinarySearchSet.cs" />
     <Compile Include="BufferedBinaryReader.cs" />
     <Compile Include="BinarySearchMultiSet.cs" />
+    <Compile Include="ParallelWorker.cs" />
     <Compile Include="PathResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserActions\Click.cs" />

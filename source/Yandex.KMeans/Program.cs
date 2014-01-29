@@ -10,7 +10,9 @@ namespace Yandex.KMeans
     {
         static void Main(string[] args)
         {
-            KMeans.DoKMeans(PathResolver.UserMatrix, @"D:\Downloads\EDWD\usersFinal.txt");
+            KMeans.DoKMeans(PathResolver.UserMatrix, @"D:\Downloads\EDWD\usersFinal");
+
+            Console.ReadLine();
         }
     }
 }
