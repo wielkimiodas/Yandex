@@ -50,6 +50,7 @@ namespace Yandex.InputFileReader.InputFileReaders
 
         public override void onClick(Click click)
         {
+            _isLastActionClick = true;
             _currentUrlClicked = click.urlId;
 
             _lastDwellTime = _currentDwellTime;
@@ -60,13 +61,19 @@ namespace Yandex.InputFileReader.InputFileReaders
             {
                 //_relevantWriter.WriteLine(click.urlId);
                 _relevants[click.urlId]++;
+
+                //nie chcemy goscia liczyc dwa razy
+                _isLastActionClick = false;
             }
             else if (diff >= 400)
             {
                 //_veryRelevantWriter.WriteLine(click.urlId);
                 _veryRelevants[click.urlId]++;
+                
+                //nie chcemy goscia liczyc dwa razy
+                _isLastActionClick = false;
             }
-            _isLastActionClick = true;
+            
         }
 
         public override void onMetadata(Metadata metadata)
@@ -86,7 +93,7 @@ namespace Yandex.InputFileReader.InputFileReaders
         public override void onQueryAction(QueryAction queryAction)
         {
             _isLastActionClick = false;
-
+            _currentDwellTime = queryAction.time;
             for (int i = 0; i < queryAction.nUrls;i++)
             {
                 _occurences[queryAction.urls[i]]++;
