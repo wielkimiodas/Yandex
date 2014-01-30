@@ -68,6 +68,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FinalProcessor.cs" />
     <Compile Include="GroupCreator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,6 +77,10 @@
     <Compile Include="UserMatrixCreator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Yandex.InputFileReader\Yandex.InputFileReader.csproj">
+      <Project>{F345AEED-BFBB-4B62-9073-09CAFB55A9B9}</Project>
+      <Name>Yandex.InputFileReader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Yandex.Utils\Yandex.Utils.csproj">
       <Project>{2A8E53DB-AA89-4DBD-BA22-1E7F99F8B846}</Project>
       <Name>Yandex.Utils</Name>

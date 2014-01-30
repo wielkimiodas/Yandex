@@ -73,12 +73,13 @@
     <Compile Include="InputFileOpener.cs" />
     <Compile Include="InputFileReaders\Counter.cs" />
     <Compile Include="InputFileReaders\Days.cs" />
-    <Compile Include="InputFileReaders\DefaultRanking.cs" />
+    <Compile Include="InputFileReaders\RandomRanking.cs" />
     <Compile Include="InputFileReaders\DomainsToTerms.cs" />
     <Compile Include="InputFileReader.cs" />
     <Compile Include="InputFileReaders\LinkSorter.cs" />
     <Compile Include="InputFileReaders\Portioner.cs" />
     <Compile Include="InputFileReaders\TermStats.cs" />
+    <Compile Include="InputFileReaders\TestFileReader.cs" />
     <Compile Include="InputFileReaders\UsersNTerms.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
