@@ -8,7 +8,7 @@ using Yandex.Utils.UserActions;
 
 namespace Yandex.InputFileReader.InputFileReaders
 {
-    public class DefaultRanking : InputFileReader
+    public class RandomRanking : InputFileReader
     {
         private int _sessionId;
         private StreamWriter _writer;
@@ -17,7 +17,7 @@ namespace Yandex.InputFileReader.InputFileReaders
         private readonly Tuple<int, int>[] _swapTypes;
         private const int TestQuery = 2;
 
-        public DefaultRanking(string output)
+        public RandomRanking(string output)
         {
             _output = output;
             _random = new Random();
