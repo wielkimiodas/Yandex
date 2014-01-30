@@ -24,7 +24,6 @@ namespace Yandex.InputFileReader.InputFileReaders
         private int[][] _veryRelevants;
         private int[][] _occurences;
         private readonly StreamWriter _writer;
-        private List<List<Tuple<int, float>>> _results;
         private readonly List<BinarySearchSet<int>> _userGroupsList;
         private int groupId;
 
@@ -47,12 +46,12 @@ namespace Yandex.InputFileReader.InputFileReaders
             _occurences = new int[_userGroupsList.Count][];
             for (int i = 0; i < _occurences.Length; i++)
                 _occurences[i] = new int[UrlMaxId];
-            _results = new List<List<Tuple<int, float>>>();
         }
 
         public override void onClick(Click click)
         {
-            if (groupId == -1) return;
+            if (groupId == -1)
+                return;
 
             _isLastActionClick = true;
             _currentUrlClicked = click.urlId;
@@ -77,6 +76,11 @@ namespace Yandex.InputFileReader.InputFileReaders
 
         public override void onMetadata(Metadata metadata)
         {
+            if (groupId != -1 && _isLastActionClick)
+            {
+                _veryRelevants[groupId][_currentUrlClicked]++;
+            }
+
             groupId = -1;
             for (int i = 0; i < _userGroupsList.Count; i++)
             {
@@ -87,13 +91,8 @@ namespace Yandex.InputFileReader.InputFileReaders
                 }
             }
 
-            if (groupId == -1) return;
-
-            if (_isLastActionClick)
-            {
-
-                _veryRelevants[groupId][_currentUrlClicked]++;
-            }
+            if (groupId == -1)
+                return;
 
             _lastDwellTime = -1;
             _currentDwellTime = -1;
@@ -103,7 +102,8 @@ namespace Yandex.InputFileReader.InputFileReaders
 
         public override void onQueryAction(QueryAction queryAction)
         {
-            if (groupId == -1) return;
+            if (groupId == -1)
+                return;
 
             _isLastActionClick = false;
             _currentDwellTime = queryAction.time;
@@ -120,16 +120,23 @@ namespace Yandex.InputFileReader.InputFileReaders
                 _veryRelevants[groupId][_currentUrlClicked]++;
             }
 
-            AnalyzeResults();
-            SaveToFile();
+            var _results = AnalyzeResults();
+            GC.Collect();
+            SaveToFile(_results);
+            _results = null;
+            GC.Collect();
         }
 
-        private void AnalyzeResults()
+        private List<List<Tuple<int, float>>> AnalyzeResults()
         {
-            Console.WriteLine("Computing results...");
+            var _results = new List<List<Tuple<int, float>>>();
 
             for (int j = 0; j < _userGroupsList.Count; j++)
             {
+                Console.Write("AnalyzeResults {0:0.00}%\r", 100.0f * j / _userGroupsList.Count);
+
+                _results.Add(new List<Tuple<int, float>>());
+
                 for (int i = 0; i < UrlMaxId; i++)
                 {
                     float res = (_veryRelevants[j][i] * 2 + _relevants[j][i]) / (float)_occurences[j][i];
@@ -138,15 +145,21 @@ namespace Yandex.InputFileReader.InputFileReaders
                         _results[j].Add(new Tuple<int, float>(i, res));
                     }
                 }
+                _veryRelevants[j] = null;
+                _relevants[j] = null;
+                _occurences[j] = null;
+                GC.Collect();
 
-                Console.WriteLine("Sorting...");
                 _results[j].Sort((x1, x2) => x2.Item2.CompareTo(x1.Item2));
             }
+            Console.Write(new String(' ', 60) + "\r");
+
+            return _results;
         }
 
-        private void SaveToFile()
+        private void SaveToFile(List<List<Tuple<int, float>>> _results)
         {
-            Console.WriteLine("Saving to file...");
+            Console.Write("Saving to file...\r");
 
             for (int j = 0; j < _userGroupsList.Count; j++)
             {
@@ -165,10 +178,8 @@ namespace Yandex.InputFileReader.InputFileReaders
 
                 _writer.WriteLine();
             }
-            
 
             _writer.Flush();
-            _writer.Close();
         }
     }
 }

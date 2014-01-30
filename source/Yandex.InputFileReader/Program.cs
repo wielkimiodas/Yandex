@@ -11,16 +11,28 @@ namespace Yandex.InputFileReader
     {
         private static void Process(List<BinarySearchSet<int>> groups, StreamWriter writer)
         {
+            var watch = Stopwatch.StartNew();
             var filename = PathResolver.TrainProcessedFile;
             using (var opener = new InputFileOpener(filename,
                             new LinkSorter(groups, writer)))
             {
                 opener.Read();
             }
+            watch.Stop();
             groups.Clear();
+            GC.Collect();
+            Console.WriteLine(groups.Count + " groups processed in " + watch.Elapsed);
         }
 
         private static void Main(string[] args)
+        {
+            var watch = Stopwatch.StartNew();
+            start();
+            watch.Stop();
+            Console.WriteLine("Done after {0}", watch.Elapsed);
+        }
+
+        private static void start()
         {
             var groups = new List<BinarySearchSet<int>>();
 
@@ -46,8 +58,10 @@ namespace Yandex.InputFileReader
                 Console.WriteLine("Reading {0} groups took {1}", groupsCount, watch.Elapsed);
             }
 
-            const int N = 3;
+            const int N = 12;
             groups.Sort((o1, o2) => o2.Count - o1.Count);
+            if (groups.Count > 2 * N)
+                groups.RemoveRange(2 * N, groups.Count - 2 * N);
 
             using (var writer = new StreamWriter(PathResolver.ClicksAnalyse))
             {

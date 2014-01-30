@@ -42,7 +42,7 @@ namespace Yandex.InputFileReader
                     {
                         Console.Write("                 \rRead: {0} %\r",
                             (binaryReader.reader.BaseStream.Position / length).ToString("0.000"));
-                        if (lineCounter % 1000000 == 0)
+                        if (lineCounter % 2000000 == 0)
                             GC.Collect();
                     }
 
