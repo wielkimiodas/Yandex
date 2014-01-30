@@ -19,17 +19,33 @@ namespace Yandex.InputFileReader
                 opener.Read();
             }
             watch.Stop();
+            int nGroups = groups.Count;
             groups.Clear();
             GC.Collect();
-            Console.WriteLine(groups.Count + " groups processed in " + watch.Elapsed);
+            Console.WriteLine(nGroups + " groups processed in " + watch.Elapsed);
         }
 
         private static void Main(string[] args)
         {
+            if (false)
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (FileStream file = new FileStream(PathResolver.TestProcessedFile, FileMode.Open, FileAccess.Read))
+                {
+                    byte[] bytes = new byte[file.Length];
+                    file.Read(bytes, 0, (int)file.Length);
+                    ms.Write(bytes, 0, (int)file.Length);
+                }
+
+                InputFileOpener opener = new InputFileOpener(ms, new LinkSorter(null, null));
+            }
+
             var watch = Stopwatch.StartNew();
             start();
             watch.Stop();
             Console.WriteLine("Done after {0}", watch.Elapsed);
+
+            Console.ReadLine();
         }
 
         private static void start()
@@ -58,17 +74,20 @@ namespace Yandex.InputFileReader
                 Console.WriteLine("Reading {0} groups took {1}", groupsCount, watch.Elapsed);
             }
 
-            const int N = 12;
+            const int N_GROUPS = 15;
+
             groups.Sort((o1, o2) => o2.Count - o1.Count);
-            if (groups.Count > 2 * N)
-                groups.RemoveRange(2 * N, groups.Count - 2 * N);
 
             using (var writer = new StreamWriter(PathResolver.ClicksAnalyse))
             {
                 while (groups.Count > 0)
                 {
+                    if (Console.KeyAvailable)
+                        if (Console.ReadKey().Key == ConsoleKey.Enter)
+                            break;
+
                     var tmpGropus = new List<BinarySearchSet<int>>();
-                    int nGroups = Math.Min(groups.Count, N);
+                    int nGroups = Math.Min(groups.Count, N_GROUPS);
 
                     tmpGropus.AddRange(groups.GetRange(0, nGroups));
                     groups.RemoveRange(0, nGroups);
@@ -76,8 +95,6 @@ namespace Yandex.InputFileReader
                     Process(tmpGropus, writer);
                 }
             }
-
-            Console.ReadLine();
         }
     }
 }

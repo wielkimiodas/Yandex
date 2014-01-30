@@ -1,18 +1,25 @@
 ﻿using System;
 using Yandex.Utils;
 using Yandex.Utils.UserActions;
+using System.IO;
 
 namespace Yandex.InputFileReader
 {
     public class InputFileOpener : IDisposable
     {
-        private readonly string _filename;
+        private readonly BinaryReader _binaryReader;
 
         private readonly InputFileReader _reader;
 
         public InputFileOpener(string filename, InputFileReader reader)
         {
-            _filename = filename;
+            _binaryReader = new BinaryReader(new FileStream(filename, FileMode.Open));
+            _reader = reader;
+        }
+
+        public InputFileOpener(MemoryStream memoryStream, InputFileReader reader)
+        {
+            _binaryReader = new BinaryReader(memoryStream);
             _reader = reader;
         }
 
@@ -23,7 +30,7 @@ namespace Yandex.InputFileReader
 
         public void Read()
         {
-            using (var binaryReader = new BufferedBinaryReader(_filename))
+            using (var binaryReader = new BufferedBinaryReader(_binaryReader))
             {
                 Metadata metadata = new Metadata();
                 QueryAction queryAction = new QueryAction();
