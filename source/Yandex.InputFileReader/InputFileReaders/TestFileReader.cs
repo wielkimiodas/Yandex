@@ -35,15 +35,22 @@ namespace Yandex.InputFileReader.InputFileReaders
         public override void onMetadata(Metadata metadata)
         {
             _userGroupId = -1;
-            for (int i = 0; i < _statistics.Count; i++)
+            ParallelWorker worker = new ParallelWorker(8);
+            bool found = false;
+            for (int it = 0; it < _statistics.Count && !found; it++)
             {
-                if (_statistics[i].users.Contains(metadata.userId))
+                int i = it;
+                worker.Queue(delegate
                 {
-                    _userGroupId = i;
-                    break;
-                }
+                    if (_statistics[i].users.Contains(metadata.userId))
+                    {
+                        _userGroupId = i;
+                        found = true;
+                    }
+                });
             }
             metadata.WriteToStream(_writer);
+            worker.Wait();
         }
 
         public override void onQueryAction(QueryAction queryAction)
