@@ -105,7 +105,15 @@ namespace Yandex.LogProcessor
             }
 
             //returns users and stats
-            return new UsersGroup(new BinarySearchSet<int>(users, Comparer<int>.Default), statistics);
+            return new UsersGroup(new BinarySearchSet<int>(users, Comparer<int>.Default), new BinarySearchMultiSet<Tuple<int, float>>(statistics, new Cmp()));
+        }
+
+        private class Cmp : IComparer<Tuple<int, float>>
+        {
+            public int Compare(Tuple<int, float> x, Tuple<int, float> y)
+            {
+                return x.Item1.CompareTo(y.Item1);
+            }
         }
     }
 }

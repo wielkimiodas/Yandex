@@ -12,9 +12,9 @@ namespace Yandex.InputFileReader.InputFileReaders
     public class UsersGroup
     {
         public BinarySearchSet<int> users { get; private set; }
-        public List<Tuple<int, float>> urlsStats { get; private set; }
+        public BinarySearchMultiSet<Tuple<int, float>> urlsStats { get; private set; }
 
-        public UsersGroup(BinarySearchSet<int> users, List<Tuple<int, float>> urlsStats)
+        public UsersGroup(BinarySearchSet<int> users, BinarySearchMultiSet<Tuple<int, float>> urlsStats)
         {
             this.users = users;
             this.urlsStats = urlsStats;
@@ -71,8 +71,14 @@ namespace Yandex.InputFileReader.InputFileReaders
                         //generally - factors from 1 to 10 inclusively
                         float ourRank = (queryAction.nUrls - i) * defFactor;
 
-                        int kTresh = _statistics[_userGroupId].urlsStats.Count;
                         var currUserGroup = _statistics[_userGroupId];
+                        int indexOf = _statistics[_userGroupId].urlsStats.IndexOf(new Tuple<int,float>(queryAction.urls[i], 0.0f));
+                        if (indexOf >= 0)
+                        {
+                            var elem = currUserGroup.urlsStats.ElementAt(indexOf);
+                            statisticsValue = elem.Item2;
+                        }
+                        /*int kTresh = _statistics[_userGroupId].urlsStats.Count;
                         for (int k = 0; k < kTresh; k++)
                         {
                             var elem = currUserGroup.urlsStats.ElementAt(k);
@@ -81,7 +87,7 @@ namespace Yandex.InputFileReader.InputFileReaders
                                 statisticsValue = elem.Item2;
                                 break;
                             }
-                        }
+                        }*/
                         
                         if (statisticsValue > 0)
                         {

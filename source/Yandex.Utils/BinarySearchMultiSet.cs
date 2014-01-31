@@ -52,6 +52,11 @@ namespace Yandex.Utils
             return index >= 0;
         }
 
+        public int IndexOf(T item)
+        {
+            return list.BinarySearch(item, comparer);
+        }
+
         public void CopyTo(T[] array, int arrayIndex)
         {
             throw new NotImplementedException();
@@ -82,7 +87,7 @@ namespace Yandex.Utils
             return list.GetEnumerator();
         }
 
-        public T get(int index)
+        public T ElementAt(int index)
         {
             return list[index];
         }
