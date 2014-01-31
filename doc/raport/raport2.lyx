@@ -119,12 +119,9 @@ Personalized Web Search Challenge
 \end_inset
 
 .
- Trwa do 10 stycznia 2014, a jako nagrodę można otrzymać 5000$, 3000$ lub
- 1000$ za odpowiednio pierwsze, drugie i trzecie miejsce.
-\end_layout
-
-\begin_layout Standard
-Link: 
+ Zakończył się 10 stycznia 2014, a jako nagrodę można było otrzymać 5000$,
+ 3000$ lub 1000$ za odpowiednio pierwsze, drugie i trzecie miejsce.
+ Link: 
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.kaggle.com/c/yandex-personalized-web-search-challenge"
@@ -132,6 +129,13 @@ target "http://www.kaggle.com/c/yandex-personalized-web-search-challenge"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Zadanie polega na tym aby uporządkować na nowo listę linków zwracanych przez
+ przeglądarkę dla danego zapytania pod konkretnego użytkownika.
+ W tym celu do dyspozycji otrzymujemy dane historyczne przeglądarki oraz
+ obecnej sesji.
 \end_layout
 
 \begin_layout Subsection
@@ -163,9 +167,10 @@ Podstawowym problemem jest zakwalifikowanie każdego linka do jednej z trzech
  użytkownika, albo wskazywane przez nie strony będą przez niego analizowane
  krócej niż 50 jednostek czasu.
  W grupie drugiej mają się znaleźć linki do tych stron, które zostaną wybrane
- przez użytkownika i przeglądane do 399 jednostek czasu.
- Wszystkie linki do stron przeglądanych przez przynajmniej 400 jednostek
- mają się znaleźć w trzeciej grupie.
+ przez użytkownika i przeglądane od 50 do 399 jednostek czasu.
+ Wszystkie linki do stron przeglądanych przez przynajmniej 400 jednostek,
+ lub te, które były ostatnimi akcjami w ramach danej sesji, mają się znaleźć
+ w trzeciej grupie.
  
 \end_layout
 
