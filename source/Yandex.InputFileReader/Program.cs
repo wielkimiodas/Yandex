@@ -37,7 +37,9 @@ namespace Yandex.InputFileReader
                     ms.Write(bytes, 0, (int)file.Length);
                 }
 
-                InputFileOpener opener = new InputFileOpener(ms, new LinkSorter(null, null));
+                InputFileOpener opener = new InputFileOpener(new BinaryReader(ms), new LinkSorter(null, null));
+
+                return;
             }
 
             var watch = Stopwatch.StartNew();

@@ -10,11 +10,17 @@ namespace Yandex.LogProcessor
     {
         private static void Main(string[] args)
         {
-            //var time = ExecuteQueries(args);
-            var time = ExecuteUsersMatrix(args);
+            var watch = Stopwatch.StartNew();
+            FinalProcessor processor = new FinalProcessor();
+            processor.ProcessTestInput(PathResolver.TestProcessedFile, PathResolver.TestProcessedFile + "2" /*!!!!!!!! NAZWA NOWEGO PLIKU TESTOWEGO !!!!!!!!!"*/);
+            watch.Stop();
+            Console.WriteLine("Processing took {0}", watch.Elapsed);
+            Console.ReadLine();
+
+            /*var time = ExecuteUsersMatrix(args);
 
             Console.WriteLine("\nAll computations took: " + time.ToString("c"));
-            Console.ReadKey();
+            Console.ReadKey();*/
         }
 
         private static TimeSpan ExecuteQueries(string[] args)

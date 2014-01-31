@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using Yandex.Utils;
+using Yandex.InputFileReader;
+using UsersGroup = Yandex.InputFileReader.InputFileReaders.UsersGroup;
 
 namespace Yandex.LogProcessor
 {
     public class FinalProcessor
     {
-        
         private readonly StreamReader _reader;
 
         public FinalProcessor()
@@ -15,48 +16,94 @@ namespace Yandex.LogProcessor
             _reader = new StreamReader(PathResolver.ClicksAnalyse);
         }
 
-        public void ReadTestInput()
+        public void ProcessTestInput(String inputTestFile, String outputTestFile)
         {
-            Tuple<List<int>, List<Tuple<int, float>>> res = null;
-            while ((res = ReadClickAnalyzerGroup()) != null)
+            const int N_GROUPS = Int32.MaxValue;
+
+            MemoryStream ms1 = GetTestFile(inputTestFile);
+
+            while(false)
             {
-                var ms1 = new MemoryStream();
-                using (var file = new FileStream(PathResolver.TestProcessedFile, FileMode.Open, FileAccess.Read))
+                List<UsersGroup> groups = ReadGroups(N_GROUPS);
+                if (groups.Count == 0)
+                    break;
+
+                MemoryStream ms2 = new MemoryStream();
+                BinaryWriter writer = new BinaryWriter(ms2);
+
+                using (InputFileOpener opener = new InputFileOpener(new BinaryReader(ms1), new InputFileReader.InputFileReaders.TestFileReader(writer, groups)))
                 {
-                    var bytes = new byte[file.Length];
-                    file.Read(bytes, 0, (int) file.Length);
-                    ms1.Write(bytes, 0, (int) file.Length);
+                    opener.Read();
                 }
-                //how to do this with memory stream? 
-                //var opener = new InputFileOpener(ms1, new TestFileReader(ms1,res.Item1,res.Item2));
+
+                ms1.Dispose();
+                ms1 = ms2;
+            }
+
+            SaveTestFile(ms1, outputTestFile);
+
+            ms1.Dispose();
+        }
+
+        private MemoryStream GetTestFile(String inputFile)
+        {
+            var ms1 = new MemoryStream();
+            using (var file = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
+            {
+                var bytes = new byte[file.Length];
+                file.Read(bytes, 0, (int)file.Length);
+                ms1.Write(bytes, 0, (int)file.Length);
+            }
+
+            return ms1;
+        }
+
+        private void SaveTestFile(MemoryStream memoryStream, String output)
+        {
+            using (FileStream file = new FileStream(output, FileMode.Create, FileAccess.Write))
+            {
+                byte[] bytes = new byte[memoryStream.Length];
+                memoryStream.Read(bytes, 0, (int)memoryStream.Length);
+                file.Write(bytes, 0, bytes.Length);
+                memoryStream.Close();
             }
         }
 
-        public Tuple<List<int>,List<Tuple<int,float>>> ReadClickAnalyzerGroup()
+        private List<UsersGroup> ReadGroups(int n)
+        {
+            var result = new List<UsersGroup>();
+            while (_reader.Peek() > -1)
+            {
+                result.Add(ReadClickAnalyzerGroup());
+                if (result.Count >= n)
+                    return result;
+            }
+
+            return result;
+        }
+
+        private UsersGroup ReadClickAnalyzerGroup()
         {
             var statistics = new List<Tuple<int, float>>();
             var users = new List<int>();
-
-            if (_reader.Peek() == -1) return null;
             
             string line;
             while (string.IsNullOrEmpty(line = _reader.ReadLine()))
             {
                 //reading users 
-                users.Add(Convert.ToInt32(line));
+                users.Add(Int32.Parse(line));
             }
 
             while (string.IsNullOrEmpty(line = _reader.ReadLine()))
             {
                 //reading urls with correlated statistic
                 var res = line.Split('\t');
-                float val;
-                float.TryParse(res[1], out val);
-                statistics.Add(new Tuple<int, float>(Convert.ToInt32(res[0]),val));
+                float val = float.Parse(res[1]);
+                statistics.Add(new Tuple<int, float>(Int32.Parse(res[0]), val));
             }
 
             //returns users and stats
-            return new Tuple<List<int>, List<Tuple<int, float>>>(users,statistics);
+            return new UsersGroup(new BinarySearchSet<int>(users, Comparer<int>.Default), statistics);
         }
     }
 }

@@ -8,54 +8,59 @@ namespace Yandex.InputFileReader
     public class InputFileOpener : IDisposable
     {
         private readonly BinaryReader _binaryReader;
+        private readonly bool closeBinaryReader;
 
         private readonly InputFileReader _reader;
 
         public InputFileOpener(string filename, InputFileReader reader)
         {
             _binaryReader = new BinaryReader(new FileStream(filename, FileMode.Open));
+            closeBinaryReader = true;
             _reader = reader;
         }
 
-        public InputFileOpener(MemoryStream memoryStream, InputFileReader reader)
+        public InputFileOpener(BinaryReader binaryReader, InputFileReader reader)
         {
-            _binaryReader = new BinaryReader(memoryStream);
+            _binaryReader = binaryReader;
+            closeBinaryReader = false;
             _reader = reader;
         }
 
         public void Dispose()
         {
+            if (closeBinaryReader)
+                _binaryReader.Close();
             _reader.Dispose();
         }
 
         public void Read()
         {
-            using (var binaryReader = new BufferedBinaryReader(_binaryReader))
+            var binaryReader = new BufferedBinaryReader(_binaryReader);
+
+            Metadata metadata = new Metadata();
+            QueryAction queryAction = new QueryAction();
+            Click click = new Click();
+
+            float length = binaryReader.reader.BaseStream.Length / 100.0f;
+
+            int lineCounter = 0;
+
+            _reader.onBeginRead();
+
+            int type = binaryReader.PeekChar();
+            while (type > -1)
             {
-                Metadata metadata = new Metadata();
-                QueryAction queryAction = new QueryAction();
-                Click click = new Click();
-
-                float length = binaryReader.reader.BaseStream.Length/100.0f;
-
-                int lineCounter = 0;
-
-                _reader.onBeginRead();
-
-                int type = binaryReader.PeekChar();
-                while (type > -1)
+                if (++lineCounter % 100000 == 0)
                 {
-                    if (++lineCounter % 100000 == 0)
-                    {
-                        Console.Write("                 \rRead: {0} %\r",
-                            (binaryReader.reader.BaseStream.Position / length).ToString("0.000"));
-                        if (lineCounter % 2000000 == 0)
-                            GC.Collect();
-                    }
+                    Console.Write("                 \rRead: {0} %\r",
+                        (binaryReader.reader.BaseStream.Position / length).ToString("0.000"));
+                    if (lineCounter % 2000000 == 0)
+                        GC.Collect();
+                }
 
-                    switch (type)
-                    {
-                        case 0:
+                switch (type)
+                {
+                    case 0:
                         {
                             metadata.type = binaryReader.ReadByte();
                             metadata.sessionId = binaryReader.ReadInt32();
@@ -65,8 +70,8 @@ namespace Yandex.InputFileReader
                             _reader.onMetadata(metadata);
                             break;
                         }
-                        case 1:
-                        case 2:
+                    case 1:
+                    case 2:
                         {
                             queryAction.type = binaryReader.ReadByte();
                             queryAction.sessionId = binaryReader.ReadInt32();
@@ -99,7 +104,7 @@ namespace Yandex.InputFileReader
                             _reader.onQueryAction(queryAction);
                             break;
                         }
-                        case 3:
+                    case 3:
                         {
                             click.type = binaryReader.ReadByte();
                             click.sessionId = binaryReader.ReadInt32();
@@ -110,15 +115,14 @@ namespace Yandex.InputFileReader
                             _reader.onClick(click);
                             break;
                         }
-                    }
-
-                    type = binaryReader.PeekChar();
                 }
 
-                Console.Write("                  \r");
-
-                _reader.onEndRead();
+                type = binaryReader.PeekChar();
             }
+
+            Console.Write("                  \r");
+
+            _reader.onEndRead();
         }
     }
 }
