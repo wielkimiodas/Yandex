@@ -327,12 +327,12 @@ namespace Yandex.Transfer
             BinaryWriter click = null;
             BinaryWriter urlFile = null;
 
-            session = new BinaryWriter(new FileStream(workDir + sessionTableName, FileMode.Create));
-            query = new BinaryWriter(new FileStream(workDir + queryTableName, FileMode.Create));
-            queryTerm = new BinaryWriter(new FileStream(workDir + queryTermTableName, FileMode.Create));
-            queryUrl = new BinaryWriter(new FileStream(workDir + queryUrlTableName, FileMode.Create));
-            click = new BinaryWriter(new FileStream(workDir + clickTableName, FileMode.Create));
-            urlFile = new BinaryWriter(new FileStream(workDir + urlTableName, FileMode.Create));
+            session = new BinaryWriter(new FileStream(workDir + sessionTableName, FileMode.CreateNew));
+            query = new BinaryWriter(new FileStream(workDir + queryTableName, FileMode.CreateNew));
+            queryTerm = new BinaryWriter(new FileStream(workDir + queryTermTableName, FileMode.CreateNew));
+            queryUrl = new BinaryWriter(new FileStream(workDir + queryUrlTableName, FileMode.CreateNew));
+            click = new BinaryWriter(new FileStream(workDir + clickTableName, FileMode.CreateNew));
+            urlFile = new BinaryWriter(new FileStream(workDir + urlTableName, FileMode.CreateNew));
 
             BinaryWriter[] writers = new BinaryWriter[] {session, query, queryTerm, queryUrl, click};
 

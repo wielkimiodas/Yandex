@@ -80,7 +80,7 @@ namespace Yandex.InputFileReader
 
             groups.Sort((o1, o2) => o2.Count - o1.Count);
 
-            using (var writer = new StreamWriter(PathResolver.ClicksAnalyse))
+            using (var writer = new StreamWriter(new FileStream(PathResolver.ClicksAnalyse, FileMode.CreateNew, FileAccess.Write)))
             {
                 while (groups.Count > 0)
                 {

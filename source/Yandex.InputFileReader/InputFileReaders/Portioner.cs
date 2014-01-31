@@ -27,7 +27,7 @@ namespace Yandex.LogPortioner
 
             for (int i = 0; i < _fileParts.Length; i++)
             {
-                _fileParts[i] = new BinaryWriter(File.Open(PathResolver.DataPartsFolder + "part" + (i + 1), FileMode.Create));
+                _fileParts[i] = new BinaryWriter(File.Open(PathResolver.DataPartsFolder + "part" + (i + 1), FileMode.CreateNew));
             }
         }
 

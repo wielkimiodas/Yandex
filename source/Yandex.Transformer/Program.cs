@@ -14,7 +14,7 @@ namespace Yandex.Transformer
             int lineCounter = 0;
 
             using (var reader = new StreamReader(inputFilename))
-            using (var writer = new BinaryWriter(new FileStream(outputFilename, FileMode.Create)))
+            using (var writer = new BinaryWriter(new FileStream(outputFilename, FileMode.CreateNew)))
             {
                 while (reader.Peek() > -1)
                 {

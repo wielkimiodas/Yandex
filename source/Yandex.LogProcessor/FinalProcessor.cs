@@ -25,6 +25,7 @@ namespace Yandex.LogProcessor
 
             while(true)
             {
+                ms1.Seek(0, SeekOrigin.Begin);
                 List<UsersGroup> groups = ReadGroups(N_GROUPS);
                 if (groups.Count == 0)
                     break;
@@ -61,7 +62,7 @@ namespace Yandex.LogProcessor
 
         private void SaveTestFile(MemoryStream memoryStream, String output)
         {
-            using (var file = new FileStream(output, FileMode.Create, FileAccess.Write))
+            using (var file = new FileStream(output, FileMode.CreateNew, FileAccess.Write))
             {
                 byte[] bytes = new byte[memoryStream.Length];
                 memoryStream.Read(bytes, 0, (int)memoryStream.Length);
@@ -89,13 +90,13 @@ namespace Yandex.LogProcessor
             var users = new List<int>();
             
             string line;
-            while (string.IsNullOrEmpty(line = _reader.ReadLine()))
+            while (!string.IsNullOrEmpty(line = _reader.ReadLine()))
             {
                 //reading users 
                 users.Add(Int32.Parse(line));
             }
 
-            while (string.IsNullOrEmpty(line = _reader.ReadLine()))
+            while (!string.IsNullOrEmpty(line = _reader.ReadLine()))
             {
                 //reading urls with correlated statistic
                 var res = line.Split('\t');

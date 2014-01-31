@@ -73,7 +73,7 @@ namespace Yandex.LogProcessor
             var path = PathResolver.UserMatrixOutput;
             var path2 = PathResolver.UserMatrixOutputProcessed;
 
-            using (var writer = new BinaryWriter(new FileStream(path, FileMode.Create)))
+            using (var writer = new BinaryWriter(new FileStream(path, FileMode.CreateNew)))
             {
                 for (int i = 0; i < count; i++)
                 {
@@ -101,7 +101,7 @@ namespace Yandex.LogProcessor
 
             double minVal = 1.5 /* ?? */* simSum / simCount;
 
-            using (var writer = new BinaryWriter(new FileStream(path2, FileMode.Create)))
+            using (var writer = new BinaryWriter(new FileStream(path2, FileMode.CreateNew)))
             using (var reader = new BufferedBinaryReader(path))
             {
                 while (reader.PeekChar() > -1)
