@@ -23,9 +23,8 @@ namespace Yandex.InputFileReader.InputFileReaders
 
     public class TestFileReader : InputFileReader
     {
-        private readonly BinarySearchSet<int> _users;
         private readonly BinaryWriter _writer;
-        private bool _isUserInGroup;
+        private int _userGroupId = -1;
         private readonly List<UsersGroup> _statistics;
         public TestFileReader(BinaryWriter writer, List<UsersGroup> statistics)
         {
@@ -35,15 +34,22 @@ namespace Yandex.InputFileReader.InputFileReaders
 
         public override void onMetadata(Metadata metadata)
         {
-            //determines if we have statistics for user from the session
-            _isUserInGroup = _users.Contains(metadata.userId);
+            _userGroupId = -1;
+            for (int i = 0; i < _statistics.Count; i++)
+            {
+                if (_statistics[i].users.Contains(metadata.userId))
+                {
+                    _userGroupId = i;
+                    break;
+                }
+            }
             metadata.WriteToStream(_writer);
         }
 
         public override void onQueryAction(QueryAction queryAction)
         {
             //have statistics for current user
-            if (_isUserInGroup)
+            if (_userGroupId > 0)
             {
                 //if it is T type query which we are requested to rearrange
                 if (queryAction.type == 2)
@@ -55,32 +61,28 @@ namespace Yandex.InputFileReader.InputFileReaders
                     for (int i = 0; i < queryAction.nUrls; i++)
                     {
                         float statisticsValue = -1;
-                        float ourRank = (queryAction.nUrls - i) * defFactor; ;
                         //generally - factors from 1 to 10 inclusively
+                        float ourRank = (queryAction.nUrls - i) * defFactor;
 
-                        var jTresh = _statistics.Count;
-                        for (int j = 0; j < jTresh; j++)
+                        int kTresh = _statistics[_userGroupId].urlsStats.Count;
+                        var currUserGroup = _statistics[_userGroupId];
+                        for (int k = 0; k < kTresh; k++)
                         {
-                            int kTresh = _statistics[j].urlsStats.Count;
-                            var currUserGroup = _statistics[j];
-                            for (int k = 0; k < kTresh; k++)
+                            var elem = currUserGroup.urlsStats.ElementAt(k);
+                            if (elem.Item1 == queryAction.urls[i])
                             {
-                                var elem = currUserGroup.urlsStats.ElementAt(k);
-                                if (elem.Item1 == queryAction.urls[i])
-                                {
-                                    statisticsValue = elem.Item2;
-                                    break;
-                                }
+                                statisticsValue = elem.Item2;
+                                break;
                             }
-                            if (statisticsValue > 0) break;
                         }
+                        
                         if (statisticsValue > 0)
                         {
-                            ourRank += statisticsValue*statisticsFactor;
+                            ourRank += statisticsValue * statisticsFactor;
                         }
-                        ourFinalRanking.Add(new Tuple<int, float>(queryAction.urls[i],ourRank));
+                        ourFinalRanking.Add(new Tuple<int, float>(queryAction.urls[i], ourRank));
                     }
-                    ourFinalRanking.Sort((x1,x2)=>x2.Item2.CompareTo(x1.Item2));
+                    ourFinalRanking.Sort((x1, x2) => x2.Item2.CompareTo(x1.Item2));
 
                     for (int i = 0; i < queryAction.nUrls; i++)
                     {
