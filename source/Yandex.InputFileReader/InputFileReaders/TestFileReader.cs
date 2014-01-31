@@ -4,17 +4,30 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Yandex.Utils;
 using Yandex.Utils.UserActions;
 
 namespace Yandex.InputFileReader.InputFileReaders
 {
+    public class UsersGroup
+    {
+        public BinarySearchSet<int> users { get; private set; }
+        public List<Tuple<int, float>> urlsStats { get; private set; }
+
+        public UsersGroup(BinarySearchSet<int> users, List<Tuple<int, float>> urlsStats)
+        {
+            this.users = users;
+            this.urlsStats = urlsStats;
+        }
+    }
+
     public class TestFileReader : InputFileReader
     {
-        private readonly List<int> _users;
+        private readonly BinarySearchSet<int> _users;
         private readonly BinaryWriter _writer;
         private bool _isUserInGroup;
-        private readonly List<Tuple<int, float>> _statistics;
-        public TestFileReader(BinaryWriter writer, List<int> users, List<Tuple<int,float>> statistics)
+        private readonly List<UsersGroup> _statistics;
+        public TestFileReader(BinaryWriter writer, BinarySearchSet<int> users, List<UsersGroup> statistics)
         {
             _writer = writer; 
             _users = users;
@@ -36,7 +49,16 @@ namespace Yandex.InputFileReader.InputFileReaders
                 //if it is T type query which we are requested to rearrange
                 if (queryAction.type == 2)
                 {
-                    //explore statistics
+                    float defFactor = 1;
+
+                    for (int i = 0; i < queryAction.nUrls; i++)
+                    {
+                        
+                        //generally - factors from 1 to 10 inclusively
+                        float currentQueryFactor = queryAction.nUrls - i;
+                        float rankingFactor = 
+                    }
+                    
                 }
             }
             else
