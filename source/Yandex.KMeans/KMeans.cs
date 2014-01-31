@@ -78,39 +78,6 @@ namespace Yandex.KMeans
                 foreach (var term in user.terms)
                     allTerms.Add(term);
 
-            /*var termsCounts = new List<int>();
-            float avg = 0;
-            foreach (var user in users)
-            {
-                avg += user.terms.Count;
-                foreach (int term in user.terms)
-                {
-                    while (termsCounts.Count <= term)
-                        termsCounts.Add(0);
-
-                    termsCounts[term]++;
-                }
-            }
-
-            int finalAvg = (int)(avg / users.Count);
-
-            var list = new BinarySearchMultiSet<Tuple<int, int>>(new CmpTuple());
-            for (int i = 0; i < termsCounts.Count; i++)
-            {
-                if (list.list.Count > 3 * finalAvg)
-                {
-                    list.list.RemoveRange(finalAvg, list.list.Count - finalAvg);
-                }
-
-                list.Add(new Tuple<int, int>(i, termsCounts[i]));
-            }
-
-            list.list.RemoveRange(finalAvg, list.list.Count - finalAvg);
-
-            var centroidTerms = new BinarySearchSet<int>(Comparer<int>.Default);
-            foreach(var val in list)
-                centroidTerms.Add(val.Item1);*/
-
             return new User() { userId = -1, terms = allTerms };
         }
     }
@@ -120,54 +87,108 @@ namespace Yandex.KMeans
         const int N_HASHES = 30;
         public const int MAX_TERM_ID = 4853846;
 
-        public static void DoKMeans(String filename, String output)
+        private static List<List<User>> getSmallBoxes(List<User> allUsers)
         {
-            var watch = Stopwatch.StartNew();
-            var matrix = MatrixReader.GetMatrix(PathResolver.UserMatrix);
-            watch.Stop();
-            Console.WriteLine("Matrix loading:\t" + watch.Elapsed);
+            allUsers.Sort((u1, u2) => { return u1.terms.Count - u2.terms.Count; });
+            List<List<User>> boxes = new List<List<User>>();
+            ParallelWorker tmpWorker = new ParallelWorker(8);
 
-            watch = Stopwatch.StartNew();
-            watch.Stop();
-            Console.WriteLine("Calculate indexes:\t" + watch.Elapsed);
+            const float MIN_SIM = 0.7f;
 
-            var r = new Random();
-
-            watch = Stopwatch.StartNew();
-            List<User> allUsers = User.GetUsers(matrix);
-            allUsers.Sort((u1, u2) => { return u2.terms.Count - u1.terms.Count; });
-            watch.Stop();
-            Console.WriteLine("Getting users:\t" + watch.Elapsed);
-
-            matrix = null;
-            GC.Collect();
-            watch = Stopwatch.StartNew();
-            int N_BOXES = allUsers.Count / 10000;
-            List<User>[] boxes = new List<User>[N_BOXES + 1];
-            boxes[N_BOXES] = new List<User>();
+            for (int it = 0; it < allUsers.Count; it++)
             {
-                ParallelWorker tmpWorker = new ParallelWorker(8);
-
-                User[] tmpCentroids = new User[N_BOXES];
-                for (int it = 0; it < allUsers.Count; it++)
+                int i = it;
+                tmpWorker.Queue(delegate
                 {
-                    if (it < N_BOXES)
+                    float bestSim = 0;
+                    int bestBox = -1;
+                    int nBoxes;
+                    lock (boxes)
                     {
-                        boxes[it] = new List<User>();
-                        boxes[it].Add(allUsers[it]);
-
-                        tmpCentroids[it] = allUsers[it];
+                        nBoxes = boxes.Count;
                     }
-                    else
+                    for (int k = 0; k < nBoxes; k++)
                     {
-                        int i = it;
-                        tmpWorker.Queue(delegate
+                        float sim = allUsers[i].GetSim(boxes[k][0]);
+                        if (bestSim < sim)
                         {
-                            float bestSim = -float.MaxValue;
-                            int bestBox = -1;
-                            for (int k = 0; k < tmpCentroids.Length; k++)
+                            bestSim = sim;
+                            bestBox = k;
+                        }
+                    }
+
+                    lock (boxes)
+                    {
+                        for (int k = nBoxes; k < boxes.Count; k++)
+                        {
+                            float sim = allUsers[i].GetSim(boxes[k][0]);
+                            if (bestSim < sim)
                             {
-                                float sim = allUsers[i].GetSim(tmpCentroids[k]);
+                                bestSim = sim;
+                                bestBox = k;
+                            }
+                        }
+
+                        if (bestSim < MIN_SIM)
+                        {
+                            bestBox = boxes.Count;
+                            boxes.Add(new List<User>());
+                        }
+
+                        boxes[bestBox].Add(allUsers[i]);
+                    }
+                });
+                if (it % 1000 == 0)
+                    Console.Write("Users: {0:0.00}%\t({1})\r", 100.0f * it / allUsers.Count, boxes.Count);
+            }
+
+            tmpWorker.Wait();
+
+            return boxes;
+        }
+
+        private static List<List<User>> getBoxes(List<User> allUsers2)
+        {
+            List<List<User>> allBoxes = new List<List<User>>();
+
+            const int N = 100;
+            for (int b = 0; b < N; b++)
+            {
+                int min = b * allUsers2.Count / N;
+                int max = (b + 1) * allUsers2.Count / N;
+                var users = allUsers2.GetRange(min, max - min);
+                var boxes2 = getSmallBoxes(users);
+
+                const float MIN_SIM = 0.5f;
+
+                ParallelWorker tmpWorker = new ParallelWorker(8);
+                for (int it = 0; it < boxes2.Count; it++)
+                {
+                    int i = it;
+                    tmpWorker.Queue(delegate
+                    {
+                        float bestSim = 0;
+                        int bestBox = -1;
+                        int nBoxes;
+                        lock (allBoxes)
+                        {
+                            nBoxes = allBoxes.Count;
+                        }
+                        for (int k = 0; k < nBoxes; k++)
+                        {
+                            float sim = boxes2[i][0].GetSim(allBoxes[k][0]);
+                            if (bestSim < sim)
+                            {
+                                bestSim = sim;
+                                bestBox = k;
+                            }
+                        }
+
+                        lock (allBoxes)
+                        {
+                            for (int k = nBoxes; k < allBoxes.Count; k++)
+                            {
+                                float sim = boxes2[i][0].GetSim(allBoxes[k][0]);
                                 if (bestSim < sim)
                                 {
                                     bestSim = sim;
@@ -175,18 +196,46 @@ namespace Yandex.KMeans
                                 }
                             }
 
-                            lock (boxes[bestBox])
+                            if (bestSim < MIN_SIM)
                             {
-                                boxes[bestBox].Add(allUsers[i]);
+                                bestBox = allBoxes.Count;
+                                allBoxes.Add(new List<User>());
                             }
-                        });
-                    }
-                    if (it % 100 == 0)
-                        Console.Write("Users: {0:0.00}%\r", 100.0f * it / allUsers.Count);
-                }
 
+                            allBoxes[bestBox].AddRange(boxes2[i]);
+                        }
+                    });
+                }
                 tmpWorker.Wait();
+
+                Console.WriteLine("Done {0}%", 100.0f * b / N);
             }
+
+            return allBoxes;
+        }
+
+        public static void DoKMeans(String filename, String output)
+        {
+            var watch = Stopwatch.StartNew();
+            var matrix = MatrixReader.GetMatrix(PathResolver.UserMatrix);
+            watch.Stop();
+            Console.WriteLine("Matrix loading:\t" + watch.Elapsed);
+
+            var r = new Random();
+
+            watch = Stopwatch.StartNew();
+            List<User> allUsers = User.GetUsers(matrix);
+            //allUsers.Sort((u1, u2) => { return u1.terms.Count - u2.terms.Count; });
+            watch.Stop();
+            Console.WriteLine("Getting users:\t" + watch.Elapsed);
+
+            matrix = null;
+            GC.Collect();
+            watch = Stopwatch.StartNew();
+            List<List<User>> boxes = new List<List<User>>();
+
+            boxes = getBoxes(allUsers);
+
             watch.Stop();
             Console.WriteLine("Putting in boxes:\t" + watch.Elapsed);
 
@@ -195,130 +244,32 @@ namespace Yandex.KMeans
                 float avgCount = 0;
                 float dev = 0;
 
-                for (int b = 0; b < boxes.Length; b++)
+                for (int b = 0; b < boxes.Count; b++)
                     avgCount += boxes[b].Count;
-                avgCount /= boxes.Length;
+                avgCount /= boxes.Count;
 
-                for (int b = 0; b < boxes.Length; b++)
+                for (int b = 0; b < boxes.Count; b++)
                     dev += (float)Math.Pow(boxes[b].Count - avgCount, 2);
-                dev = (float)Math.Sqrt(dev / boxes.Length);
-                Console.WriteLine("Stats: " + boxes.Length + "\t" + avgCount + "\t" + dev);
-                for (int b = 0; b < boxes.Length; b++)
-                    Console.Write(boxes[b].Count + "\t");
-                Console.WriteLine();
+                dev = (float)Math.Sqrt(dev / boxes.Count);
+                Console.WriteLine("Stats of {0} boxes:", boxes.Count);
+                Console.WriteLine("  AVG(Count):\t" + avgCount + "\tDev:\t" + dev);
             }
             #endregion WYLICZANIE STATYSTYK
 
             ParallelWorker worker = new ParallelWorker(8);
 
-            const int ITERATIONS = 20;
-            for (int i = 1; i <= ITERATIONS; i++)
+            #region ZAPISYWANIE GRUPY DO PLIKU
+            using (var writer = new StreamWriter(output))
             {
-                #region ZAPISYWANIE GRUPY DO PLIKU
-                using (var writer = new StreamWriter(output + i + ".txt"))
+                for (int j = 0; j < boxes.Count - 1; j++)
                 {
-                    for (int j = 0; j < boxes.Length - 1; j++)
-                    {
-                        foreach (User user in boxes[j])
-                            writer.WriteLine(user.userId);
+                    foreach (User user in boxes[j])
+                        writer.WriteLine(user.userId);
 
-                        writer.WriteLine();
-                    }
+                    writer.WriteLine();
                 }
-                #endregion ZAPISYWANIE GRUPY DO PLIKU
-
-                watch = Stopwatch.StartNew();
-                var newBoxes = new List<User>[boxes.Length];
-                for (int j = 0; j < newBoxes.Length; j++)
-                    newBoxes[j] = new List<User>();
-
-                var centroids = new User[boxes.Length - 1];
-                for (int j = 0; j < boxes.Length - 1; j++)
-                {
-                    int value = j;
-                    Console.Write("Centroid: {0:0.00}%\r", 100.0f * j / boxes.Length);
-                    worker.Queue(delegate
-                    {
-                        centroids[value] = User.GetCentroid(boxes[value]);
-                    });
-                }
-
-                worker.Wait();
-
-                Console.Write(new String(' ', 40) + "\r");
-
-                for (int j = 0; j < boxes.Length; j++)
-                {
-                    Console.Write("Box: {0:0.00}%\r", 100.0f * j / boxes.Length);
-                    foreach (User userIt in boxes[j])
-                    {
-                        User user = userIt;
-                        worker.Queue(delegate
-                        {
-                            float bestSim = -float.MaxValue;
-                            int bestBox = -1;
-                            for (int k = 0; k < boxes.Length - 1; k++)
-                            {
-                                float sim = user.GetSim(centroids[k]);
-                                if (bestSim < sim)
-                                {
-                                    bestSim = sim;
-                                    bestBox = k;
-                                }
-                            }
-
-                            const float MIN_SIM = 0.2f;
-
-                            if (bestSim < MIN_SIM)
-                                bestBox = boxes.Length - 1;
-
-                            lock (newBoxes[bestBox])
-                            {
-                                newBoxes[bestBox].Add(user);
-                            }
-                        });
-                    }
-
-                    worker.Wait();
-                }
-
-                {
-                    int nBoxes = newBoxes.Count((l) => { return l.Count != 0; });
-                    if (newBoxes[newBoxes.Length - 1].Count == 0)
-                        nBoxes++;
-                    boxes = new List<User>[nBoxes];
-                    int index = 0;
-                    for (int j = 0; j < newBoxes.Length; j++)
-                    {
-                        if (newBoxes[j].Count == 0 && j != newBoxes.Length - 1)
-                            continue;
-
-                        boxes[index++] = newBoxes[j];
-                    }
-                }
-
-                #region WYLICZANIE STATYSTYK
-                {
-                    float avgCount = 0;
-                    float dev = 0;
-
-                    for (int b = 0; b < boxes.Length; b++)
-                        avgCount += boxes[b].Count;
-                    avgCount /= boxes.Length;
-
-                    for (int b = 0; b < boxes.Length; b++)
-                        dev += (float)Math.Pow(boxes[b].Count - avgCount, 2);
-                    dev = (float)Math.Sqrt(dev / boxes.Length);
-                    Console.WriteLine("Stats: " + boxes.Length + "\t" + avgCount + "\t" + dev);
-                    /*for (int b = 0; b < boxes.Length; b++)
-                        Console.Write(boxes[b].Count + "\t");
-                    Console.WriteLine();*/
-                }
-                #endregion WYLICZANIE STATYSTYK
-
-                watch.Stop();
-                Console.WriteLine("Iteration " + i + ":\t" + watch.Elapsed);
             }
+            #endregion ZAPISYWANIE GRUPY DO PLIKU
         }
     }
 }
