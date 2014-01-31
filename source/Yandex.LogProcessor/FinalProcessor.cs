@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Yandex.InputFileReader.InputFileReaders;
 using Yandex.Utils;
 using Yandex.InputFileReader;
 using UsersGroup = Yandex.InputFileReader.InputFileReaders.UsersGroup;
@@ -22,16 +23,16 @@ namespace Yandex.LogProcessor
 
             MemoryStream ms1 = GetTestFile(inputTestFile);
 
-            while(false)
+            while(true)
             {
                 List<UsersGroup> groups = ReadGroups(N_GROUPS);
                 if (groups.Count == 0)
                     break;
 
-                MemoryStream ms2 = new MemoryStream();
-                BinaryWriter writer = new BinaryWriter(ms2);
+                var ms2 = new MemoryStream();
+                var writer = new BinaryWriter(ms2);
 
-                using (InputFileOpener opener = new InputFileOpener(new BinaryReader(ms1), new InputFileReader.InputFileReaders.TestFileReader(writer, groups)))
+                using (var opener = new InputFileOpener(new BinaryReader(ms1), new TestFileReader(writer, groups)))
                 {
                     opener.Read();
                 }
@@ -60,7 +61,7 @@ namespace Yandex.LogProcessor
 
         private void SaveTestFile(MemoryStream memoryStream, String output)
         {
-            using (FileStream file = new FileStream(output, FileMode.Create, FileAccess.Write))
+            using (var file = new FileStream(output, FileMode.Create, FileAccess.Write))
             {
                 byte[] bytes = new byte[memoryStream.Length];
                 memoryStream.Read(bytes, 0, (int)memoryStream.Length);

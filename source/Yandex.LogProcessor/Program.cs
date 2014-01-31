@@ -11,7 +11,7 @@ namespace Yandex.LogProcessor
         private static void Main(string[] args)
         {
             var watch = Stopwatch.StartNew();
-            FinalProcessor processor = new FinalProcessor();
+            var processor = new FinalProcessor();
             processor.ProcessTestInput(PathResolver.TestProcessedFile, PathResolver.TestProcessedFile + "2" /*!!!!!!!! NAZWA NOWEGO PLIKU TESTOWEGO !!!!!!!!!"*/);
             watch.Stop();
             Console.WriteLine("Processing took {0}", watch.Elapsed);
