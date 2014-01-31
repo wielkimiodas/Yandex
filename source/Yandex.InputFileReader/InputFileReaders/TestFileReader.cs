@@ -63,7 +63,7 @@ namespace Yandex.InputFileReader.InputFileReaders
                 {
                     var ourFinalRanking = new List<Tuple<int, float>>();
                     const float defFactor = 1;
-                    const float statisticsFactor = 1;
+                    const float statisticsFactor = 5;
 
                     for (int i = 0; i < queryAction.nUrls; i++)
                     {

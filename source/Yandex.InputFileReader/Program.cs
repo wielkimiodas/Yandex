@@ -14,7 +14,7 @@ namespace Yandex.InputFileReader
             var watch = Stopwatch.StartNew();
             var filename = PathResolver.TrainProcessedFile;
             using (var opener = new InputFileOpener(filename,
-                            new LinkSorter(groups, writer)))
+                            new OutputGenerator(PathResolver.OutputPath)))
             {
                 opener.Read();
             }
@@ -43,7 +43,14 @@ namespace Yandex.InputFileReader
             }
 
             var watch = Stopwatch.StartNew();
-            start();
+            //start();
+            var filename = PathResolver.TestProcessedFile+"2";
+            using (var opener = new InputFileOpener(filename,
+                            new OutputGenerator(PathResolver.OutputPath)))
+            {
+                opener.Read();
+            }
+
             watch.Stop();
             Console.WriteLine("Done after {0}", watch.Elapsed);
 

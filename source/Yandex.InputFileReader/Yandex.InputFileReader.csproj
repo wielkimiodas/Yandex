@@ -73,6 +73,7 @@
     <Compile Include="InputFileOpener.cs" />
     <Compile Include="InputFileReaders\Counter.cs" />
     <Compile Include="InputFileReaders\Days.cs" />
+    <Compile Include="InputFileReaders\OutputGenerator.cs" />
     <Compile Include="InputFileReaders\RandomRanking.cs" />
     <Compile Include="InputFileReaders\DomainsToTerms.cs" />
     <Compile Include="InputFileReader.cs" />
