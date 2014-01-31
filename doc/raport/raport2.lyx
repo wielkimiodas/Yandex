@@ -205,6 +205,17 @@ gdzie:
  jest idealną wartością miary.
 \end_layout
 
+\begin_layout Subsection
+Założone cele
+\end_layout
+
+\begin_layout Standard
+Jak okazało się w czasie konkursu, odesłanie zapytań konkursowych do przeporządk
+owania jako gotowe rozwiązanie dawało bardzo wysoki wynik: 0.79133.
+ Naturalnym celem jaki sobie zatem postawiliśmy, było przekroczenie tego
+ rezultatu.
+\end_layout
+
 \begin_layout Section
 Opis metody predykcyjnej
 \end_layout
@@ -287,6 +298,19 @@ Ostateczny wynik na zbiorze testowym, miejsce w konkursie, odniesienie do
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Ostateczny wynik jaki uzyskaliśmy używając metod predykcyjnych, niestety
+ nie przekroczył rozwiązania domyślnego, korzystającego z istniejącego rankingu
+ Yandexa.
+ Nasz ostatateczny wynik w serwisie Kaggle wyniósł 0.79133, gdzie razem z
+ osiemdziesięcioma innymi drużynami dzieliliśmy 93 miejsce.
+ Warto wspomnieć, że najlepsza drużyna (która jak się okazało była drużyną
+ wystawioną przez Yandex) uzyskała wynik: 0.80725, który przebija rozwiązanie
+ domyślne zaledwie o 0.01592.
+ Liczby te pokazują, że ulepszenie istniejącego już uporządkowania było
+ nietrywialne.
 \end_layout
 
 \begin_layout Section
