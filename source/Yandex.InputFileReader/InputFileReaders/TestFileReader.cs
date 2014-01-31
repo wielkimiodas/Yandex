@@ -27,10 +27,9 @@ namespace Yandex.InputFileReader.InputFileReaders
         private readonly BinaryWriter _writer;
         private bool _isUserInGroup;
         private readonly List<UsersGroup> _statistics;
-        public TestFileReader(BinaryWriter writer, BinarySearchSet<int> users, List<UsersGroup> statistics)
+        public TestFileReader(BinaryWriter writer, List<UsersGroup> statistics)
         {
             _writer = writer; 
-            _users = users;
             _statistics = statistics;
         }
 
