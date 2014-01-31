@@ -25,7 +25,7 @@ namespace Yandex.InputFileReader.InputFileReaders
         private int[][] _occurences;
         private readonly StreamWriter _writer;
         private readonly List<BinarySearchSet<int>> _userGroupsList;
-        private int groupId;
+        private int _groupId;
 
         private const int UrlMaxId = 71224114 + 1;
 
@@ -50,7 +50,7 @@ namespace Yandex.InputFileReader.InputFileReaders
 
         public override void onClick(Click click)
         {
-            if (groupId == -1)
+            if (_groupId == -1)
                 return;
 
             _isLastActionClick = true;
@@ -62,13 +62,13 @@ namespace Yandex.InputFileReader.InputFileReaders
             int diff = _currentDwellTime - _lastDwellTime;
             if (diff <= 399 && diff >= 50)
             {
-                _relevants[groupId][click.urlId]++;
+                _relevants[_groupId][click.urlId]++;
                 //nie chcemy goscia liczyc dwa razy
                 _isLastActionClick = false;
             }
             else if (diff >= 400)
             {
-                _veryRelevants[groupId][click.urlId]++;
+                _veryRelevants[_groupId][click.urlId]++;
                 //nie chcemy goscia liczyc dwa razy
                 _isLastActionClick = false;
             }
@@ -76,22 +76,22 @@ namespace Yandex.InputFileReader.InputFileReaders
 
         public override void onMetadata(Metadata metadata)
         {
-            if (groupId != -1 && _isLastActionClick)
+            if (_groupId != -1 && _isLastActionClick)
             {
-                _veryRelevants[groupId][_currentUrlClicked]++;
+                _veryRelevants[_groupId][_currentUrlClicked]++;
             }
 
-            groupId = -1;
+            _groupId = -1;
             for (int i = 0; i < _userGroupsList.Count; i++)
             {
                 if (_userGroupsList[i].Contains(metadata.userId))
                 {
-                    groupId = i;
+                    _groupId = i;
                     break;
                 }
             }
 
-            if (groupId == -1)
+            if (_groupId == -1)
                 return;
 
             _lastDwellTime = -1;
@@ -102,22 +102,22 @@ namespace Yandex.InputFileReader.InputFileReaders
 
         public override void onQueryAction(QueryAction queryAction)
         {
-            if (groupId == -1)
+            if (_groupId == -1)
                 return;
 
             _isLastActionClick = false;
             _currentDwellTime = queryAction.time;
             for (int i = 0; i < queryAction.nUrls; i++)
             {
-                _occurences[groupId][queryAction.urls[i]]++;
+                _occurences[_groupId][queryAction.urls[i]]++;
             }
         }
 
         public override void onEndRead()
         {
-            if (_isLastActionClick && groupId > -1)
+            if (_isLastActionClick && _groupId > -1)
             {
-                _veryRelevants[groupId][_currentUrlClicked]++;
+                _veryRelevants[_groupId][_currentUrlClicked]++;
             }
 
             var _results = AnalyzeResults();

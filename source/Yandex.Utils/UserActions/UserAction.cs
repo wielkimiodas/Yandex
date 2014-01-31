@@ -18,7 +18,7 @@ namespace Yandex.Utils.UserActions
         /// Zapisuje dane do pliku.
         /// </summary>
         /// <returns>True, jeżeli operacja zapisu powiedzie się.</returns>
-        public abstract bool WriteToFile(BinaryWriter writer);
+        public abstract bool WriteToStream(BinaryWriter writer);
 
         public static UserAction GetAction(String line)
         {

@@ -12,7 +12,7 @@ namespace Yandex.InputFileReader.InputFileReaders
     {
         private readonly List<int> _users;
         private readonly BinaryWriter _writer;
-        private bool isUserInGroup;
+        private bool _isUserInGroup;
         private readonly List<Tuple<int, float>> _statistics;
         public TestFileReader(BinaryWriter writer, List<int> users, List<Tuple<int,float>> statistics)
         {
@@ -23,38 +23,31 @@ namespace Yandex.InputFileReader.InputFileReaders
 
         public override void onMetadata(Metadata metadata)
         {
-            isUserInGroup = _users.Contains(metadata.userId);
-
-            metadata.WriteToFile(_writer);
+            //determines if we have statistics for user from the session
+            _isUserInGroup = _users.Contains(metadata.userId);
+            metadata.WriteToStream(_writer);
         }
 
         public override void onQueryAction(QueryAction queryAction)
         {
-            List<Tuple<int, float,int>> blub = null;
-            if (queryAction.type == 2)
+            //have statistics for current user
+            if (_isUserInGroup)
             {
-                blub = new List<Tuple<int, float,int>>();
-                for (int i = 0; i < queryAction.nUrls; i++)
+                //if it is T type query which we are requested to rearrange
+                if (queryAction.type == 2)
                 {
-                    var res = _statistics.Find(x => x.Item1 == queryAction.urls[i]);
-                    if (res != null) blub.Add(new Tuple<int, float,int>(res.Item1,res.Item2,i));
+                    //explore statistics
                 }
             }
-
-            if (blub != null)
+            else
             {
-                blub.Sort((x,y)=>y.Item2.CompareTo(x.Item2));
-                foreach (var tuple in blub)
-                {
-                    
-                }
+                queryAction.WriteToStream(_writer);
             }
-
         }
 
         public override void onClick(Click click)
         {
-            click.WriteToFile(_writer);
+            click.WriteToStream(_writer);
         }
     }
 }

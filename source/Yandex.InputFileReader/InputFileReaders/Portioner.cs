@@ -34,17 +34,17 @@ namespace Yandex.LogPortioner
         public override void onMetadata(Metadata metadata)
         {
             currentDay = metadata.day - 1;
-            metadata.WriteToFile(_fileParts[currentDay]);
+            metadata.WriteToStream(_fileParts[currentDay]);
         }
 
         public override void onClick(Click click)
         {
-            click.WriteToFile(_fileParts[currentDay]);
+            click.WriteToStream(_fileParts[currentDay]);
         }
 
         public override void onQueryAction(QueryAction queryAction)
         {
-            queryAction.WriteToFile(_fileParts[currentDay]);
+            queryAction.WriteToStream(_fileParts[currentDay]);
         }
 
         public override void onEndRead()

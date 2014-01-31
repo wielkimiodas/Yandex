@@ -31,7 +31,7 @@ namespace Yandex.Transformer
                         continue;
                     }
 
-                    if (!action.WriteToFile(writer))
+                    if (!action.WriteToStream(writer))
                     {
                         Console.WriteLine("IOException in line #" + lineCounter);
                         return;

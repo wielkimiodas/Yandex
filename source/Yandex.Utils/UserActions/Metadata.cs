@@ -39,7 +39,7 @@ namespace Yandex.Utils.UserActions
             return true;
         }
 
-        public override bool WriteToFile(BinaryWriter writer)
+        public override bool WriteToStream(BinaryWriter writer)
         {
             try
             {
