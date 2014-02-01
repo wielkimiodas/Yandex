@@ -308,25 +308,6 @@ e 1/10000 liczby użytkowników) i następnie dodawaliśmy użytkowników do gru
  W obu metodach porównywaliśmy użytkowników miarą Jaccarda.
 \end_layout
 
-\begin_layout Standard
-Gdy już mieliśmy wyliczone statystyki dla każdej grupy, przeporządkowywaliśmy
- listę urli dla każdej sesji w następujący sposób:
-\end_layout
-
-\begin_layout Itemize
-na wstępie każdy link dostawał ocenę 10-i (pierwszy link 10, drugi 9 itd.)
-\end_layout
-
-\begin_layout Itemize
-dla linku sczytywaliśmy wartość ze statystyk
-\end_layout
-
-\begin_layout Itemize
-obliczaliśmy wagę końcową dla linku obliczając mnożnik *statysyka + ocena_począt
-kowa.
- Próbowaliśmy kilku podejść modyfikując mnożnik statystyki (1,2,5,10)
-\end_layout
-
 \begin_layout Section
 Wyniki eksperymentalne na zbiorze treningowym
 \end_layout
@@ -361,6 +342,13 @@ Czasy uczenia się i czas obliczeń:
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="4" columns="3">
 <features tabularvalignment="middle">
@@ -490,6 +478,23 @@ Grupowanie metoda 2
 
 \end_layout
 
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Czasy wykonywania rozwiązań
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Wynik końcowy
 \end_layout
@@ -532,11 +537,15 @@ pomylić
 \end_inset
 
 .
-\end_layout
+\begin_inset Float table
+wide false
+sideways false
+status open
 
-\begin_layout Standard
+\begin_layout Plain Layout
+\align center
 \begin_inset Tabular
-<lyxtabular version="3" rows="4" columns="2">
+<lyxtabular version="3" rows="5" columns="2">
 <features tabularvalignment="middle">
 <column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
@@ -565,7 +574,7 @@ Wynik
 \begin_inset Text
 
 \begin_layout Plain Layout
-Rozwiązanie bazowe
+Rozwiązanie początkowe
 \end_layout
 
 \end_inset
@@ -574,7 +583,27 @@ Rozwiązanie bazowe
 \begin_inset Text
 
 \begin_layout Plain Layout
+0.78881
+\end_layout
 
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Rozwiązanie bazowe 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.79133
 \end_layout
 
 \end_inset
@@ -594,7 +623,7 @@ Grupowanie metoda 1
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+0.78495
 \end_layout
 
 \end_inset
@@ -614,13 +643,31 @@ Grupowanie metoda 2
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+0.79033
 \end_layout
 
 \end_inset
 </cell>
 </row>
 </lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Wyniki różnych metod
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \end_inset
 
