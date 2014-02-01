@@ -308,6 +308,25 @@ e 1/10000 liczby użytkowników) i następnie dodawaliśmy użytkowników do gru
  W obu metodach porównywaliśmy użytkowników miarą Jaccarda.
 \end_layout
 
+\begin_layout Standard
+Gdy już mieliśmy wyliczone statystyki dla każdej grupy, przeporządkowywaliśmy
+ listę urli dla każdej sesji w następujący sposób:
+\end_layout
+
+\begin_layout Itemize
+na wstępie każdy link dostawał ocenę 10-i (pierwszy link 10, drugi 9 itd.)
+\end_layout
+
+\begin_layout Itemize
+dla linku sczytywaliśmy wartość ze statystyk
+\end_layout
+
+\begin_layout Itemize
+obliczaliśmy wagę końcową dla linku obliczając mnożnik *statysyka + ocena_począt
+kowa.
+ Próbowaliśmy kilku podejść modyfikując mnożnik statystyki (1,2,5,10)
+\end_layout
+
 \begin_layout Section
 Wyniki eksperymentalne na zbiorze treningowym
 \end_layout
