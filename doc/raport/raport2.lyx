@@ -500,6 +500,19 @@ Ostateczny wynik jaki uzyskaliśmy używając metod predykcyjnych, niestety
  domyślne zaledwie o 0.01592.
  Liczby te pokazują, że ulepszenie istniejącego już uporządkowania było
  nietrywialne.
+ Jeśli chodzi o nasze rozwiązanie, które wiązało się przeporządkowaniem
+ istotnej ilości danych, to było ono gorsze od początkowego zaledwie o 0.001
+ - jednak ciężko powiedzieć czy było ono na tyle dobre, czy jednak zmieniało
+ tylko na tyle mało istotne urle (zamiana urli o tej samej ocenie nie zmienia
+ wyniku), a co za tym idzie, miało mało okazji by się 
+\begin_inset Quotes eld
+\end_inset
+
+pomylić
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
