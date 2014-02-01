@@ -491,10 +491,10 @@ Ostateczny wynik na zbiorze testowym, miejsce w konkursie, odniesienie do
 
 \begin_layout Standard
 Ostateczny wynik jaki uzyskaliśmy używając metod predykcyjnych, niestety
- nie przekroczył rozwiązania domyślnego, korzystającego z istniejącego rankingu
- Yandexa.
- Nasz ostatateczny wynik w serwisie Kaggle wyniósł 0.79133, gdzie razem z
- osiemdziesięcioma innymi drużynami dzieliliśmy 93 miejsce.
+ nie przekroczył rozwiązania początkowego, korzystającego z istniejącego
+ rankingu Yandexa.
+ Co za tym idzie - ostatateczny wynik w serwisie Kaggle wyniósł 0.79133,
+ gdzie razem z osiemdziesięcioma innymi drużynami dzieliliśmy 93 miejsce.
  Warto wspomnieć, że najlepsza drużyna (która jak się okazało była drużyną
  wystawioną przez Yandex) uzyskała wynik: 0.80725, który przebija rozwiązanie
  domyślne zaledwie o 0.01592.
@@ -606,7 +606,7 @@ Uczestnictwo w omawianym konkursie było ciekawym doświadczeniem i wiele
  Mimo, że wysoce sobie to cenimy, to po tych zawodach czujemy pewien niesmak,
  że szczere zaangażowanie i duża ilość pracy nie została przełożona na jakikolwi
 ek wynik - wszytkie nasze predykcje spełzły na niczym, wobec rozwiązania
- bazowego.
+ początkowego.
  
 \end_layout
 
