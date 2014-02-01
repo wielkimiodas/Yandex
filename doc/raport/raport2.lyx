@@ -302,8 +302,8 @@ final.importance=statistic.factor*url.statistic+(10-poz)
 \end_layout
 
 \begin_layout Standard
-gdzie f to wspomniany wyżej, a to jego waga, natomiast poz to domyślna pozycja
- linku w wynikach.
+gdzie url.statistic to ustalana przez nas waga, natomiast poz to domyślna
+ pozycja linku w wynikach.
 \end_layout
 
 \begin_layout Standard
@@ -315,10 +315,8 @@ e 1/10000 liczby użytkowników) i następnie dodawaliśmy użytkowników do gru
  Drugi wariant zakładał dodawanie użytkowników do grup tylko wtedy, gdy
  podobieństwo przekraczało pewien próg (0.5), w przeciwnym wypadku użytkownik
  tworzył nową grupę.
- Ze względu na znaczne zwiększenie ilości grup, a w związku z tym wydłużenie
- czasu obliczania współczynników f, zdecydowaliśmy się ograniczyć tylko
- do 20% najliczniejszych grup.
- W obu metodach porównywaliśmy użytkowników miarą Jaccarda.
+ W obu metodach porównywaliśmy użytkowników miarą Jaccarda, biorąc pod uwagę
+ zbiory termów używanych przez nich w zapytaniach.
 \end_layout
 
 \begin_layout Section
@@ -470,7 +468,7 @@ Grupowanie metoda 2
 \begin_inset Text
 
 \begin_layout Plain Layout
-4h 30min
+2h 30min
 \end_layout
 
 \end_inset
@@ -510,23 +508,18 @@ Czasy wykonywania rozwiązań
 \end_layout
 
 \begin_layout Standard
-W pierwszym podejściu do grup (mało grup, wiele urli) czas uczenia był większy,
- ze względu na mnogość urli jakie zwracał dla zadanych grup.
- Jednak z tego samego powodu czas poświęcony na produkowanie ostatecznego
- rozwiązania był zdecydowanie mniejszy w porównaniu do rozwiązania drugiego.
- Gdy liczyliśmy drugim sposobem, czas poświęcony na uczenie był ponad dwukrotnie
- mniejszy niż w metodzie 
-\begin_inset Quotes eld
-\end_inset
-
-konkurencyjnej
-\begin_inset Quotes erd
-\end_inset
-
- jednak zwracanie ostatecznego rozwiązania było wydłużone.
+W pierwszym podejściu do grup (mało grup) zarówno czas uczenia, jak i produkowan
+ia ostatecznego rozwiązania był nieco mniejszy w porównaniu do rozwiązania
+ drugiego.
+ Gdy liczyliśmy drugim sposobem, czas poświęcony na uczenie został przez
+ nas mocno ograniczony (wzięliśmy pod uwagę jedynie najliczniejszych 20%
+ grup, warto jednak zaznaczyć, że dalsze grupy miały znacznie mniejsze liczności
+, a ponad połowa grup była jednoosobowa), dzięki czemu czas uczenia wydaje
+ się akceptowalny, jednak zwracanie ostatecznego rozwiązania było wydłużone
+ (i to pomimo tak dużego zredukowania ilości grup).
  W ostatecznych wynikach metoda 2 okazała się być skuteczniejszą, jednak
- jej decydowanie o jej poprawności na podstawie wyniku który i tak jest
- mniejszy od wyniku początkowego nie jest do końca bezpieczne.
+ decydowanie o jej poprawności na podstawie wyniku który i tak jest mniejszy
+ od wyniku początkowego nie jest do końca bezpieczne.
 \end_layout
 
 \begin_layout Section
@@ -548,29 +541,6 @@ Ostateczny wynik na zbiorze testowym, miejsce w konkursie, odniesienie do
 \end_layout
 
 \begin_layout Standard
-Ostateczny wynik jaki uzyskaliśmy używając metod predykcyjnych, niestety
- nie przekroczył rozwiązania początkowego, korzystającego z istniejącego
- rankingu Yandexa.
- Co za tym idzie - ostatateczny wynik w serwisie Kaggle wyniósł 0.79133,
- gdzie razem z osiemdziesięcioma innymi drużynami dzieliliśmy 93 miejsce.
- Warto wspomnieć, że najlepsza drużyna (która jak się okazało była drużyną
- wystawioną przez Yandex) uzyskała wynik: 0.80725, który przebija rozwiązanie
- domyślne zaledwie o 0.01592.
- Liczby te pokazują, że ulepszenie istniejącego już uporządkowania było
- nietrywialne.
- Jeśli chodzi o nasze rozwiązanie, które wiązało się przeporządkowaniem
- istotnej ilości danych, to było ono gorsze od początkowego zaledwie o 0.001
- - jednak ciężko powiedzieć czy było ono na tyle dobre, czy jednak zmieniało
- tylko na tyle mało istotne urle (zamiana urli o tej samej ocenie nie zmienia
- wyniku), a co za tym idzie, miało mało okazji by się 
-\begin_inset Quotes eld
-\end_inset
-
-pomylić
-\begin_inset Quotes erd
-\end_inset
-
-.
 \begin_inset Float table
 placement H
 wide false
@@ -700,13 +670,47 @@ Wyniki różnych metod
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Ostateczny wynik jaki uzyskaliśmy używając metod predykcyjnych, niestety
+ nie przekroczył rozwiązania początkowego, korzystającego z istniejącego
+ rankingu Yandexa.
+ Co za tym idzie - ostatateczny wynik w serwisie Kaggle wyniósł 0.79133,
+ gdzie razem z osiemdziesięcioma innymi drużynami dzieliliśmy 93 miejsce.
+ Warto wspomnieć, że najlepsza drużyna (która jak się okazało była drużyną
+ wystawioną przez Yandex) uzyskała wynik: 0.80725, który przebija rozwiązanie
+ domyślne zaledwie o 0.01592.
+ Liczby te pokazują, że ulepszenie istniejącego już uporządkowania było
+ nietrywialne.
+ Jeśli chodzi o nasze rozwiązanie, które wiązało się przeporządkowaniem
+ istotnej ilości danych, to było ono gorsze od początkowego zaledwie o 0.001
+ - jednak ciężko powiedzieć czy było ono na tyle dobre, czy jednak zmieniało
+ tylko na tyle mało istotne urle (zamiana urli o tej samej ocenie nie zmienia
+ wyniku), a co za tym idzie, miało mało okazji by się 
+\begin_inset Quotes eld
+\end_inset
+
+pomylić
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Wydaje się, że przyjęte przez nas metody są znacznie mniej złożone od tych,
+ które są domyślnie stosowane w Yandex'ie i w związku z tym zmiana początkowego
+ rozwiązania psuje jego całkiem dobre uporządkowanie.
+ Całkiem możliwe, że winowajcą są niewystarczające algorytmy podziału użytkownik
+ów na grupy.
+ Próbowaliśmy zastosować algorytm KMeans, jednak po pierwsze przy tak dużej
+ ilości użytkowników działał on stanowczo zbyt długo (pojedyncza iteracja
+ przekraczałaby dobę), a po drugie nie mieliśmy opracowanej dobrej metody
+ wyznaczania elementu średniego dla grupy użytkowników.
 \end_layout
 
 \begin_layout Section
@@ -715,13 +719,12 @@ Podsumowanie
 
 \begin_layout Standard
 Uczestnictwo w omawianym konkursie było ciekawym doświadczeniem i wiele
- nas nauczyło - choć nie tylko z dziedziny eksploracji danych czy uczenia
- maszynowego.
+ nas nauczyło - nie tylko z dziedziny eksploracji danych czy uczenia maszynowego.
  Mimo, że wysoce sobie to cenimy, to po tych zawodach czujemy pewien niesmak,
- że szczere zaangażowanie i duża ilość pracy nie została przełożona na jakikolwi
-ek wynik - wszytkie nasze predykcje spełzły na niczym, wobec rozwiązania
- początkowego, a na początku założony cel pozostał tylko zbyt wysoko postawioną
- poprzeczką.
+ gdyż szczere zaangażowanie i duża ilość pracy nie została przełożona na
+ jakikolwiek wynik - wszytkie nasze predykcje spełzły na niczym, wobec rozwiązan
+ia początkowego, a na początku założony cel pozostał tylko zbyt wysoko postawion
+ą poprzeczką.
 \end_layout
 
 \end_body
