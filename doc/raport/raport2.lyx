@@ -343,6 +343,7 @@ Czasy uczenia się i czas obliczeń:
 
 \begin_layout Standard
 \begin_inset Float table
+placement H
 wide false
 sideways false
 status open
@@ -398,7 +399,7 @@ Rozwiązanie bazowe
 \begin_inset Text
 
 \begin_layout Plain Layout
-?
+12min
 \end_layout
 
 \end_inset
@@ -538,6 +539,7 @@ pomylić
 
 .
 \begin_inset Float table
+placement H
 wide false
 sideways false
 status open
