@@ -262,7 +262,7 @@ Rozwiązanie bazowe, jakie zastosowaliśmy, to wyliczenie pewnego współczynnik
 \begin_layout Standard
 \begin_inset Formula 
 \[
-f=\frac{2*N_{VeryRelevant}+N_{Relevant}}{N_{Occurances}}
+url.statistic=\frac{2*N_{VeryRelevant}+N_{Relevant}}{N_{Occurances}}
 \]
 
 \end_inset
@@ -271,8 +271,18 @@ f=\frac{2*N_{VeryRelevant}+N_{Relevant}}{N_{Occurances}}
 \end_layout
 
 \begin_layout Standard
-gdzie N_VeryRelevant to liczba kliknięć zaklasyfikowanch jako bardzo ważne,
- N_Relevant to liczba kliknięć zaklasyfikowanych jako ważne, a N_Occurances
+gdzie 
+\begin_inset Formula $N_{VeryRelevant}$
+\end_inset
+
+ to liczba kliknięć zaklasyfikowanch jako bardzo ważne, 
+\begin_inset Formula $N_{Relevant}$
+\end_inset
+
+ to liczba kliknięć zaklasyfikowanych jako ważne, a 
+\begin_inset Formula $N_{Occurances}$
+\end_inset
+
  to liczba wystąpień linków w wynikach wyszukiwania.
  Dalsze przetwarzanie to zmiana kolejności wyników zapytań testowych z częściowy
 m uwzględnieniem początkowej kolejności.
@@ -283,7 +293,7 @@ m uwzględnieniem początkowej kolejności.
 \begin_layout Standard
 \begin_inset Formula 
 \[
-f_{2}=a*f+(10-poz)
+final.importance=statistic.factor*url.statistic+(10-poz)
 \]
 
 \end_inset
