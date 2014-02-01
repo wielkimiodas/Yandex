@@ -122,6 +122,9 @@ Personalized Web Search Challenge
  Zakończył się 10 stycznia 2014, a jako nagrodę można było otrzymać 5000$,
  3000$ lub 1000$ za odpowiednio pierwsze, drugie i trzecie miejsce.
  Link: 
+\end_layout
+
+\begin_layout Standard
 \begin_inset CommandInset href
 LatexCommand href
 target "http://www.kaggle.com/c/yandex-personalized-web-search-challenge"
