@@ -253,6 +253,61 @@ Proszę również opisać rozwiązanie bazowe dla danego problemu.
 
 \end_layout
 
+\begin_layout Standard
+Rozwiązanie bazowe, jakie zastosowaliśmy, to wyliczenie pewnego współczynnika
+ dla wszystkich linków pokazywanych użytkownikowi.
+ Wygląda on następująco:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+f=\frac{2*N_{VeryRelevant}+N_{Relevant}}{N_{Occurances}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+gdzie N_VeryRelevant to liczba kliknięć zaklasyfikowanch jako bardzo ważne,
+ N_Relevant to liczba kliknięć zaklasyfikowanych jako ważne, a N_Occurances
+ to liczba wystąpień linków w wynikach wyszukiwania.
+ Dalsze przetwarzanie to zmiana kolejności wyników zapytań testowych z częściowy
+m uwzględnieniem początkowej kolejności.
+ Dokładny wzór na współczynnik, po którym następowało sortwanie wygląda
+ następująco:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+f_{2}=a*f+(10-poz)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+gdzie f to wspomniany wyżej, a to jego waga, natomiast poz to domyślna pozycja
+ linku w wynikach.
+\end_layout
+
+\begin_layout Standard
+Naszym pomysłem było zebranie użytkowników w grupy i obliczanie wspomnianych
+ współczynników dla każdej grupy z osobna.
+ Przyjęliśmy dwa warianty - w jednym podawaliśmy konkretną liczbę grup (dokładni
+e 1/10000 liczby użytkowników) i następnie dodawaliśmy użytkowników do grupy
+ z najbardziej podobnymi użytkownikami.
+ Drugi wariant zakładał dodawanie użytkowników do grup tylko wtedy, gdy
+ podobieństwo przekraczało pewien próg (0.5), w przeciwnym wypadku użytkownik
+ tworzył nową grupę.
+ W obu metodach porównywaliśmy użytkowników miarą Jaccarda.
+\end_layout
+
 \begin_layout Section
 Wyniki eksperymentalne na zbiorze treningowym
 \end_layout
