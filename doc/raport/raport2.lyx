@@ -305,6 +305,9 @@ e 1/10000 liczby użytkowników) i następnie dodawaliśmy użytkowników do gru
  Drugi wariant zakładał dodawanie użytkowników do grup tylko wtedy, gdy
  podobieństwo przekraczało pewien próg (0.5), w przeciwnym wypadku użytkownik
  tworzył nową grupę.
+ Ze względu na znaczne zwiększenie ilości grup, a w związku z tym wydłużenie
+ czasu obliczania współczynników f, zdecydowaliśmy się ograniczyć tylko
+ do 20% najliczniejszych grup.
  W obu metodach porównywaliśmy użytkowników miarą Jaccarda.
 \end_layout
 
@@ -457,7 +460,7 @@ Grupowanie metoda 2
 \begin_inset Text
 
 \begin_layout Plain Layout
-1h 30min
+4h 30min
 \end_layout
 
 \end_inset
